@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dan Bourret Photos</title>
+  <meta name="description" content="Wildlife and nature photography by Dan Bourret Photos." />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="brand">
+        <h1>Dan Bourret Photos</h1>
+        <p>Wildlife · Nature</p>
+      </div>
+      <nav>
+        <a href="#home" data-page="home" class="active">Home</a>
+        <a href="#gallery" data-page="gallery">Gallery</a>
+        <a href="#pricing" data-page="pricing">Pricing</a>
+        <a href="#contact" data-page="contact">Contact</a>
+        <a href="#order" data-page="order">Order Summary</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section id="page-home" class="page active">
+      <div class="container hero-grid">
+        <div>
+          <span class="eyebrow">Premium wildlife collection</span>
+          <h2 class="hero-title">Photography that brings nature and beauty into your space.</h2>
+          <p class="lead">
+            Dan Bourret Photos captures vivid wildlife and nature moments designed for collectors, home decor, and premium wall art.
+          </p>
+          <div class="button-row">
+            <button class="btn btn-primary" data-page-target="gallery">View Gallery</button>
+            <button class="btn btn-primary" data-page-target="pricing">Explore Pricing</button>
+            <button class="btn btn-primary" data-page-target="contact">Get in Touch</button>
+          </div>
+        </div>
+
+        <div class="image-card">
+          <img src="images/animals/bengal_tiger.jpg" alt="Bengal Tiger" loading="eager" />
+          <div class="image-caption">
+            <strong>Photo taken at Kowiachobee Animal Preserve</strong>
+            <span>2861 4th Ave SE, Naples, FL 34117</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="page-gallery" class="page">
+      <div class="container">
+        <div class="section-heading">
+          <span>Gallery</span>
+          <h2>Featured wildlife collection</h2>
+          <p>
+            Browse the collection below. This gallery is powered by your JSON file, so you can keep adding photos without rewriting the HTML.
+          </p>
+        </div>
+
+        <div class="gallery-grid" id="gallery-grid"></div>
+      </div>
+    </section>
+
+    <section id="page-pricing" class="page">
+      <div class="container">
+        <div class="section-heading">
+          <span>Pricing</span>
+          <h2>Print formats and pricing options</h2>
+        </div>
+
+        <div class="services-grid">
+          <div class="card">
+            <h3 class="service-title">Prints</h3>
+            <div class="pricing-block">
+              <div class="pricing-title">Price</div>
+              <div class="pricing-grid">
+                <div class="pricing-header">Size</div>
+                <div class="pricing-header">Price</div>
+
+                <div>11×14</div><div>$20.79</div>
+                <div>12×18</div><div>$23.99</div>
+                <div>16×20</div><div>$31.99</div>
+                <div>20×30</div><div>$41.59</div>
+                <div>24×36</div><div>$51.19</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3 class="service-title">Canvas</h3>
+            <div class="pricing-block">
+              <div class="pricing-title">Price</div>
+              <div class="pricing-grid">
+                <div class="pricing-header">Size</div>
+                <div class="pricing-header">Price</div>
+
+                <div>8×10</div><div>$63.99</div>
+                <div>11×14</div><div>$79.99</div>
+                <div>12×12</div><div>$79.99</div>
+                <div>16×20</div><div>$143.99</div>
+                <div>20×24</div><div>$239.99</div>
+                <div>20×30</div><div>$271.99</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3 class="service-title">Metal</h3>
+            <div class="pricing-block">
+              <div class="pricing-title">Price</div>
+              <div class="pricing-grid">
+                <div class="pricing-header">Size</div>
+                <div class="pricing-header">Price</div>
+
+                <div>5×7</div><div>$47.99</div>
+                <div>8×10</div><div>$59.19</div>
+                <div>11×14</div><div>$95.99</div>
+                <div>12×12</div><div>$95.99</div>
+                <div>16×20</div><div>$111.99</div>
+                <div>20×24</div><div>$159.99</div>
+                <div>20×30</div><div>$207.99</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3 class="service-title">Wood</h3>
+            <div class="pricing-block">
+              <div class="pricing-title">Price</div>
+              <div class="pricing-grid">
+                <div class="pricing-header">Size</div>
+                <div class="pricing-header">Price</div>
+
+                <div>5×7</div><div>$39.99</div>
+                <div>8×10</div><div>$63.99</div>
+                <div>11×14</div><div>$95.99</div>
+                <div>12×12</div><div>$95.99</div>
+                <div>16×20</div><div>$111.99</div>
+                <div>20×30</div><div>$159.99</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="page-contact" class="page">
+      <div class="container contact-grid">
+        <div>
+          <div class="section-heading">
+            <span>Contact</span>
+            <h2>Let’s talk about prints, sessions, or custom work</h2>
+            <p>
+              Use this page for print orders, service inquiries, licensing requests, or commissioned photography questions.
+            </p>
+          </div>
+
+          <div class="card">
+            <h3>Contact details</h3>
+            <ul class="info-list">
+              <li>Email: your@email.com</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Send an inquiry</h3>
+          <input type="text" placeholder="Your name" />
+          <input type="email" placeholder="Email address" />
+          <input type="text" placeholder="What are you interested in?" />
+          <textarea placeholder="Tell me about the print, service, or project you have in mind"></textarea>
+          <a href="mailto:your@email.com" class="btn btn-primary">Email to Order</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="page-order" class="page">
+      <div class="container">
+        <div class="section-heading">
+          <span>Order Summary</span>
+          <h2>Customize your order</h2>
+          <p>Select a format and size for the photo you chose.</p>
+        </div>
+
+        <div class="card">
+          <h3 id="cart-photo-title">Selected Photo</h3>
+          <p class="muted" id="cart-photo-category"></p>
+
+          <div class="cart-layout">
+            <div class="cart-preview">
+              <img id="cart-photo-image" alt="Selected photo preview" style="display:none;" />
+            </div>
+
+            <div class="cart-form">
+              <label for="cart-format">Choose a format</label>
+              <select id="cart-format">
+                <option value="">Select format</option>
+                <option value="Prints">Prints</option>
+                <option value="Canvas">Canvas</option>
+                <option value="Metal">Metal</option>
+                <option value="Wood">Wood</option>
+              </select>
+
+              <label for="cart-size">Choose a size and price</label>
+              <select id="cart-size">
+                <option value="">Select size</option>
+              </select>
+
+              <div class="cart-summary">
+                <p><strong>Format:</strong> <span id="summary-format">—</span></p>
+                <p><strong>Selection:</strong> <span id="summary-size">—</span></p>
+                <p><strong>Price:</strong> <span id="summary-price">—</span></p>
+              </div>
+
+              <div class="button-row">
+                <button class="btn btn-primary" id="cart-order-btn">Add To Cart</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" id="cart-items-card">
+          <h3>Your Cart</h3>
+          <div id="cart-items"></div>
+          <div class="cart-total">
+            <strong>Total:</strong> <span id="cart-total">$0.00</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Checkout</h3>
+
+          <div class="checkout-grid">
+            <input id="cust-name" type="text" placeholder="Full Name" />
+            <input id="cust-email" type="email" placeholder="Email Address" />
+            <input id="cust-phone" type="text" placeholder="Phone Number" />
+            <input id="cust-address" type="text" placeholder="Street Address" />
+            <input id="cust-city" type="text" placeholder="City" />
+            <input id="cust-state" type="text" placeholder="State" />
+            <input id="cust-zip" type="text" placeholder="ZIP Code" />
+          </div>
+
+          <div class="checkout-actions">
+            <button type="button" class="btn" id="clear-cart-btn">Clear Cart</button>
+          </div>
+
+          <div class="payment-block">
+            <h4>Pay with PayPal</h4>
+            <div id="paypal-button-container"></div>
+          </div>
+
+          <div class="payment-block">
+            <h4>Pay with Square</h4>
+            <div id="card-container"></div>
+            <button type="button" class="btn btn-primary" id="square-pay-btn">Pay with Card</button>
+            <p class="muted" id="square-status"></p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer container">
+    &copy; <span id="copyright-year"></span> Dan Bourret Photos. All rights reserved.
+  </footer>
+
+  <div id="lightbox">
+    <button type="button" id="lightbox-prev" class="lightbox-nav" aria-label="Previous image">‹</button>
+    <span id="lightbox-close">×</span>
+    <img id="lightbox-img" src="" alt="Preview" />
+    <div id="lightbox-caption"></div>
+    <button type="button" id="lightbox-next" class="lightbox-nav" aria-label="Next image">›</button>
+  </div>
+
+  <script src="js/main.js"></script>
+  <script src="js/gallery.js"></script>
+</body>
+</html>

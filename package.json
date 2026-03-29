@@ -1,0 +1,17 @@
+{
+  "name": "dan-bourret-photos",
+  "version": "1.0.0",
+  "description": "Wildlife and nature photography site with cart, PayPal, and Square checkout.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.21.2"
+  }
+}
