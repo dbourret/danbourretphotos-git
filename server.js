@@ -1,13 +1,17 @@
 const express = require("express");
 const path = require("path");
-const crypto = require("crypto");
-require("dotenv").config();
 
 const app = express();
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 3000;
 
-app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
+
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
+});
+
+app.listen(PORT, "0.0.0.0", () => console.log(`Listening on ${PORT}`));
+
 
 function getPayPalBaseUrl() {
   return process.env.PAYPAL_MODE === "live"
