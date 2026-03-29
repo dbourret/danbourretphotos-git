@@ -1,3 +1,5 @@
+app.get("/", (req, res) => res.status(200).send("OK from Node"));
+
 const express = require("express");
 const path = require("path");
 
