@@ -7,12 +7,6 @@
   let galleryImages = [];
   let currentLightboxIndex = 0;
 
-  let paypalLoaded = false;
-  let paypalButtonsRendered = false;
-  let paypalRenderTimeout = null;
-  let paypalRenderInFlight = false;
-  let paypalClientId = null;
-
   let squarePayments = null;
   let squareCard = null;
   let squareInitPromise = null;
@@ -177,21 +171,12 @@
     if (summaryPrice) summaryPrice.textContent = selected.price;
   });
 
-  function resetPayPalButtons() {
-    paypalButtonsRendered = false;
-    const container = document.getElementById("paypal-button-container");
-    if (container) {
-      container.innerHTML = "";
-    }
-  }
-
   function renderCart() {
     if (!cartItemsContainer || !cartTotalEl) return;
 
     if (cart.length === 0) {
       cartItemsContainer.innerHTML = `<p class="muted">Your cart is empty.</p>`;
       cartTotalEl.textContent = "$0.00";
-      resetPayPalButtons();
       setSquareStatus("");
       return;
     }
@@ -231,7 +216,6 @@
         item.qty = Math.max(1, parseInt(input.value, 10) || 1);
         saveCart();
         renderCart();
-        safeRenderPayPal();
       });
     });
 
@@ -240,7 +224,6 @@
         cart = cart.filter((item) => item.id !== Number(button.dataset.id));
         saveCart();
         renderCart();
-        safeRenderPayPal();
       });
     });
   }
@@ -270,7 +253,6 @@
 
     saveCart();
     renderCart();
-    safeRenderPayPal();
     alert("Added to cart.");
   });
 
@@ -324,31 +306,6 @@
     if (event.key === "ArrowRight") moveLightbox(1);
   });
 
-  async function loadScriptOnce(src) {
-    const existing = document.querySelector(`script[src="${src}"]`);
-
-    if (existing) {
-      if (existing.dataset.loaded === "true") return;
-      await new Promise((resolve, reject) => {
-        existing.addEventListener("load", resolve, { once: true });
-        existing.addEventListener("error", reject, { once: true });
-      });
-      return;
-    }
-
-    await new Promise((resolve, reject) => {
-      const script = document.createElement("script");
-      script.src = src;
-      script.async = true;
-      script.onload = () => {
-        script.dataset.loaded = "true";
-        resolve();
-      };
-      script.onerror = reject;
-      document.head.appendChild(script);
-    });
-  }
-
   async function getSquareConfig() {
     if (squareConfig) return squareConfig;
 
@@ -371,217 +328,6 @@
         console.warn("Could not destroy existing Square card instance:", err);
       }
       squareCard = null;
-    }
-  }
-
- function safeRenderPayPal() {
-  clearTimeout(paypalRenderTimeout);
-
-  paypalRenderTimeout = setTimeout(() => {
-    renderPayPalButtons().catch((err) => {
-      console.error("PayPal render error:", err);
-    });
-  }, 150);
-}
-
-async function ensurePayPalLoaded() {
-  if (!paypalClientId) {
-    const configRes = await fetch("/api/config/paypal");
-    const config = await configRes.json();
-
-    if (!configRes.ok || !config.clientId) {
-      throw new Error(config.error || "Missing PayPal client ID");
-    }
-
-    paypalClientId = config.clientId;
-  }
-
-const sdkUrl =
-  `https://www.paypal.com/sdk/js?client-id=${encodeURIComponent(paypalClientId)}` +
-  `&currency=USD&intent=capture`;
-
-  const existingPaypalScripts = Array.from(
-    document.querySelectorAll('script[src*="paypal.com/sdk/js"]')
-  );
-
-  for (const script of existingPaypalScripts) {
-    if (script.src !== sdkUrl) {
-      script.remove();
-      paypalLoaded = false;
-      if (window.paypal) {
-        delete window.paypal;
-      }
-    }
-  }
-
-  const existingExact = document.querySelector(`script[src="${sdkUrl}"]`);
-
-  if (!existingExact) {
-    await new Promise((resolve, reject) => {
-      const script = document.createElement("script");
-      script.src = sdkUrl;
-      script.async = true;
-      script.onload = resolve;
-      script.onerror = reject;
-      document.head.appendChild(script);
-    });
-  } else if (!window.paypal) {
-    await new Promise((resolve, reject) => {
-      existingExact.addEventListener("load", resolve, { once: true });
-      existingExact.addEventListener("error", reject, { once: true });
-    });
-  }
-
-  if (!window.paypal) {
-    throw new Error("PayPal SDK not available");
-  }
-
-  paypalLoaded = true;
-}
-
-async function renderPayPalButtons() {
-  const container = document.getElementById("paypal-button-container");
-  if (!container) return;
-  if (paypalRenderInFlight) return;
-
-  if (cart.length === 0) {
-    resetPayPalButtons();
-    return;
-  }
-
-  try {
-    paypalRenderInFlight = true;
-
-    await ensurePayPalLoaded();
-
-    container.innerHTML = "";
-    paypalButtonsRendered = false;
-
-    const buttons = window.paypal.Buttons({
-      style: {
-        layout: "vertical",
-        shape: "rect",
-        label: "paypal"
-      },
-
-      createOrder: async () => {
-        if (!validateCheckout()) {
-          throw new Error("Checkout form incomplete");
-        }
-
-        const res = await fetch("/api/paypal/create-order", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            cart,
-            customer: getCustomer()
-          })
-        });
-
-        const data = await res.json();
-
-        if (!res.ok) {
-          throw new Error(data.error || "Could not create PayPal order");
-        }
-
-        return data.id;
-      },
-
-      onApprove: async (data) => {
-        const res = await fetch(`/api/paypal/capture-order/${data.orderID}`, {
-          method: "POST"
-        });
-
-        const capture = await res.json();
-
-        if (!res.ok) {
-          alert(capture.error || "PayPal payment failed.");
-          return;
-        }
-
-        alert("PayPal success!");
-        cart = [];
-        saveCart();
-        renderCart();
-        resetPayPalButtons();
-        setSquareStatus("");
-      },
-
-      onError: (err) => {
-        console.error("PayPal error:", err);
-        alert("PayPal error");
-      }
-    });
-
-    if (!buttons.isEligible()) {
-      container.innerHTML = `<p class="muted">PayPal is not available right now.</p>`;
-      return;
-    }
-
-    await buttons.render("#paypal-button-container");
-    paypalButtonsRendered = true;
-  } finally {
-    paypalRenderInFlight = false;
-  }
-}
-        createOrder: async () => {
-          if (!validateCheckout()) {
-            throw new Error("Checkout form incomplete");
-          }
-
-          const res = await fetch("/api/paypal/create-order", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              cart,
-              customer: getCustomer()
-            })
-          });
-
-          const data = await res.json();
-
-          if (!res.ok) {
-            throw new Error(data.error || "Could not create PayPal order");
-          }
-
-          return data.id;
-        },
-
-        onApprove: async (data) => {
-          const res = await fetch(`/api/paypal/capture-order/${data.orderID}`, {
-            method: "POST"
-          });
-
-          const capture = await res.json();
-
-          if (!res.ok) {
-            alert(capture.error || "PayPal payment failed.");
-            return;
-          }
-
-          alert("PayPal success!");
-          cart = [];
-          saveCart();
-          renderCart();
-          resetPayPalButtons();
-          setSquareStatus("");
-        },
-
-        onError: (err) => {
-          console.error("PayPal error:", err);
-          alert("PayPal error");
-        }
-      });
-
-      if (!buttons.isEligible()) {
-        container.innerHTML = `<p class="muted">PayPal is not available right now.</p>`;
-        return;
-      }
-
-      await buttons.render("#paypal-button-container");
-      paypalButtonsRendered = true;
-    } finally {
-      paypalRenderInFlight = false;
     }
   }
 
@@ -659,7 +405,6 @@ async function renderPayPalButtons() {
             cart = [];
             saveCart();
             renderCart();
-            resetPayPalButtons();
           } catch (err) {
             console.error("Square payment error:", err);
             setSquareStatus(err.message || "Payment failed.");
@@ -697,8 +442,6 @@ async function renderPayPalButtons() {
     window.scrollTo({ top: 0, behavior: "smooth" });
 
     if (pageName === "order") {
-      safeRenderPayPal();
-
       requestAnimationFrame(() => {
         initSquare().catch((err) => {
           console.error("Square init error:", err);
