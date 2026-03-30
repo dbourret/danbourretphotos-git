@@ -387,21 +387,24 @@
     try {
       paypalRenderInFlight = true;
 
-      if (!paypalLoaded) {
-        const configRes = await fetch("/api/config/paypal");
-        const config = await configRes.json();
+     if (!paypalLoaded) {
+  const configRes = await fetch("/api/config/paypal");
+  const config = await configRes.json();
 
-        if (!configRes.ok || !config.clientId) {
-          throw new Error(config.error || "Missing PayPal client ID");
-        }
+  if (!configRes.ok || !config.clientId) {
+    throw new Error(config.error || "Missing PayPal client ID");
+  }
 
-        await loadScriptOnce(`https://www.paypal.com/sdk/js?client-id=${encodeURIComponent(config.clientId)}&currency=USD`);
-        paypalLoaded = true;
-      }
+  await loadScriptOnce(
+    `https://www.paypal.com/sdk/js?client-id=${encodeURIComponent(config.clientId)}&currency=USD&disable-funding=paylater`
+  );
 
-      if (!window.paypal) {
-        throw new Error("PayPal SDK not available");
-      }
+  paypalLoaded = true;
+}
+
+if (!window.paypal) {
+  throw new Error("PayPal SDK not available");
+}
 
       if (paypalButtonsRendered) return;
 
