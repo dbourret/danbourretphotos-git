@@ -373,99 +373,91 @@
     }, 150);
   }
 
-  async function renderPayPalButtons() {
-    const container = document.getElementById("paypal-button-container");
-    if (!container) return;
-    if (paypalRenderInFlight) return;
+  async function renderPayPalButtons() 
+  try {
+    paypalRenderInFlight = true;
 
-    if (cart.length === 0) {
-      container.innerHTML = "";
-      paypalButtonsRendered = false;
-      return;
+    if (!paypalLoaded) {
+      const configRes = await fetch("/api/config/paypal");
+      const config = await configRes.json();
+
+      if (!configRes.ok || !config.clientId) {
+        throw new Error(config.error || "Missing PayPal client ID");
+      }
+
+      await loadScriptOnce(
+        `https://www.paypal.com/sdk/js?client-id=${encodeURIComponent(config.clientId)}&currency=USD&disable-funding=paylater`
+      );
+
+      paypalLoaded = true;
     }
 
-    try {
-      paypalRenderInFlight = true;
+    if (!window.paypal) {
+      throw new Error("PayPal SDK not available");
+    }
 
-     if (!paypalLoaded) {
-  const configRes = await fetch("/api/config/paypal");
-  const config = await configRes.json();
+    if (paypalButtonsRendered) return;
 
-  if (!configRes.ok || !config.clientId) {
-    throw new Error(config.error || "Missing PayPal client ID");
-  }
+    container.innerHTML = "";
 
-  await loadScriptOnce(
-    `https://www.paypal.com/sdk/js?client-id=${encodeURIComponent(config.clientId)}&currency=USD&disable-funding=paylater`
-  );
-
-  paypalLoaded = true;
-}
-
-if (!window.paypal) {
-  throw new Error("PayPal SDK not available");
-}
-
-      if (paypalButtonsRendered) return;
-
-      container.innerHTML = "";
-
-      await window.paypal.Buttons({
-        createOrder: async () => {
-          if (!validateCheckout()) {
-            throw new Error("Checkout form incomplete");
-          }
-
-          const res = await fetch("/api/paypal/create-order", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              cart,
-              customer: getCustomer()
-            })
-          });
-
-          const data = await res.json();
-
-          if (!res.ok) {
-            throw new Error(data.error || "Could not create PayPal order");
-          }
-
-          return data.id;
-        },
-
-        onApprove: async (data) => {
-          const res = await fetch(`/api/paypal/capture-order/${data.orderID}`, {
-            method: "POST"
-          });
-
-          const capture = await res.json();
-
-          if (!res.ok) {
-            alert(capture.error || "PayPal payment failed.");
-            return;
-          }
-
-          alert("PayPal success!");
-          cart = [];
-          saveCart();
-          renderCart();
-          paypalButtonsRendered = false;
-          container.innerHTML = "";
-          setSquareStatus("");
-        },
-
-        onError: (err) => {
-          console.error("PayPal error:", err);
-          alert("PayPal error");
+    await window.paypal.Buttons({
+      createOrder: async () => {
+        if (!validateCheckout()) {
+          throw new Error("Checkout form incomplete");
         }
-      }).render("#paypal-button-container");
 
-      paypalButtonsRendered = true;
-    } finally {
-      paypalRenderInFlight = false;
-    }
+        const res = await fetch("/api/paypal/create-order", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            cart,
+            customer: getCustomer()
+          })
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          throw new Error(data.error || "Could not create PayPal order");
+        }
+
+        return data.id;
+      },
+
+      onApprove: async (data) => {
+        const res = await fetch(`/api/paypal/capture-order/${data.orderID}`, {
+          method: "POST"
+        });
+
+        const capture = await res.json();
+
+        if (!res.ok) {
+          alert(capture.error || "PayPal payment failed.");
+          return;
+        }
+
+        alert("PayPal success!");
+        cart = [];
+        saveCart();
+        renderCart();
+        paypalButtonsRendered = false;
+        container.innerHTML = "";
+        setSquareStatus("");
+      },
+
+      onError: (err) => {
+        console.error("PayPal error:", err);
+        alert("PayPal error");
+      }
+    }).render("#paypal-button-container");
+
+    paypalButtonsRendered = true;
+  } catch (err) {
+    console.error("PayPal render error:", err);
+  } finally {
+    paypalRenderInFlight = false;
   }
+}
 
   async function initSquare() {
     if (squareInitPromise) return squareInitPromise;
