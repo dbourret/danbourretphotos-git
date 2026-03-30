@@ -1,13 +1,5 @@
 require("dotenv").config();
 
-console.log("PAYPAL_CLIENT_ID loaded:", !!process.env.PAYPAL_CLIENT_ID);
-console.log(
-  "SQUARE_APP_ID loaded:",
-  !!process.env.SQUARE_APP_ID,
-  "SQUARE_LOCATION_ID loaded:",
-  !!process.env.SQUARE_LOCATION_ID
-);
-
 const express = require("express");
 const path = require("path");
 const crypto = require("crypto");
@@ -15,36 +7,38 @@ const crypto = require("crypto");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// If your structure is:
-// project-root/
-//   public/
-//   nodejs/server.js
-const publicDir = path.join(__dirname, "public");
-
-// If you removed the public folder and moved everything to the root,
-// replace the line above with this instead:
-// const publicDir = path.join(__dirname, "..");
+/*
+  Files are now in the project root, so serve static files from __dirname.
+  Example structure:
+  project-root/
+    index.html
+    js/
+    css/
+    images/
+    server.js
+*/
+const publicDir = __dirname;
 
 app.use((req, res, next) => {
   const csp = [
     "default-src 'self';",
-    "script-src 'self' https://www.paypal.com https://www.sandbox.paypal.com https://sandbox.web.squarecdn.com 'unsafe-inline';",
-    "style-src 'self' https://sandbox.web.squarecdn.com 'unsafe-inline';",
-    "img-src 'self' data: https://www.paypalobjects.com https://sandbox.web.squarecdn.com;",
-    "font-src 'self' data: https:;",
-    "connect-src 'self' https://api-m.sandbox.paypal.com https://www.sandbox.paypal.com https://pci-connect.squareupsandbox.com https://connect.squareupsandbox.com https://o160250.ingest.sentry.io;",
-    "frame-src 'self' https://www.paypal.com https://www.sandbox.paypal.com https://sandbox.web.squarecdn.com;",
-    "child-src 'self' https://www.paypal.com https://www.sandbox.paypal.com https://sandbox.web.squarecdn.com;"
+    "base-uri 'self';",
+    "object-src 'none';",
+    "script-src 'self' 'unsafe-inline' https://www.paypal.com https://www.sandbox.paypal.com https://www.paypalobjects.com https://web.squarecdn.com https://sandbox.web.squarecdn.com;",
+    "style-src 'self' 'unsafe-inline' https://web.squarecdn.com https://sandbox.web.squarecdn.com;",
+    "img-src 'self' data: https://www.paypal.com https://www.paypalobjects.com https://www.sandbox.paypal.com https://web.squarecdn.com https://sandbox.web.squarecdn.com;",
+    "font-src 'self' data: https://www.paypalobjects.com https://web.squarecdn.com https://sandbox.web.squarecdn.com https:;",
+    "connect-src 'self' https://api-m.paypal.com https://api-m.sandbox.paypal.com https://www.paypal.com https://www.sandbox.paypal.com https://connect.squareup.com https://connect.squareupsandbox.com https://pci-connect.squareup.com https://pci-connect.squareupsandbox.com https://web.squarecdn.com https://sandbox.web.squarecdn.com;",
+    "frame-src 'self' https://www.paypal.com https://www.sandbox.paypal.com https://web.squarecdn.com https://sandbox.web.squarecdn.com;",
+    "child-src 'self' https://www.paypal.com https://www.sandbox.paypal.com https://web.squarecdn.com https://sandbox.web.squarecdn.com;"
   ].join(" ");
 
   res.setHeader("Content-Security-Policy", csp);
   next();
 });
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.get("/csp-test", (req, res) => {
-  res.send("CSP test route is coming from this server.js");
-});
 app.use(express.static(publicDir));
 
 function getPayPalBaseUrl() {
