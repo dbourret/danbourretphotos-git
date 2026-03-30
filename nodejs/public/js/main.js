@@ -396,9 +396,9 @@ async function ensurePayPalLoaded() {
     paypalClientId = config.clientId;
   }
 
-  const sdkUrl =
-    `https://www.paypal.com/sdk/js?client-id=${encodeURIComponent(paypalClientId)}` +
-    `&currency=USD&intent=capture&components=buttons&disable-funding=paylater`;
+const sdkUrl =
+  `https://www.paypal.com/sdk/js?client-id=${encodeURIComponent(paypalClientId)}` +
+  `&currency=USD&intent=capture`;
 
   const existingPaypalScripts = Array.from(
     document.querySelectorAll('script[src*="paypal.com/sdk/js"]')
