@@ -592,7 +592,7 @@ label {
 
 /* LIGHTBOX (FIXED) */
 #lightbox {
-  display: none;
+  display: none !important;
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.92);
@@ -602,7 +602,7 @@ label {
 }
 
 #lightbox.active {
-  display: flex;
+  display: flex !important;
 }
 
 #lightbox-img {
@@ -647,7 +647,7 @@ label {
   text-align: center;
   width: 100%;
 }
-.info-list {
+  .info-list {
   margin: 16px 0 0;
   padding-left: 18px;
   color: var(--muted);
