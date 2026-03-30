@@ -1,6 +1,8 @@
 (() => {
   "use strict";
 
+  console.log("main.js loaded");
+
   let cart = [];
   let galleryImages = [];
   let currentLightboxIndex = 0;
@@ -358,6 +360,59 @@
     if (event.key === "ArrowRight") moveLightbox(1);
   });
 
+  document.addEventListener("DOMContentLoaded", function () {
+  const container = document.getElementById("paypal-button-container");
+
+  console.log("paypal:", window.paypal);
+  console.log("container:", container);
+
+  if (!window.paypal) {
+    console.error("PayPal SDK not loaded.");
+    return;
+  }
+
+  if (!container) {
+    console.error("PayPal container not found.");
+    return;
+  }
+
+  paypal.Buttons({
+    style: {
+      layout: "vertical",
+      shape: "rect",
+      label: "paypal",
+      height: 40
+    },
+
+    createOrder: function (data, actions) {
+      return actions.order.create({
+        purchase_units: [
+          {
+            amount: {
+              value: "10.00"
+            }
+          }
+        ]
+      });
+    },
+
+    onApprove: function (data, actions) {
+      return actions.order.capture().then(function (details) {
+        alert("Transaction completed by " + details.payer.name.given_name);
+      });
+    },
+
+    onError: function (err) {
+      console.error("PayPal error:", err);
+    }
+  }).render("#paypal-button-container")
+    .then(function () {
+      console.log("PayPal button rendered.");
+    })
+    .catch(function (err) {
+      console.error("Render failed:", err);
+    });
+});
   async function loadScriptOnce(src) {
     const existing = document.querySelector(`script[src="${src}"]`);
     if (existing) return;

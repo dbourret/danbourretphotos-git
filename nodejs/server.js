@@ -54,6 +54,32 @@ async function getPayPalAccessToken() {
 
   const data = await response.json();
 
+  if (window.paypal) {
+  paypal.Buttons({
+    createOrder: function (data, actions) {
+      return actions.order.create({
+        purchase_units: [
+          {
+            amount: {
+              value: "10.00"
+            }
+          }
+        ]
+      });
+    },
+    onApprove: function (data, actions) {
+      return actions.order.capture().then(function (details) {
+        alert("Transaction completed by " + details.payer.name.given_name);
+      });
+    },
+    onError: function (err) {
+      console.error("PayPal error:", err);
+    }
+  }).render("#paypal-button-container");
+} else {
+  console.error("PayPal SDK did not load.");
+}
+
   if (!response.ok) {
     throw new Error(data.error_description || "Could not get PayPal access token.");
   }
