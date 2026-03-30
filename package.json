@@ -4,9 +4,10 @@
   "description": "Wildlife and nature photography site with cart, PayPal, and Square checkout.",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "node server.js"
-  },
+ "scripts": {
+ "start": "node server.js"
+ }
+}
   "engines": {
     "node": ">=18"
   },
