@@ -17,6 +17,7 @@ app.listen(PORT, "0.0.0.0", () => {
   console.log(`Listening on ${PORT}`);
 });
 
+app.get("/__check", (req, res) => res.status(200).send("OK"));
 
 function getPayPalBaseUrl() {
   return process.env.PAYPAL_MODE === "live"
