@@ -17,7 +17,7 @@ const PORT = process.env.PORT || 3000;
     images/
     server.js
 */
-const publicDir = __dirname;
+const publicDir = path.join(__dirname, "public");
 
 app.use((req, res, next) => {
   const csp = [
