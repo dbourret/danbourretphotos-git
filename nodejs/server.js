@@ -12,11 +12,6 @@ app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
-// Start server
-app.listen(PORT, "0.0.0.0", () => {
-  console.log(`Listening on ${PORT}`);
-});
-
 app.get("/__check", (req, res) => res.status(200).send("OK"));
 
 function getPayPalBaseUrl() {
