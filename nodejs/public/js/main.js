@@ -596,10 +596,6 @@
 
   function showPage(pageName) {
     pages.forEach((page) => {
-      page.classList.toggle("active", page.id === `#page-${pageName}`.replace("#", ""));
-    });
-
-    pages.forEach((page) => {
       page.classList.toggle("active", page.id === `page-${pageName}`);
     });
 
