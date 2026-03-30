@@ -6,11 +6,16 @@
   let cart = [];
   let galleryImages = [];
   let currentLightboxIndex = 0;
+
   let paypalLoaded = false;
   let paypalButtonsRendered = false;
+  let paypalRenderTimeout = null;
+  let paypalRenderInFlight = false;
+
   let squarePayments = null;
   let squareCard = null;
-  let squareScriptLoaded = false;
+  let squareInitPromise = null;
+  let squareConfig = null;
 
   const pricingOptions = {
     Prints: [
@@ -80,8 +85,6 @@
   const custState = document.getElementById("cust-state");
   const custZip = document.getElementById("cust-zip");
 
-  const squarePayBtn = document.getElementById("square-pay-btn");
-  const squareStatus = document.getElementById("square-status");
   const copyrightYear = document.getElementById("copyright-year");
 
   function loadCart() {
@@ -104,59 +107,38 @@
     return cart.reduce((sum, item) => sum + item.price * (item.qty || 1), 0);
   }
 
-  function showPage(pageName) {
-    pages.forEach((page) => {
-      page.classList.toggle("active", page.id === `page-${pageName}`);
-    });
-
-    navLinks.forEach((link) => {
-      link.classList.toggle("active", link.dataset.page === pageName);
-    });
-
-    if (window.location.hash !== `#${pageName}`) {
-      history.replaceState(null, "", `#${pageName}`);
-    }
-
-    window.scrollTo({ top: 0, behavior: "smooth" });
-
-    if (pageName === "order") {
-      renderPayPalButtons().catch(console.error);
-      initSquare().catch(console.error);
-    }
+  function getCustomer() {
+    return {
+      name: custName?.value.trim() || "",
+      email: custEmail?.value.trim() || "",
+      phone: custPhone?.value.trim() || "",
+      address: custAddress?.value.trim() || "",
+      city: custCity?.value.trim() || "",
+      state: custState?.value.trim() || "",
+      zip: custZip?.value.trim() || ""
+    };
   }
 
-  navLinks.forEach((link) => {
-    link.addEventListener("click", (event) => {
-      event.preventDefault();
-      showPage(link.dataset.page);
-    });
-  });
+  function validateCheckout() {
+    const c = getCustomer();
 
-  pageButtons.forEach((button) => {
-    button.addEventListener("click", () => {
-      showPage(button.dataset.pageTarget);
-    });
-  });
-
-  function resetOrderSummary() {
-    if (orderFormat) orderFormat.value = "";
-    if (orderSize) orderSize.innerHTML = `<option value="">Select size</option>`;
-    if (summaryFormat) summaryFormat.textContent = "—";
-    if (summarySize) summarySize.textContent = "—";
-    if (summaryPrice) summaryPrice.textContent = "—";
-
-    if (orderPhotoImage) {
-      orderPhotoImage.removeAttribute("src");
-      orderPhotoImage.style.display = "none";
-      orderPhotoImage.alt = "Selected photo preview";
+    if (!c.name || !c.email || !c.address || !c.city || !c.state || !c.zip) {
+      alert("Please complete checkout form");
+      return false;
     }
 
-    if (orderPhotoTitle) {
-      orderPhotoTitle.textContent = "Selected Photo";
+    if (cart.length === 0) {
+      alert("Cart is empty");
+      return false;
     }
 
-    if (orderPhotoCategory) {
-      orderPhotoCategory.textContent = "";
+    return true;
+  }
+
+  function setSquareStatus(message) {
+    const statusContainer = document.getElementById("payment-status-container");
+    if (statusContainer) {
+      statusContainer.textContent = message || "";
     }
   }
 
@@ -194,34 +176,6 @@
     if (summaryPrice) summaryPrice.textContent = selected.price;
   });
 
-  function getCustomer() {
-    return {
-      name: custName?.value.trim() || "",
-      email: custEmail?.value.trim() || "",
-      phone: custPhone?.value.trim() || "",
-      address: custAddress?.value.trim() || "",
-      city: custCity?.value.trim() || "",
-      state: custState?.value.trim() || "",
-      zip: custZip?.value.trim() || ""
-    };
-  }
-
-  function validateCheckout() {
-    const c = getCustomer();
-
-    if (!c.name || !c.email || !c.address || !c.city || !c.state || !c.zip) {
-      alert("Please complete checkout form");
-      return false;
-    }
-
-    if (cart.length === 0) {
-      alert("Cart is empty");
-      return false;
-    }
-
-    return true;
-  }
-
   function renderCart() {
     if (!cartItemsContainer || !cartTotalEl) return;
 
@@ -229,10 +183,13 @@
       cartItemsContainer.innerHTML = `<p class="muted">Your cart is empty.</p>`;
       cartTotalEl.textContent = "$0.00";
       paypalButtonsRendered = false;
+      setSquareStatus("");
       return;
     }
 
-    cartItemsContainer.innerHTML = cart.map((item) => `
+    cartItemsContainer.innerHTML = cart
+      .map(
+        (item) => `
       <div class="cart-item">
         <img src="${item.image}" alt="${item.photo}">
         <div class="cart-item-details">
@@ -251,7 +208,9 @@
           <button type="button" data-id="${item.id}" class="remove-btn">Remove</button>
         </div>
       </div>
-    `).join("");
+    `
+      )
+      .join("");
 
     cartTotalEl.textContent = formatMoney(getCartTotal());
 
@@ -264,7 +223,7 @@
         saveCart();
         renderCart();
         paypalButtonsRendered = false;
-        renderPayPalButtons().catch(console.error);
+        safeRenderPayPal();
       });
     });
 
@@ -274,7 +233,7 @@
         saveCart();
         renderCart();
         paypalButtonsRendered = false;
-        renderPayPalButtons().catch(console.error);
+        safeRenderPayPal();
       });
     });
   }
@@ -305,7 +264,7 @@
     saveCart();
     renderCart();
     paypalButtonsRendered = false;
-    renderPayPalButtons().catch(console.error);
+    safeRenderPayPal();
     alert("Added to cart.");
   });
 
@@ -314,7 +273,13 @@
     saveCart();
     renderCart();
     paypalButtonsRendered = false;
-    renderPayPalButtons().catch(console.error);
+
+    const paypalContainer = document.getElementById("paypal-button-container");
+    if (paypalContainer) {
+      paypalContainer.innerHTML = "";
+    }
+
+    setSquareStatus("");
   });
 
   function openLightbox(index) {
@@ -360,59 +325,6 @@
     if (event.key === "ArrowRight") moveLightbox(1);
   });
 
-  document.addEventListener("DOMContentLoaded", function () {
-  const container = document.getElementById("paypal-button-container");
-
-  console.log("paypal:", window.paypal);
-  console.log("container:", container);
-
-  if (!window.paypal) {
-    console.error("PayPal SDK not loaded.");
-    return;
-  }
-
-  if (!container) {
-    console.error("PayPal container not found.");
-    return;
-  }
-
-  paypal.Buttons({
-    style: {
-      layout: "vertical",
-      shape: "rect",
-      label: "paypal",
-      height: 40
-    },
-
-    createOrder: function (data, actions) {
-      return actions.order.create({
-        purchase_units: [
-          {
-            amount: {
-              value: "10.00"
-            }
-          }
-        ]
-      });
-    },
-
-    onApprove: function (data, actions) {
-      return actions.order.capture().then(function (details) {
-        alert("Transaction completed by " + details.payer.name.given_name);
-      });
-    },
-
-    onError: function (err) {
-      console.error("PayPal error:", err);
-    }
-  }).render("#paypal-button-container")
-    .then(function () {
-      console.log("PayPal button rendered.");
-    })
-    .catch(function (err) {
-      console.error("Render failed:", err);
-    });
-});
   async function loadScriptOnce(src) {
     const existing = document.querySelector(`script[src="${src}"]`);
     if (existing) return;
@@ -426,146 +338,271 @@
     });
   }
 
+  async function getSquareConfig() {
+    if (squareConfig) return squareConfig;
+
+    const res = await fetch("/api/config/square");
+    const data = await res.json();
+
+    if (!res.ok || !data.appId || !data.locationId) {
+      throw new Error(data.error || "Missing Square config");
+    }
+
+    squareConfig = data;
+    return squareConfig;
+  }
+
+  async function destroySquareCard() {
+    if (squareCard) {
+      try {
+        await squareCard.destroy();
+      } catch (err) {
+        console.warn("Could not destroy existing Square card instance:", err);
+      }
+      squareCard = null;
+    }
+  }
+
+  function safeRenderPayPal() {
+    clearTimeout(paypalRenderTimeout);
+
+    paypalRenderTimeout = setTimeout(() => {
+      renderPayPalButtons().catch((err) => {
+        console.error("PayPal render error:", err);
+      });
+    }, 150);
+  }
+
   async function renderPayPalButtons() {
     const container = document.getElementById("paypal-button-container");
     if (!container) return;
+    if (paypalRenderInFlight) return;
 
-    container.innerHTML = "";
-
-    if (cart.length === 0) return;
-
-    const config = await fetch("/api/config/paypal").then((r) => r.json());
-    if (!config.clientId) return;
-
-    if (!paypalLoaded) {
-      await loadScriptOnce(`https://www.paypal.com/sdk/js?client-id=${config.clientId}&currency=USD`);
-      paypalLoaded = true;
+    if (cart.length === 0) {
+      container.innerHTML = "";
+      paypalButtonsRendered = false;
+      return;
     }
 
-    if (!window.paypal || paypalButtonsRendered) return;
+    try {
+      paypalRenderInFlight = true;
 
-    await window.paypal.Buttons({
-      createOrder: async () => {
-        if (!validateCheckout()) {
-          throw new Error("Checkout form incomplete");
+      if (!paypalLoaded) {
+        const configRes = await fetch("/api/config/paypal");
+        const config = await configRes.json();
+
+        if (!configRes.ok || !config.clientId) {
+          throw new Error(config.error || "Missing PayPal client ID");
         }
 
-        const res = await fetch("/api/paypal/create-order", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            cart,
-            customer: getCustomer()
-          })
-        });
-
-        const data = await res.json();
-
-        if (!res.ok) {
-          throw new Error(data.error || "Could not create PayPal order");
-        }
-
-        return data.id;
-      },
-
-      onApprove: async (data) => {
-        const res = await fetch(`/api/paypal/capture-order/${data.orderID}`, {
-          method: "POST"
-        });
-
-        const capture = await res.json();
-
-        if (!res.ok) {
-          alert(capture.error || "PayPal payment failed.");
-          return;
-        }
-
-        alert("PayPal success!");
-        cart = [];
-        saveCart();
-        renderCart();
-        paypalButtonsRendered = false;
-      },
-
-      onError: (err) => {
-        console.error(err);
-        alert("PayPal error");
+        await loadScriptOnce(`https://www.paypal.com/sdk/js?client-id=${encodeURIComponent(config.clientId)}&currency=USD`);
+        paypalLoaded = true;
       }
-    }).render("#paypal-button-container");
 
-    paypalButtonsRendered = true;
+      if (!window.paypal) {
+        throw new Error("PayPal SDK not available");
+      }
+
+      if (paypalButtonsRendered) return;
+
+      container.innerHTML = "";
+
+      await window.paypal.Buttons({
+        createOrder: async () => {
+          if (!validateCheckout()) {
+            throw new Error("Checkout form incomplete");
+          }
+
+          const res = await fetch("/api/paypal/create-order", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              cart,
+              customer: getCustomer()
+            })
+          });
+
+          const data = await res.json();
+
+          if (!res.ok) {
+            throw new Error(data.error || "Could not create PayPal order");
+          }
+
+          return data.id;
+        },
+
+        onApprove: async (data) => {
+          const res = await fetch(`/api/paypal/capture-order/${data.orderID}`, {
+            method: "POST"
+          });
+
+          const capture = await res.json();
+
+          if (!res.ok) {
+            alert(capture.error || "PayPal payment failed.");
+            return;
+          }
+
+          alert("PayPal success!");
+          cart = [];
+          saveCart();
+          renderCart();
+          paypalButtonsRendered = false;
+          container.innerHTML = "";
+          setSquareStatus("");
+        },
+
+        onError: (err) => {
+          console.error("PayPal error:", err);
+          alert("PayPal error");
+        }
+      }).render("#paypal-button-container");
+
+      paypalButtonsRendered = true;
+    } finally {
+      paypalRenderInFlight = false;
+    }
   }
 
   async function initSquare() {
-    const config = await fetch("/api/config/square").then((r) => r.json());
+    if (squareInitPromise) return squareInitPromise;
 
-    if (!config.appId || !config.locationId) return;
+    squareInitPromise = (async () => {
+      const cardContainer = document.getElementById("card-container");
+      const originalCardButton = document.getElementById("card-button");
+      const statusContainer = document.getElementById("payment-status-container");
 
-    const squareScriptUrl = config.appId.startsWith("sandbox-")
-      ? "https://sandbox.web.squarecdn.com/v1/square.js"
-      : "https://web.squarecdn.com/v1/square.js";
+      if (!cardContainer || !originalCardButton || !statusContainer) {
+        squareInitPromise = null;
+        return null;
+      }
 
-    if (!squareScriptLoaded) {
-      await loadScriptOnce(squareScriptUrl);
-      squareScriptLoaded = true;
+      setSquareStatus("");
+
+      if (!window.Square) {
+        console.error("Square.js failed to load");
+        setSquareStatus("Payment form unavailable. Please refresh.");
+        squarePayments = null;
+        await destroySquareCard();
+        squareInitPromise = null;
+        return null;
+      }
+
+      try {
+        const config = await getSquareConfig();
+
+        if (!squarePayments) {
+          squarePayments = window.Square.payments(config.appId, config.locationId);
+        }
+
+        await destroySquareCard();
+
+        cardContainer.innerHTML = "";
+        squareCard = await squarePayments.card();
+        await squareCard.attach("#card-container");
+
+        const newButton = originalCardButton.cloneNode(true);
+        originalCardButton.parentNode.replaceChild(newButton, originalCardButton);
+
+        newButton.addEventListener("click", async () => {
+          try {
+            if (!validateCheckout()) return;
+            if (!squareCard) throw new Error("Card is not initialized");
+
+            setSquareStatus("Processing payment...");
+
+            const result = await squareCard.tokenize();
+
+            if (result.status !== "OK") {
+              console.error("Square tokenization details:", result);
+              throw new Error(result.errors?.[0]?.message || "Tokenization failed");
+            }
+
+            const res = await fetch("/api/square/create-payment", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                sourceId: result.token,
+                cart,
+                customer: getCustomer()
+              })
+            });
+
+            const data = await res.json();
+
+            if (!res.ok) {
+              throw new Error(data.error || "Square payment failed");
+            }
+
+            setSquareStatus("Payment successful.");
+            cart = [];
+            saveCart();
+            renderCart();
+            paypalButtonsRendered = false;
+
+            const paypalContainer = document.getElementById("paypal-button-container");
+            if (paypalContainer) {
+              paypalContainer.innerHTML = "";
+            }
+          } catch (err) {
+            console.error("Square payment error:", err);
+            setSquareStatus(err.message || "Payment failed.");
+          }
+        });
+
+        squareInitPromise = null;
+        return squareCard;
+      } catch (err) {
+        console.error("Square init failed:", err);
+        setSquareStatus("Payment form unavailable.");
+        squarePayments = null;
+        await destroySquareCard();
+        squareInitPromise = null;
+        return null;
+      }
+    })();
+
+    return squareInitPromise;
+  }
+
+  function showPage(pageName) {
+    pages.forEach((page) => {
+      page.classList.toggle("active", page.id === `page-${pageName}`);
+    });
+
+    navLinks.forEach((link) => {
+      link.classList.toggle("active", link.dataset.page === pageName);
+    });
+
+    if (window.location.hash !== `#${pageName}`) {
+      history.replaceState(null, "", `#${pageName}`);
     }
 
-    if (!squarePayments) {
-      squarePayments = window.Square.payments(config.appId, config.locationId);
-    }
+    window.scrollTo({ top: 0, behavior: "smooth" });
 
-    if (!squareCard) {
-      squareCard = await squarePayments.card();
-      await squareCard.attach("#card-container");
+    if (pageName === "order") {
+      safeRenderPayPal();
+
+      requestAnimationFrame(() => {
+        initSquare().catch((err) => {
+          console.error("Square init error:", err);
+          setSquareStatus("Payment form unavailable.");
+        });
+      });
     }
   }
 
-  squarePayBtn?.addEventListener("click", async () => {
-    try {
-      if (!validateCheckout()) return;
+  navLinks.forEach((link) => {
+    link.addEventListener("click", (event) => {
+      event.preventDefault();
+      showPage(link.dataset.page);
+    });
+  });
 
-      await initSquare();
-
-      if (!squareCard) {
-        throw new Error("Square card form not initialized.");
-      }
-
-      if (squareStatus) squareStatus.textContent = "Processing payment...";
-
-      const result = await squareCard.tokenize();
-
-      if (result.status !== "OK") {
-        throw new Error("Card error");
-      }
-
-      const res = await fetch("/api/square/payment", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          sourceId: result.token,
-          cart,
-          customer: getCustomer()
-        })
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.error || "Square payment failed.");
-      }
-
-      alert("Square payment success!");
-      cart = [];
-      saveCart();
-      renderCart();
-      if (squareStatus) squareStatus.textContent = "Payment successful.";
-    } catch (error) {
-      console.error(error);
-      if (squareStatus) squareStatus.textContent = error.message || "Payment failed.";
-      alert(error.message || "Payment failed.");
-    }
+  pageButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      showPage(button.dataset.pageTarget);
+    });
   });
 
   const App = {
@@ -588,16 +625,12 @@
         }
       }
 
-      resetOrderSummary();
+      if (orderFormat) orderFormat.value = "";
+      populateSizeOptions("");
 
-      if (orderPhotoTitle) orderPhotoTitle.textContent = photo.title || "Selected Photo";
-      if (orderPhotoCategory) orderPhotoCategory.textContent = photo.category || "";
-
-      if (orderPhotoImage && photo.src) {
-        orderPhotoImage.src = photo.src;
-        orderPhotoImage.alt = photo.title || "Selected photo";
-        orderPhotoImage.style.display = "block";
-      }
+      if (summaryFormat) summaryFormat.textContent = "—";
+      if (summarySize) summarySize.textContent = "—";
+      if (summaryPrice) summaryPrice.textContent = "—";
 
       showPage("order");
     },
@@ -633,17 +666,6 @@
         }
       }
 
-      resetOrderSummary();
-
-      if (orderPhotoTitle) orderPhotoTitle.textContent = item.photo;
-      if (orderPhotoCategory) orderPhotoCategory.textContent = item.category;
-
-      if (orderPhotoImage && item.image) {
-        orderPhotoImage.src = item.image;
-        orderPhotoImage.alt = item.photo;
-        orderPhotoImage.style.display = "block";
-      }
-
       if (orderFormat) {
         orderFormat.value = "Prints";
         populateSizeOptions("Prints");
@@ -663,14 +685,18 @@
 
   window.App = App;
 
-  loadCart();
-  renderCart();
+  document.addEventListener("DOMContentLoaded", () => {
+    loadCart();
+    renderCart();
 
-  if (copyrightYear) {
-    copyrightYear.textContent = new Date().getFullYear();
-  }
+    if (copyrightYear) {
+      copyrightYear.textContent = new Date().getFullYear();
+    }
 
-  const initialPage = (window.location.hash || "#home").replace("#", "");
-  const validPages = ["home", "gallery", "pricing", "contact", "order"];
-  showPage(validPages.includes(initialPage) ? initialPage : "home");
+    const initialPage = (window.location.hash || "#home").replace("#", "");
+    const validPages = ["home", "gallery", "pricing", "contact", "order"];
+    const pageToShow = validPages.includes(initialPage) ? initialPage : "home";
+
+    showPage(pageToShow);
+  });
 })();

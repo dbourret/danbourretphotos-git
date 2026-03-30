@@ -1,18 +1,51 @@
+require("dotenv").config();
+
+console.log("PAYPAL_CLIENT_ID loaded:", !!process.env.PAYPAL_CLIENT_ID);
+console.log(
+  "SQUARE_APP_ID loaded:",
+  !!process.env.SQUARE_APP_ID,
+  "SQUARE_LOCATION_ID loaded:",
+  !!process.env.SQUARE_LOCATION_ID
+);
+
 const express = require("express");
 const path = require("path");
+const crypto = require("crypto");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Serve static files (CSS, JS, images, etc.)
-app.use(express.static(path.join(__dirname, "public")));
+// If your structure is:
+// project-root/
+//   public/
+//   nodejs/server.js
+const publicDir = path.join(__dirname, "public");
 
-// Single root route
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "index.html"));
+// If you removed the public folder and moved everything to the root,
+// replace the line above with this instead:
+// const publicDir = path.join(__dirname, "..");
+
+app.use((req, res, next) => {
+  const csp = [
+    "default-src 'self';",
+    "script-src 'self' https://www.paypal.com https://www.sandbox.paypal.com https://sandbox.web.squarecdn.com 'unsafe-inline';",
+    "style-src 'self' https://sandbox.web.squarecdn.com 'unsafe-inline';",
+    "img-src 'self' data: https://www.paypalobjects.com https://sandbox.web.squarecdn.com;",
+    "font-src 'self' data: https:;",
+    "connect-src 'self' https://api-m.sandbox.paypal.com https://www.sandbox.paypal.com https://pci-connect.squareupsandbox.com https://connect.squareupsandbox.com https://o160250.ingest.sentry.io;",
+    "frame-src 'self' https://www.paypal.com https://www.sandbox.paypal.com https://sandbox.web.squarecdn.com;",
+    "child-src 'self' https://www.paypal.com https://www.sandbox.paypal.com https://sandbox.web.squarecdn.com;"
+  ].join(" ");
+
+  res.setHeader("Content-Security-Policy", csp);
+  next();
 });
-
-app.get("/__check", (req, res) => res.status(200).send("OK"));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.get("/csp-test", (req, res) => {
+  res.send("CSP test route is coming from this server.js");
+});
+app.use(express.static(publicDir));
 
 function getPayPalBaseUrl() {
   return process.env.PAYPAL_MODE === "live"
@@ -20,28 +53,15 @@ function getPayPalBaseUrl() {
     : "https://api-m.sandbox.paypal.com";
 }
 
-function getSquareBaseUrl() {
-  return process.env.SQUARE_MODE === "live"
-    ? "https://connect.squareup.com"
-    : "https://connect.squareupsandbox.com";
-}
-
-function calculateCartTotal(cart = []) {
-  return cart.reduce((sum, item) => {
-    const price = Number(item.price) || 0;
-    const qty = Number(item.qty) || 1;
-    return sum + price * qty;
-  }, 0);
-}
-
-function toCents(amount) {
-  return Math.round(Number(amount) * 100);
-}
-
 async function getPayPalAccessToken() {
-  const auth = Buffer.from(
-    `${process.env.PAYPAL_CLIENT_ID}:${process.env.PAYPAL_CLIENT_SECRET}`
-  ).toString("base64");
+  const clientId = process.env.PAYPAL_CLIENT_ID;
+  const clientSecret = process.env.PAYPAL_CLIENT_SECRET;
+
+  if (!clientId || !clientSecret) {
+    throw new Error("Missing PayPal credentials");
+  }
+
+  const auth = Buffer.from(`${clientId}:${clientSecret}`).toString("base64");
 
   const response = await fetch(`${getPayPalBaseUrl()}/v1/oauth2/token`, {
     method: "POST",
@@ -54,37 +74,33 @@ async function getPayPalAccessToken() {
 
   const data = await response.json();
 
-  if (window.paypal) {
-  paypal.Buttons({
-    createOrder: function (data, actions) {
-      return actions.order.create({
-        purchase_units: [
-          {
-            amount: {
-              value: "10.00"
-            }
-          }
-        ]
-      });
-    },
-    onApprove: function (data, actions) {
-      return actions.order.capture().then(function (details) {
-        alert("Transaction completed by " + details.payer.name.given_name);
-      });
-    },
-    onError: function (err) {
-      console.error("PayPal error:", err);
-    }
-  }).render("#paypal-button-container");
-} else {
-  console.error("PayPal SDK did not load.");
-}
-
-  if (!response.ok) {
-    throw new Error(data.error_description || "Could not get PayPal access token.");
+  if (!response.ok || !data.access_token) {
+    throw new Error(
+      data.error_description || data.error || "Failed to get PayPal access token"
+    );
   }
 
   return data.access_token;
+}
+
+function calculateCartTotal(cart) {
+  return (cart || []).reduce((sum, item) => {
+    const price = Number(item.price || 0);
+    const qty = Number(item.qty || 1);
+    return sum + price * qty;
+  }, 0);
+}
+
+function cartToPayPalItems(cart) {
+  return (cart || []).map((item) => ({
+    name: String(item.photo || "Photo Print").slice(0, 127),
+    description: `${item.format || ""} ${item.size || ""}`.trim().slice(0, 127),
+    quantity: String(Number(item.qty || 1)),
+    unit_amount: {
+      currency_code: "USD",
+      value: Number(item.price || 0).toFixed(2)
+    }
+  }));
 }
 
 app.get("/api/config/paypal", (req, res) => {
@@ -102,14 +118,33 @@ app.get("/api/config/square", (req, res) => {
 
 app.post("/api/paypal/create-order", async (req, res) => {
   try {
-    const { cart = [] } = req.body;
-    const total = calculateCartTotal(cart).toFixed(2);
+    const cart = req.body.cart || [];
+    const total = calculateCartTotal(cart);
 
-    if (!cart.length || Number(total) <= 0) {
-      return res.status(400).json({ error: "Cart is empty." });
+    if (!Array.isArray(cart) || cart.length === 0 || total <= 0) {
+      return res.status(400).json({ error: "Cart is empty or invalid" });
     }
 
     const accessToken = await getPayPalAccessToken();
+
+    const orderPayload = {
+      intent: "CAPTURE",
+      purchase_units: [
+        {
+          amount: {
+            currency_code: "USD",
+            value: total.toFixed(2),
+            breakdown: {
+              item_total: {
+                currency_code: "USD",
+                value: total.toFixed(2)
+              }
+            }
+          },
+          items: cartToPayPalItems(cart)
+        }
+      ]
+    };
 
     const response = await fetch(`${getPayPalBaseUrl()}/v2/checkout/orders`, {
       method: "POST",
@@ -117,38 +152,37 @@ app.post("/api/paypal/create-order", async (req, res) => {
         Authorization: `Bearer ${accessToken}`,
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({
-        intent: "CAPTURE",
-        purchase_units: [
-          {
-            amount: {
-              currency_code: "USD",
-              value: total
-            }
-          }
-        ]
-      })
+      body: JSON.stringify(orderPayload)
     });
 
     const data = await response.json();
 
-    if (!response.ok) {
-      return res.status(500).json({ error: data.message || "Could not create PayPal order." });
+    if (!response.ok || !data.id) {
+      return res.status(response.status || 500).json({
+        error: data.message || data.error_description || "Could not create PayPal order",
+        details: data
+      });
     }
 
-    res.json(data);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: error.message || "PayPal order creation failed." });
+    res.json({ id: data.id });
+  } catch (err) {
+    console.error("PayPal create-order error:", err);
+    res.status(500).json({ error: err.message || "PayPal create-order failed" });
   }
 });
 
-app.post("/api/paypal/capture-order/:orderId", async (req, res) => {
+app.post("/api/paypal/capture-order/:orderID", async (req, res) => {
   try {
+    const orderID = req.params.orderID;
+
+    if (!orderID) {
+      return res.status(400).json({ error: "Missing order ID" });
+    }
+
     const accessToken = await getPayPalAccessToken();
 
     const response = await fetch(
-      `${getPayPalBaseUrl()}/v2/checkout/orders/${req.params.orderId}/capture`,
+      `${getPayPalBaseUrl()}/v2/checkout/orders/${orderID}/capture`,
       {
         method: "POST",
         headers: {
@@ -161,74 +195,86 @@ app.post("/api/paypal/capture-order/:orderId", async (req, res) => {
     const data = await response.json();
 
     if (!response.ok) {
-      return res.status(500).json({ error: data.message || "Could not capture PayPal order." });
+      return res.status(response.status || 500).json({
+        error: data.message || data.error_description || "Could not capture PayPal order",
+        details: data
+      });
     }
 
     res.json(data);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: error.message || "PayPal capture failed." });
+  } catch (err) {
+    console.error("PayPal capture-order error:", err);
+    res.status(500).json({ error: err.message || "PayPal capture failed" });
   }
 });
 
-app.post("/api/square/payment", async (req, res) => {
+app.post("/api/square/create-payment", async (req, res) => {
   try {
-    const { sourceId, cart = [], customer = {} } = req.body;
+    const sourceId = req.body.sourceId;
+    const cart = req.body.cart || [];
+    const customer = req.body.customer || {};
     const total = calculateCartTotal(cart);
 
     if (!sourceId) {
-      return res.status(400).json({ error: "Missing Square payment token." });
+      return res.status(400).json({ error: "Missing sourceId" });
     }
 
-    if (!cart.length || total <= 0) {
-      return res.status(400).json({ error: "Cart is empty." });
+    if (!Array.isArray(cart) || cart.length === 0 || total <= 0) {
+      return res.status(400).json({ error: "Cart is empty or invalid" });
     }
 
-    const response = await fetch(`${getSquareBaseUrl()}/v2/payments`, {
+    if (!process.env.SQUARE_ACCESS_TOKEN || !process.env.SQUARE_LOCATION_ID) {
+      return res.status(500).json({ error: "Missing Square server credentials" });
+    }
+
+    const squareBaseUrl =
+      process.env.SQUARE_MODE === "live"
+        ? "https://connect.squareup.com"
+        : "https://connect.squareupsandbox.com";
+
+    const squareBody = {
+      source_id: sourceId,
+      idempotency_key: crypto.randomUUID(),
+      location_id: process.env.SQUARE_LOCATION_ID,
+      amount_money: {
+        amount: Math.round(total * 100),
+        currency: "USD"
+      },
+      note: customer.email ? `Photo order for ${customer.email}` : "Photo order"
+    };
+
+    const response = await fetch(`${squareBaseUrl}/v2/payments`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${process.env.SQUARE_ACCESS_TOKEN}`,
         "Content-Type": "application/json",
-        "Square-Version": "2025-01-23"
+        "Square-Version": "2025-10-16"
       },
-      body: JSON.stringify({
-        source_id: sourceId,
-        idempotency_key: crypto.randomUUID(),
-        amount_money: {
-          amount: toCents(total),
-          currency: "USD"
-        },
-        autocomplete: true,
-        buyer_email_address: customer.email || undefined,
-        billing_address: {
-          address_line_1: customer.address || undefined,
-          locality: customer.city || undefined,
-          administrative_district_level_1: customer.state || undefined,
-          postal_code: customer.zip || undefined,
-          country: "US"
-        }
-      })
+      body: JSON.stringify(squareBody)
     });
 
     const data = await response.json();
 
     if (!response.ok) {
-      return res.status(500).json({
-        error: data.errors?.[0]?.detail || "Square payment failed."
+      return res.status(response.status || 500).json({
+        error:
+          (data.errors && data.errors[0] && data.errors[0].detail) ||
+          "Square payment failed",
+        details: data
       });
     }
 
     res.json(data);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: error.message || "Square payment failed." });
+  } catch (err) {
+    console.error("Square create-payment error:", err);
+    res.status(500).json({ error: err.message || "Square create-payment failed" });
   }
 });
 
 app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "index.html"));
+  res.sendFile(path.join(publicDir, "index.html"));
 });
 
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`Server running at http://localhost:${PORT}`);
 });
