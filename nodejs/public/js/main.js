@@ -284,7 +284,8 @@
 
   function moveLightbox(direction) {
     if (galleryImages.length === 0) return;
-    currentLightboxIndex = (currentLightboxIndex + direction + galleryImages.length) % galleryImages.length;
+    currentLightboxIndex =
+      (currentLightboxIndex + direction + galleryImages.length) % galleryImages.length;
     openLightbox(currentLightboxIndex);
   }
 
@@ -309,14 +310,32 @@
   async function getSquareConfig() {
     if (squareConfig) return squareConfig;
 
-    const res = await fetch("/api/config/square");
-    const data = await res.json();
+    let res;
+    try {
+      res = await fetch("/api/config/square", {
+        method: "GET",
+        headers: { Accept: "application/json" }
+      });
+    } catch {
+      throw new Error("Could not reach Square config endpoint");
+    }
+
+    let data = {};
+    try {
+      data = await res.json();
+    } catch {
+      throw new Error("Square config endpoint did not return valid JSON");
+    }
 
     if (!res.ok || !data.appId || !data.locationId) {
       throw new Error(data.error || "Missing Square config");
     }
 
-    squareConfig = data;
+    squareConfig = {
+      appId: data.appId,
+      locationId: data.locationId
+    };
+
     return squareConfig;
   }
 
@@ -358,9 +377,7 @@
       try {
         const config = await getSquareConfig();
 
-        if (!squarePayments) {
-          squarePayments = window.Square.payments(config.appId, config.locationId);
-        }
+        squarePayments = window.Square.payments(config.appId, config.locationId);
 
         await destroySquareCard();
 
@@ -376,6 +393,7 @@
             if (!validateCheckout()) return;
             if (!squareCard) throw new Error("Card is not initialized");
 
+            newButton.disabled = true;
             setSquareStatus("Processing payment...");
 
             const result = await squareCard.tokenize();
@@ -395,19 +413,26 @@
               })
             });
 
-            const data = await res.json();
+            let data = {};
+            try {
+              data = await res.json();
+            } catch {
+              throw new Error("Payment endpoint did not return valid JSON");
+            }
 
             if (!res.ok) {
               throw new Error(data.error || "Square payment failed");
             }
 
-            setSquareStatus("Payment successful.");
+            setSquareStatus("Payment successful. Your order has been received.");
             cart = [];
             saveCart();
             renderCart();
           } catch (err) {
             console.error("Square payment error:", err);
             setSquareStatus(err.message || "Payment failed.");
+          } finally {
+            newButton.disabled = false;
           }
         });
 
@@ -415,7 +440,7 @@
         return squareCard;
       } catch (err) {
         console.error("Square init failed:", err);
-        setSquareStatus("Payment form unavailable.");
+        setSquareStatus(err.message || "Payment form unavailable.");
         squarePayments = null;
         await destroySquareCard();
         squareInitPromise = null;
@@ -445,7 +470,7 @@
       requestAnimationFrame(() => {
         initSquare().catch((err) => {
           console.error("Square init error:", err);
-          setSquareStatus("Payment form unavailable.");
+          setSquareStatus(err.message || "Payment form unavailable.");
         });
       });
     }

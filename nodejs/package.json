@@ -4,13 +4,14 @@
  "description": "Wildlife and nature photography site with cart, PayPal, and Square checkout.",
  "main": "server.js",
  "scripts": {
- "start": "node server.js"
+  "start": "node server.js"
  },
  "engines": {
- "node": "18.x"
+  "node": "18.x"
  },
  "dependencies": {
- "dotenv": "^16.4.5",
- "express": "^4.21.2"
+  "dotenv": "^16.4.5",
+  "express": "^4.21.2",
+  "nodemailer": "^8.0.4"
  }
 }

@@ -3,21 +3,14 @@ require("dotenv").config();
 const express = require("express");
 const path = require("path");
 const crypto = require("crypto");
+const nodemailer = require("nodemailer");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-
-/*
-  Files are now in the project root, so serve static files from __dirname.
-  Example structure:
-  project-root/
-    index.html
-    js/
-    css/
-    images/
-    server.js
-*/
 const publicDir = path.join(__dirname, "public");
+
+console.log("__dirname =", __dirname);
+console.log("publicDir =", publicDir);
 
 app.use((req, res, next) => {
   const csp = [
@@ -95,6 +88,78 @@ function cartToPayPalItems(cart) {
       value: Number(item.price || 0).toFixed(2)
     }
   }));
+}
+
+function buildOrderEmail({ paymentId, cart, customer, total }) {
+  const itemLines = (cart || [])
+    .map((item) => {
+      const qty = Number(item.qty || 1);
+      const price = Number(item.price || 0);
+      const lineTotal = (qty * price).toFixed(2);
+      return [
+        `${qty} x ${item.photo || "Photo Print"}`,
+        `Format: ${item.format || "N/A"}`,
+        `Size: ${item.size || "N/A"}`,
+        `Unit Price: $${price.toFixed(2)}`,
+        `Line Total: $${lineTotal}`
+      ].join("\n");
+    })
+    .join("\n\n");
+
+  return `
+New paid order received
+
+Payment ID: ${paymentId || "N/A"}
+Total Paid: $${Number(total || 0).toFixed(2)}
+
+Customer
+--------
+Name: ${customer.name || ""}
+Email: ${customer.email || ""}
+Phone: ${customer.phone || ""}
+
+Shipping Address
+----------------
+${customer.address || ""}
+${customer.city || ""}, ${customer.state || ""} ${customer.zip || ""}
+
+Items
+-----
+${itemLines || "No items found"}
+  `.trim();
+}
+
+async function sendOrderEmail({ paymentId, cart, customer, total }) {
+  if (
+    !process.env.SMTP_HOST ||
+    !process.env.SMTP_PORT ||
+    !process.env.SMTP_USER ||
+    !process.env.SMTP_PASS ||
+    !process.env.ORDER_FROM_EMAIL ||
+    !process.env.ORDER_NOTIFY_EMAIL
+  ) {
+    throw new Error("Missing SMTP or order email environment variables");
+  }
+
+  const transporter = nodemailer.createTransport({
+    host: process.env.SMTP_HOST,
+    port: Number(process.env.SMTP_PORT),
+    secure: Number(process.env.SMTP_PORT) === 465,
+    auth: {
+      user: process.env.SMTP_USER,
+      pass: process.env.SMTP_PASS
+    }
+  });
+
+  const text = buildOrderEmail({ paymentId, cart, customer, total });
+
+  await transporter.sendMail({
+    from: process.env.ORDER_FROM_EMAIL,
+    to: process.env.ORDER_NOTIFY_EMAIL,
+    subject: `New paid order ${paymentId || ""}`.trim(),
+    text,
+    replyTo: customer.email || undefined
+  });
 }
 
 app.get("/api/config/paypal", (req, res) => {
@@ -204,7 +269,7 @@ app.post("/api/paypal/capture-order/:orderID", async (req, res) => {
 
 app.post("/api/square/create-payment", async (req, res) => {
   try {
-    const sourceId = req.body.sourceId;
+    const sourceId = String(req.body.sourceId || "").trim();
     const cart = req.body.cart || [];
     const customer = req.body.customer || {};
     const total = calculateCartTotal(cart);
@@ -215,6 +280,17 @@ app.post("/api/square/create-payment", async (req, res) => {
 
     if (!Array.isArray(cart) || cart.length === 0 || total <= 0) {
       return res.status(400).json({ error: "Cart is empty or invalid" });
+    }
+
+    if (
+      !customer.name ||
+      !customer.email ||
+      !customer.address ||
+      !customer.city ||
+      !customer.state ||
+      !customer.zip
+    ) {
+      return res.status(400).json({ error: "Customer info is incomplete" });
     }
 
     if (!process.env.SQUARE_ACCESS_TOKEN || !process.env.SQUARE_LOCATION_ID) {
@@ -233,6 +309,15 @@ app.post("/api/square/create-payment", async (req, res) => {
       amount_money: {
         amount: Math.round(total * 100),
         currency: "USD"
+      },
+      autocomplete: true,
+      buyer_email_address: customer.email,
+      billing_address: {
+        address_line_1: customer.address,
+        locality: customer.city,
+        administrative_district_level_1: customer.state,
+        postal_code: customer.zip,
+        country: "US"
       },
       note: customer.email ? `Photo order for ${customer.email}` : "Photo order"
     };
@@ -257,6 +342,15 @@ app.post("/api/square/create-payment", async (req, res) => {
         details: data
       });
     }
+
+    const paymentId = data?.payment?.id || "";
+
+    await sendOrderEmail({
+      paymentId,
+      cart,
+      customer,
+      total
+    });
 
     res.json(data);
   } catch (err) {
