@@ -424,10 +424,12 @@
               throw new Error(data.error || "Square payment failed");
             }
 
-            setSquareStatus("Payment successful. Your order has been received.");
-            cart = [];
-            saveCart();
-            renderCart();
+            // Clear cart
+            localStorage.removeItem("cart");
+            window.location.href = "/success.html";
+
+          // Redirect to success page
+            window.location.href = "/success.html";
           } catch (err) {
             console.error("Square payment error:", err);
             setSquareStatus(err.message || "Payment failed.");

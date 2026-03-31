@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Order Submitted | Dan Bourret Photos</title>
+  <style>
+    :root {
+      --bg: #090909;
+      --panel: rgba(255,255,255,0.05);
+      --panel-strong: #111111;
+      --border: rgba(255,255,255,0.10);
+      --text: #f5f5f5;
+      --muted: #b8b8b8;
+      --gold: #d6b36a;
+      --gold-soft: rgba(214,179,106,0.18);
+      --max: 1180px;
+      --radius: 24px;
+      --shadow: 0 24px 70px rgba(0,0,0,0.35);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      min-height: 100%;
+      margin: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      font-family: Georgia, "Times New Roman", serif;
+      background:
+        radial-gradient(circle at top, rgba(214,179,106,0.10), transparent 28%),
+        var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .container {
+      width: min(var(--max), calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      backdrop-filter: blur(10px);
+      background: rgba(9,9,9,0.9);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 18px 0;
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 1.2rem;
+      letter-spacing: 0.08em;
+      font-weight: 600;
+    }
+
+    .brand p {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 0.9rem;
+      font-family: Arial, sans-serif;
+    }
+
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 22px;
+      font-family: Arial, sans-serif;
+      font-size: 0.95rem;
+      color: #dfdfdf;
+    }
+
+    nav a {
+      transition: color 0.2s ease;
+    }
+
+    nav a:hover {
+      color: var(--gold);
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 48px 0 56px;
+    }
+
+    .card {
+      position: relative;
+      border: 1px solid var(--border);
+      background: var(--panel);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      padding: 42px 34px;
+      width: min(760px, 100%);
+      text-align: center;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      padding: 8px 14px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: rgba(255,255,255,0.04);
+      color: #e6d6ae;
+      font-family: Arial, sans-serif;
+      font-size: 0.74rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+    }
+
+    .success-title {
+      margin: 18px 0 0;
+      font-size: clamp(2.4rem, 4vw, 3.8rem);
+      line-height: 1.02;
+      font-weight: 600;
+    }
+
+    .lead,
+    .muted,
+    .btn,
+    .footer {
+      font-family: Arial, sans-serif;
+    }
+
+    .lead {
+      margin: 22px auto 0;
+      max-width: 620px;
+      color: var(--muted);
+      font-size: 1.05rem;
+      line-height: 1.9;
+    }
+
+    .success-note {
+      margin: 28px auto 0;
+      padding: 18px;
+      max-width: 520px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: rgba(255,255,255,0.03);
+    }
+
+    .muted {
+      color: var(--muted);
+      margin: 0;
+    }
+
+    .button-row {
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      margin-top: 28px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 14px 22px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.04);
+      color: white;
+      font-size: 0.96rem;
+      cursor: pointer;
+      transition: 0.22s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 14px 28px rgba(0,0,0,0.2);
+    }
+
+    .btn-primary {
+      background: linear-gradient(180deg, #f4dfac, #d6b36a);
+      color: #171717;
+      border: none;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+    }
+
+    .btn-primary:hover {
+      box-shadow: 0 10px 25px rgba(214,179,106,0.35);
+    }
+
+    .footer {
+      padding: 14px 0 20px;
+      color: var(--muted);
+      font-size: 0.92rem;
+      text-align: center;
+    }
+
+    @media (max-width: 720px) {
+      .container {
+        width: min(var(--max), calc(100% - 22px));
+      }
+
+      .header-inner {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      nav {
+        gap: 14px;
+        font-size: 0.88rem;
+      }
+
+      .card {
+        padding: 28px 22px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="brand">
+        <h1>Dan Bourret Photos</h1>
+        <p>Wildlife & Nature Photography</p>
+      </div>
+      <nav>
+        <a href="/">Home</a>
+        <a href="/#gallery">Gallery</a>
+        <a href="/#pricing">Pricing</a>
+        <a href="/#contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <div class="card">
+        <span class="eyebrow">Order Confirmed</span>
+        <h1 class="success-title">Transaction Successfully Submitted</h1>
+        <p class="lead">
+          Thank you for your order. Your payment was successfully processed, and your
+          request has been submitted for fulfillment.
+        </p>
+
+        <div class="success-note">
+          <p class="muted">
+            You can return to the homepage whenever you're ready.
+          </p>
+        </div>
+
+        <div class="button-row">
+          <a class="btn btn-primary" href="/">Return to Homepage</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      &copy; <span id="copyright-year"></span> Dan Bourret Photos. All rights reserved.
+    </div>
+  </footer>
+
+  <script>
+    window.history.replaceState(null, "", "/success.html");
+    document.getElementById("copyright-year").textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
