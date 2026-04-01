@@ -19,6 +19,14 @@ console.log("publicDir =", publicDir);
 
 app.disable("x-powered-by");
 
+console.log("SQUARE_ENVIRONMENT =", process.env.SQUARE_ENVIRONMENT);
+console.log("SQUARE_APP_ID =", process.env.SQUARE_APP_ID);
+console.log("SQUARE_LOCATION_ID =", process.env.SQUARE_LOCATION_ID);
+console.log(
+  "SQUARE_ACCESS_TOKEN starts with =",
+  process.env.SQUARE_ACCESS_TOKEN?.slice(0, 12)
+);
+
 /* =============================
    REQUEST LOGGING
 ============================= */
