@@ -91,6 +91,18 @@ const transporter = nodemailer.createTransport({
   auth: {
     user: process.env.SMTP_USER,
     pass: process.env.SMTP_PASS
+  },
+  pool: true,          // ✅ reuse connections
+  maxConnections: 1,   // ✅ prevent spam connections
+  maxMessages: 50      // optional
+});
+
+// run once when server starts
+transporter.verify((err, success) => {
+  if (err) {
+    console.error("SMTP ERROR:", err);
+  } else {
+    console.log("SMTP server is ready");
   }
 });
 

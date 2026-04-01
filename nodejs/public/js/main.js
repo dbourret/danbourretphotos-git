@@ -421,8 +421,15 @@ let currentIndex = 0;
 function closeLightbox() {
   const lightbox = document.getElementById("lightbox");
   if (lightbox) {
-    lightbox.classList.remove("active");
+    lightbox.style.display = "none";
   }
+
+  document.body.classList.remove("lightbox-open");
+  document.body.style.overflow = "";
+
+  document.querySelectorAll("header, .site-header, .navbar, nav").forEach((el) => {
+    el.style.visibility = "";
+  });
 }
 
 function ensureLightbox() {
@@ -434,113 +441,185 @@ function ensureLightbox() {
     document.body.appendChild(lightbox);
   }
 
- lightbox.innerHTML = `
-  <div id="lightbox-content" style="position:relative; display:inline-block; max-width:92vw; max-height:92vh;">
-    <button
-      id="lightbox-close"
-      type="button"
-      aria-label="Close image"
-      style="
-        position:absolute;
-        top:10px;
-        right:10px;
-        z-index:100001;
-        width:42px;
-        height:42px;
-        border:none;
-        border-radius:999px;
-        background:rgba(0,0,0,0.65);
-        color:#fff;
-        font-size:28px;
-        line-height:1;
-        cursor:pointer;
-      "
-    >&times;</button>
+  lightbox.style.position = "fixed";
+  lightbox.style.inset = "0";
+  lightbox.style.width = "100vw";
+  lightbox.style.height = "100vh";
+  lightbox.style.display = "none";
+  lightbox.style.alignItems = "center";
+  lightbox.style.justifyContent = "center";
+  lightbox.style.background = "rgba(0,0,0,0.94)";
+  lightbox.style.padding = "0";
+  lightbox.style.zIndex = "100000";
+  lightbox.style.boxSizing = "border-box";
 
-    <button
-      id="lightbox-prev"
-      class="lightbox-nav"
-      type="button"
-      aria-label="Previous image"
-      style="
-        position:absolute;
-        left:-64px;
-        top:50%;
-        transform:translateY(-50%);
-      "
-    >&#10094;</button>
-
-    <img
-      id="lightbox-img"
-      alt="Expanded gallery image"
-      style="
-        display:block;
-        max-width:92vw;
-        max-height:92vh;
-        width:auto;
-        height:auto;
-        border-radius:18px;
-      "
-    />
-
-    <button
-      id="lightbox-next"
-      class="lightbox-nav"
-      type="button"
-      aria-label="Next image"
-      style="
-        position:absolute;
-        right:-64px;
-        top:50%;
-        transform:translateY(-50%);
-      "
-    >&#10095;</button>
-
+  lightbox.innerHTML = `
     <div
-      id="lightbox-caption"
+      id="lightbox-content"
       style="
-        margin-top:12px;
-        text-align:center;
-      "
-    ></div>
-  </div>
-`;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100vw;
+      height: 100vh;
+      padding: 8px;
+      box-sizing: border-box;
+"
+>
+      <button
+        id="lightbox-close"
+        type="button"
+        aria-label="Close image"
+        style="
+          position: absolute;
+          top: 14px;
+          right: 14px;
+          z-index: 100001;
+          width: 46px;
+          height: 46px;
+          border: none;
+          border-radius: 999px;
+          background: rgba(0,0,0,0.65);
+          color: #fff;
+          font-size: 30px;
+          line-height: 1;
+          cursor: pointer;
+        "
+      >&times;</button>
 
-  const closeBtn = document.getElementById("lightbox-close");
-  const prevBtn = document.getElementById("lightbox-prev");
-  const nextBtn = document.getElementById("lightbox-next");
-  const img = document.getElementById("lightbox-img");
+      <button
+        id="lightbox-prev"
+        type="button"
+        aria-label="Previous image"
+        style="
+          position: absolute;
+          left: 14px;
+          top: 50%;
+          transform: translateY(-50%);
+          z-index: 100001;
+          width: 48px;
+          height: 48px;
+          border: none;
+          border-radius: 999px;
+          background: rgba(0,0,0,0.55);
+          color: #fff;
+          font-size: 28px;
+          cursor: pointer;
+        "
+      >&#10094;</button>
 
-  const content = document.getElementById("lightbox-content");
+  <img
+  id="lightbox-img"
+  alt="Expanded gallery image"
+  style="
+    display:block;
+    width:100%;
+    height:100%;
+    max-width:100%;
+    max-height:100%;
+    object-fit:contain;
+    border-radius:18px;
+    cursor: zoom-in;
+    transition: transform 0.25s ease;
+    transform-origin: center center;
+  "
+/>
 
-if (window.innerWidth <= 768) {
-  prevBtn.style.left = "8px";
-  nextBtn.style.right = "8px";
+      <button
+        id="lightbox-next"
+        type="button"
+        aria-label="Next image"
+        style="
+          position: absolute;
+          right: 14px;
+          top: 50%;
+          transform: translateY(-50%);
+          z-index: 100001;
+          width: 48px;
+          height: 48px;
+          border: none;
+          border-radius: 999px;
+          background: rgba(0,0,0,0.55);
+          color: #fff;
+          font-size: 28px;
+          cursor: pointer;
+        "
+      >&#10095;</button>
+
+      <div
+        id="lightbox-caption"
+        style="
+          position: absolute;
+          bottom: 14px;
+          left: 50%;
+          transform: translateX(-50%);
+          width: min(90vw, 900px);
+          text-align: center;
+          color: #fff;
+          background: rgba(0,0,0,0.45);
+          padding: 10px 14px;
+          border-radius: 12px;
+        "
+      ></div>
+    </div>
+  `;
+
+  const closeBtn = lightbox.querySelector("#lightbox-close");
+const prevBtn = lightbox.querySelector("#lightbox-prev");
+const nextBtn = lightbox.querySelector("#lightbox-next");
+const img = lightbox.querySelector("#lightbox-img");
+
+if (!closeBtn || !prevBtn || !nextBtn || !img) {
+  console.error("Lightbox elements not found");
+  return;
 }
 
-  closeBtn.onclick = (e) => {
+  let zoomed = false;
+
+  if (window.innerWidth <= 768) {
+    prevBtn.style.left = "8px";
+    nextBtn.style.right = "8px";
+    prevBtn.style.width = "42px";
+    prevBtn.style.height = "42px";
+    nextBtn.style.width = "42px";
+    nextBtn.style.height = "42px";
+  }
+
+  closeBtn.onclick = function (e) {
     e.preventDefault();
     e.stopPropagation();
     closeLightbox();
   };
 
-  prevBtn.onclick = (e) => {
+  prevBtn.onclick = function (e) {
     e.preventDefault();
     e.stopPropagation();
     showLightbox(currentIndex - 1);
   };
 
-  nextBtn.onclick = (e) => {
+  nextBtn.onclick = function (e) {
     e.preventDefault();
     e.stopPropagation();
     showLightbox(currentIndex + 1);
   };
 
-  img.onclick = (e) => {
-    e.stopPropagation();
-  };
+img.onclick = function (e) {
+  e.preventDefault();
+  e.stopPropagation();
 
-  lightbox.onclick = (e) => {
+  zoomed = !zoomed;
+
+  if (zoomed) {
+    img.style.transform = "scale(1.8)";
+    img.style.cursor = "zoom-out";
+  } else {
+    img.style.transform = "scale(1)";
+    img.style.cursor = "zoom-in";
+  }
+};
+
+  lightbox.onclick = function (e) {
     if (e.target === lightbox) {
       closeLightbox();
     }
@@ -559,9 +638,19 @@ function showLightbox(index) {
   const caption = document.getElementById("lightbox-caption");
   const lightbox = document.getElementById("lightbox");
 
+  if (!lightboxImg || !caption || !lightbox) return;
+
   lightboxImg.src = img.src;
+  lightboxImg.style.transform = "scale(1)";
+lightboxImg.style.cursor = "zoom-in";
   caption.textContent = img.dataset.caption || "";
-  lightbox.classList.add("active");
+  lightbox.style.display = "flex";
+  document.body.classList.add("lightbox-open");
+document.body.style.overflow = "hidden";
+
+document.querySelectorAll("header, .site-header, .navbar, nav").forEach((el) => {
+  el.style.visibility = "hidden";
+});
 }
 
 /* =============================
