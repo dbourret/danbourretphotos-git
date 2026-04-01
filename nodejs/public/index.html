@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dan Bourret Photos</title>
@@ -15,41 +15,45 @@
         <h1>Dan Bourret Photos</h1>
         <p>Wildlife · Nature</p>
       </div>
-      <nav>
-        <a href="#home" data-page="home" class="active">Home</a>
-        <a href="#gallery" data-page="gallery">Gallery</a>
-        <a href="#pricing" data-page="pricing">Pricing</a>
-        <a href="#contact" data-page="contact">Contact</a>
-        <a href="#order" data-page="order">Order Summary</a>
-      </nav>
+
+<nav class="site-nav">
+  <a href="#" data-page="home">Home</a>
+  <a href="#" data-page="gallery">Gallery</a>
+  <a href="#" data-page="pricing">Pricing</a>
+  <a href="#" data-page="contact">Contact</a>
+  <a href="#" data-page="order">Cart</a>
+</nav>
     </div>
   </header>
 
   <main>
-    <section id="page-home" class="page active">
-      <div class="container hero-grid">
-        <div>
-          <span class="eyebrow">Premium wildlife collection</span>
-          <h2 class="hero-title">Photography that brings nature and beauty into your space.</h2>
-          <p class="lead">
-            Dan Bourret Photos captures vivid wildlife and nature moments designed for collectors, home decor, and premium wall art.
-          </p>
-          <div class="button-row">
-            <button class="btn btn-primary" data-page-target="gallery">View Gallery</button>
-            <button class="btn btn-primary" data-page-target="pricing">Explore Pricing</button>
-            <button class="btn btn-primary" data-page-target="contact">Get in Touch</button>
-          </div>
-        </div>
+<section id="page-home" class="page active">
+  <div class="container hero-grid">
+    <div class="hero-copy">
+      <span class="eyebrow">Premium wildlife collection</span>
+      <h2 class="hero-title">Photography that brings nature and beauty into your space.</h2>
+      <p class="lead">
+        Dan Bourret Photos captures vivid wildlife and nature moments designed for collectors, home decor, and premium wall art.
+      </p>
 
-        <div class="image-card">
-          <img src="images/animals/bengal_tiger.jpg" alt="Bengal Tiger" loading="eager" />
-          <div class="image-caption">
-            <strong>Photo taken at Kowiachobee Animal Preserve</strong>
-            <span>2861 4th Ave SE, Naples, FL 34117</span>
-          </div>
+      <div class="button-row">
+        <button class="btn btn-primary" data-page-target="gallery">View Gallery</button>
+        <button class="btn btn-primary" data-page-target="pricing">Explore Pricing</button>
+        <button class="btn btn-primary" data-page-target="contact">Get in Touch</button>
+      </div>
+    </div>
+
+    <div class="hero-media">
+      <div class="image-card">
+        <img src="images/animals/bengal_tiger.jpg" alt="Bengal Tiger" loading="eager" />
+        <div class="image-caption">
+          <strong>Photo taken at Kowiachobee Animal Preserve</strong>
+          <span>2861 4th Ave SE, Naples, FL 34117</span>
         </div>
       </div>
-    </section>
+    </div>
+  </div>
+</section>
 
     <section id="page-gallery" class="page">
       <div class="container">
@@ -57,7 +61,7 @@
           <span>Gallery</span>
           <h2>Featured wildlife collection</h2>
           <p>
-            Browse the collection below. If you see something you like, click it to buy!
+            Browse the collection below. Click a photo to preview it larger, or add it to your cart.
           </p>
         </div>
 
@@ -80,7 +84,6 @@
               <div class="pricing-grid">
                 <div class="pricing-header">Size</div>
                 <div class="pricing-header">Price</div>
-
                 <div>11×14</div><div>$20.79</div>
                 <div>12×18</div><div>$23.99</div>
                 <div>16×20</div><div>$31.99</div>
@@ -97,7 +100,6 @@
               <div class="pricing-grid">
                 <div class="pricing-header">Size</div>
                 <div class="pricing-header">Price</div>
-
                 <div>8×10</div><div>$63.99</div>
                 <div>11×14</div><div>$79.99</div>
                 <div>12×12</div><div>$79.99</div>
@@ -115,7 +117,6 @@
               <div class="pricing-grid">
                 <div class="pricing-header">Size</div>
                 <div class="pricing-header">Price</div>
-
                 <div>5×7</div><div>$47.99</div>
                 <div>8×10</div><div>$59.19</div>
                 <div>11×14</div><div>$95.99</div>
@@ -134,7 +135,6 @@
               <div class="pricing-grid">
                 <div class="pricing-header">Size</div>
                 <div class="pricing-header">Price</div>
-
                 <div>5×7</div><div>$39.99</div>
                 <div>8×10</div><div>$63.99</div>
                 <div>11×14</div><div>$95.99</div>
@@ -175,50 +175,13 @@
       </div>
     </section>
 
-    <section id="page-order" class="page">
-      <div class="container">
-        <div class="section-heading">
-          <span>Order Summary</span>
-          <h2>Customize your order</h2>
-          <p>Select a format and size for the photo you chose.</p>
-        </div>
-
-        <div class="card">
-          <h3 id="cart-photo-title">Selected Photo</h3>
-          <p class="muted" id="cart-photo-category"></p>
-
-          <div class="cart-layout">
-            <div class="cart-preview">
-              <img id="cart-photo-image" alt="Selected photo preview" style="display:none;" />
-            </div>
-
-            <div class="cart-form">
-              <label for="cart-format">Choose a format</label>
-              <select id="cart-format">
-                <option value="">Select format</option>
-                <option value="Prints">Prints</option>
-                <option value="Canvas">Canvas</option>
-                <option value="Metal">Metal</option>
-                <option value="Wood">Wood</option>
-              </select>
-
-              <label for="cart-size">Choose a size and price</label>
-              <select id="cart-size">
-                <option value="">Select size</option>
-              </select>
-
-              <div class="cart-summary">
-                <p><strong>Format:</strong> <span id="summary-format">—</span></p>
-                <p><strong>Selection:</strong> <span id="summary-size">—</span></p>
-                <p><strong>Price:</strong> <span id="summary-price">—</span></p>
-              </div>
-
-              <div class="button-row">
-                <button class="btn btn-primary" id="cart-order-btn">Add To Cart</button>
-              </div>
-            </div>
-          </div>
-        </div>
+<section id="page-order" class="page">
+  <div class="container">
+    <div class="section-heading">
+      <span>Cart</span>
+      <h2>Your Cart</h2>
+      <p>Review your cart and complete any selections before checkout.</p>
+    </div>
 
         <div class="card" id="cart-items-card">
           <h3>Your Cart</h3>
@@ -242,13 +205,13 @@
           </div>
 
           <div class="checkout-actions">
-            <button type="button" class="btn" id="clear-cart-btn">Clear Cart</button>
+            <button type="button" class="btn btn-secondary" id="clear-cart-btn">Clear Cart</button>
           </div>
 
           <div class="payment-block">
             <h4>Pay with Square</h4>
             <div id="card-container"></div>
-            <button id="card-button" type="button">Buy Now</button>
+            <button id="square-pay-btn" class="btn btn-primary" type="button">Pay with Card</button>
             <div id="payment-status-container"></div>
             <p class="muted" id="square-status"></p>
           </div>
@@ -257,16 +220,26 @@
     </section>
   </main>
 
-  <footer class="footer container">
-    &copy; <span id="copyright-year"></span> Dan Bourret Photos. All rights reserved.
+  <footer class="footer">
+    <div class="container">
+      &copy; <span id="copyright-year"></span> Dan Bourret Photos. All rights reserved.
+    </div>
   </footer>
 
-  <div id="lightbox">
+  <div id="lightbox" class="lightbox">
     <button type="button" id="lightbox-prev" class="lightbox-nav" aria-label="Previous image">‹</button>
-    <span id="lightbox-close">×</span>
+    <button type="button" id="lightbox-close" class="lightbox-close" aria-label="Close">×</button>
     <img id="lightbox-img" src="" alt="Preview" />
     <div id="lightbox-caption"></div>
     <button type="button" id="lightbox-next" class="lightbox-nav" aria-label="Next image">›</button>
+  </div>
+
+  <div id="site-modal" class="site-modal" aria-hidden="true">
+    <div class="site-modal-card">
+      <button type="button" id="site-modal-close" class="site-modal-close" aria-label="Close">×</button>
+      <p id="site-modal-message" class="site-modal-message"></p>
+      <div id="site-modal-actions" class="button-row"></div>
+    </div>
   </div>
 
   <script src="https://sandbox.web.squarecdn.com/v1/square.js"></script>

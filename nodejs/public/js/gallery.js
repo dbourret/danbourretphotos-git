@@ -2,15 +2,16 @@ document.addEventListener("DOMContentLoaded", loadGallery);
 
 async function loadGallery() {
   try {
-    const response = await fetch("/data/photos.json");
+    const response = await fetch("data/photos.json");
 
     if (!response.ok) {
       throw new Error("Could not load photos.json");
     }
 
     const photos = await response.json();
-    const grid = document.getElementById("gallery-grid");
+    window.galleryPhotos = photos;
 
+    const grid = document.getElementById("gallery-grid");
     if (!grid) return;
 
     grid.innerHTML = photos.map((photo, index) => `
@@ -30,11 +31,11 @@ async function loadGallery() {
 
           <div class="meta-row">
             <button
-              class="btn btn-primary buy-now-btn"
+              class="btn btn-primary add-to-cart-btn"
               type="button"
-              data-index="${index}"
+              onclick="window.addPhotoToCartByIndex(${index}); return false;"
             >
-              Buy Now
+              Add To Cart
             </button>
           </div>
         </div>
@@ -42,26 +43,17 @@ async function loadGallery() {
     `).join("");
 
     const images = Array.from(grid.querySelectorAll("img"));
-    window.App?.registerGallery(images);
 
-    images.forEach((img, index) => {
-      if (img.complete) {
-        img.classList.add("loaded");
-      } else {
-        img.addEventListener("load", () => {
-          img.classList.add("loaded");
-        });
-      }
+    if (window.App && typeof window.App.registerGallery === "function") {
+      window.App.registerGallery(images);
+    }
 
+    images.forEach((img) => {
       img.addEventListener("click", () => {
-        window.App?.openLightboxByIndex(index);
-      });
-    });
-
-    document.querySelectorAll(".buy-now-btn").forEach((button) => {
-      button.addEventListener("click", () => {
-        const photo = photos[Number(button.dataset.index)];
-        window.App?.buyNowFromGallery(photo);
+        const index = Number(img.dataset.index);
+        if (window.App && typeof window.App.openLightboxByIndex === "function") {
+          window.App.openLightboxByIndex(index);
+        }
       });
     });
   } catch (error) {

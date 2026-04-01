@@ -3,17 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Order Submitted | Dan Bourret Photos</title>
+  <title>Order Confirmed | Dan Bourret Photography</title>
   <style>
     :root {
       --bg: #090909;
       --panel: rgba(255,255,255,0.05);
-      --panel-strong: #111111;
       --border: rgba(255,255,255,0.10);
       --text: #f5f5f5;
       --muted: #b8b8b8;
       --gold: #d6b36a;
-      --gold-soft: rgba(214,179,106,0.18);
       --max: 1180px;
       --radius: 24px;
       --shadow: 0 24px 70px rgba(0,0,0,0.35);
@@ -91,10 +89,6 @@
       color: #dfdfdf;
     }
 
-    nav a {
-      transition: color 0.2s ease;
-    }
-
     nav a:hover {
       color: var(--gold);
     }
@@ -115,8 +109,17 @@
       box-shadow: var(--shadow);
       overflow: hidden;
       padding: 42px 34px;
-      width: min(760px, 100%);
+      width: min(820px, 100%);
       text-align: center;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      opacity: 0.85;
     }
 
     .eyebrow {
@@ -142,30 +145,94 @@
     .lead,
     .muted,
     .btn,
-    .footer {
+    .footer,
+    .detail-label,
+    .detail-value,
+    .section-title,
+    .success-summary-item__title,
+    .success-summary-item__meta,
+    .success-summary-empty {
       font-family: Arial, sans-serif;
     }
 
     .lead {
       margin: 22px auto 0;
-      max-width: 620px;
+      max-width: 640px;
       color: var(--muted);
       font-size: 1.05rem;
       line-height: 1.9;
     }
 
-    .success-note {
-      margin: 28px auto 0;
-      padding: 18px;
-      max-width: 520px;
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      background: rgba(255,255,255,0.03);
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+      margin: 30px 0 0;
+      text-align: left;
     }
 
+    .summary-card,
+    .items-card,
+    .next-step-card {
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      background: rgba(255,255,255,0.03);
+      padding: 18px;
+    }
+
+    .detail-label {
+      color: var(--muted);
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      margin-bottom: 10px;
+    }
+
+    .detail-value {
+      font-size: 1.08rem;
+      color: var(--text);
+      word-break: break-word;
+    }
+
+    .items-card,
+    .next-step-card {
+      margin-top: 18px;
+      text-align: left;
+    }
+
+    .section-title {
+      margin: 0 0 12px;
+      font-size: 1rem;
+      color: #f0e0b0;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .success-items {
+      display: grid;
+      gap: 12px;
+    }
+
+    .success-summary-item {
+      padding: 12px 14px;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 14px;
+      background: rgba(255,255,255,0.025);
+    }
+
+    .success-summary-item__title {
+      font-weight: 700;
+      font-size: 0.98rem;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .success-summary-item__meta,
+    .success-summary-empty,
     .muted {
       color: var(--muted);
-      margin: 0;
+      font-size: 0.95rem;
+      line-height: 1.7;
     }
 
     .button-row {
@@ -173,6 +240,7 @@
       justify-content: center;
       gap: 14px;
       margin-top: 28px;
+      flex-wrap: wrap;
     }
 
     .btn {
@@ -231,6 +299,10 @@
       .card {
         padding: 28px 22px;
       }
+
+      .summary-grid {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
@@ -238,50 +310,97 @@
   <header class="site-header">
     <div class="container header-inner">
       <div class="brand">
-        <h1>Dan Bourret Photos</h1>
-        <p>Wildlife & Nature Photography</p>
+        <h1>Dan Bourret Photography</h1>
+        <p>Wildlife &amp; Nature Photography</p>
       </div>
       <nav>
-        <a href="/">Home</a>
-        <a href="/#gallery">Gallery</a>
-        <a href="/#pricing">Pricing</a>
-        <a href="/#contact">Contact</a>
-      </nav>
+  <a href="/">Home</a>
+  <a href="/?page=gallery">Gallery</a>
+  <a href="/?page=pricing">Pricing</a>
+  <a href="/?page=contact">Contact</a>
+</nav>
     </div>
   </header>
 
   <main>
     <div class="container">
-      <div class="card">
+      <div class="card" data-success-page>
         <span class="eyebrow">Order Confirmed</span>
-        <h1 class="success-title">Transaction Successfully Submitted</h1>
+        <h1 class="success-title">Thank you for your order</h1>
         <p class="lead">
-          Thank you for your order. Your payment was successfully processed, and your
-          request has been submitted for fulfillment.
+          Your payment has been successfully processed and your print request has
+          been received. I’ll review the details and begin fulfillment shortly.
         </p>
 
-        <div class="success-note">
+        <div class="summary-grid">
+          <div class="summary-card">
+            <div class="detail-label">Confirmation</div>
+            <div class="detail-value" id="success-payment-id">Confirmed</div>
+          </div>
+          <div class="summary-card">
+            <div class="detail-label">Order Total</div>
+            <div class="detail-value" id="success-total">Paid</div>
+          </div>
+        </div>
+
+        <div class="items-card">
+          <h2 class="section-title">Your Selection</h2>
+          <div id="success-items" class="success-items">
+            <p class="success-summary-empty">
+              Your order is confirmed and has been sent for fulfillment.
+            </p>
+          </div>
+        </div>
+
+        <div class="next-step-card">
+          <h2 class="section-title">What Happens Next</h2>
           <p class="muted">
-            You can return to the homepage whenever you're ready.
+            Your order details have been submitted for processing. You can continue
+            browsing the gallery or return to the homepage whenever you're ready.
           </p>
         </div>
 
         <div class="button-row">
-          <a class="btn btn-primary" href="/">Return to Homepage</a>
-        </div>
+  <a class="btn btn-primary" href="/?page=gallery">Continue Browsing</a>
+  <a class="btn" href="/">Return Home</a>
+</div>
       </div>
     </div>
   </main>
 
   <footer class="footer">
     <div class="container">
-      &copy; <span id="copyright-year"></span> Dan Bourret Photos. All rights reserved.
+      &copy; <span id="copyright-year"></span> Dan Bourret Photography. All rights reserved.
     </div>
   </footer>
 
+  <script src="js/main.js"></script>
+
   <script>
-    window.history.replaceState(null, "", "/success.html");
-    document.getElementById("copyright-year").textContent = new Date().getFullYear();
-  </script>
+  const order = JSON.parse(localStorage.getItem("lastOrder") || "{}");
+
+  document.getElementById("success-payment-id").textContent =
+    order.paymentId || "Confirmed";
+
+  document.getElementById("success-total").textContent =
+    order.total || "";
+
+  const itemsEl = document.getElementById("success-items");
+
+  if (itemsEl && order.items) {
+    itemsEl.innerHTML = order.items.map((item, index) => `
+  <div class="success-summary-item">
+    <div class="success-summary-item__title">
+      ${index + 1}. ${item.title || "Untitled Photo"}
+    </div>
+    <div class="success-summary-item__meta">
+      Size: ${item.size}<br/>
+      Material: ${item.material}<br/>
+      Finish: ${item.finish}
+    </div>
+  </div>
+`).join("");
+  }
+</script>
 </body>
 </html>
