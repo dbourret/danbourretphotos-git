@@ -447,6 +447,7 @@ const squareClient = new SquareClient({
 app.get("/api/config/square", (req, res) => {
   const appId = process.env.SQUARE_APP_ID;
   const locationId = process.env.SQUARE_LOCATION_ID;
+  const env = String(process.env.SQUARE_ENVIRONMENT || "sandbox").toLowerCase();
 
   if (!appId || !locationId) {
     return res.status(500).json({
@@ -457,7 +458,11 @@ app.get("/api/config/square", (req, res) => {
   return res.json({
     appId,
     locationId,
-    environment: process.env.SQUARE_ENVIRONMENT || "sandbox"
+    environment: env,
+    scriptUrl:
+      env === "production"
+        ? "https://web.squarecdn.com/v1/square.js"
+        : "https://sandbox.web.squarecdn.com/v1/square.js"
   });
 });
 

@@ -1022,6 +1022,28 @@ let squarePayments = null;
 let squareCard = null;
 let squareInitPromise = null;
 
+
+async function loadSquareSdk(scriptUrl) {
+  if (window.Square) return;
+
+  await new Promise((resolve, reject) => {
+    const existing = document.querySelector('script[data-square-sdk="true"]');
+
+    if (existing) {
+      existing.addEventListener("load", resolve, { once: true });
+      existing.addEventListener("error", () => reject(new Error("Failed to load Square SDK")), { once: true });
+      return;
+    }
+
+    const script = document.createElement("script");
+    script.src = scriptUrl;
+    script.async = true;
+    script.dataset.squareSdk = "true";
+    script.onload = resolve;
+    script.onerror = () => reject(new Error(`Failed to load Square SDK from ${scriptUrl}`));
+    document.head.appendChild(script);
+  });
+}
 async function initSquare() {
   const cardContainer = document.getElementById("card-container");
   if (!cardContainer) {
@@ -1034,17 +1056,19 @@ async function initSquare() {
 
   squareInitPromise = (async () => {
     try {
-      if (!window.Square) {
-        throw new Error("Square SDK not loaded");
-      }
-
       const res = await fetch("/api/config/square");
       const config = await res.json();
 
       console.log("Square config:", config);
 
-      if (!res.ok || !config.appId || !config.locationId) {
+      if (!res.ok || !config.appId || !config.locationId || !config.scriptUrl) {
         throw new Error("Missing Square configuration");
+      }
+
+      await loadSquareSdk(config.scriptUrl);
+
+      if (!window.Square) {
+        throw new Error("Square SDK not loaded");
       }
 
       squarePayments = window.Square.payments(config.appId, config.locationId);
