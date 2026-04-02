@@ -257,7 +257,7 @@ ${notes || "None"}
       <div style="max-width:760px;margin:0 auto;background:#0f0f10;border-radius:24px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.18);">
         <div style="padding:28px 32px;background:linear-gradient(180deg,#171717 0%,#101010 100%);border-bottom:1px solid rgba(255,255,255,0.08);">
           <div style="font-size:12px;letter-spacing:0.22em;text-transform:uppercase;color:#d6b36a;margin-bottom:10px;">
-            Dan Bourret Photography
+            Dan Bourret Photos
           </div>
           <h1 style="margin:0;font-size:28px;line-height:1.2;color:#ffffff;">
             New Print Order Received
@@ -353,7 +353,7 @@ console.log("ORDER_NOTIFY_EMAIL:", process.env.ORDER_NOTIFY_EMAIL);
 console.log("Subject:", subject);
 
 const info = await transporter.sendMail({
-  from: `"Dan Bourret Photography" <${process.env.ORDER_FROM_EMAIL}>`,
+  from: `"Dan Bourret Photos" <${process.env.ORDER_FROM_EMAIL}>`,
   to: process.env.ORDER_NOTIFY_EMAIL,
   replyTo:
     customer?.email && customer.email.includes("@")
@@ -366,7 +366,7 @@ const info = await transporter.sendMail({
 
 // Send confirmation email to customer
 if (customer?.email && customer.email.includes("@")) {
-  const customerSubject = "Your Order Confirmation - Dan Bourret Photography";
+  const customerSubject = "Your Order Confirmation - Dan Bourret Photos";
 
   const customerText = `
 Thank you for your order!
@@ -380,7 +380,7 @@ We have received your order and will begin processing it shortly.
 If you have any questions, reply to this email.
 
 Thank you,
-Dan Bourret Photography
+Dan Bourret Photos
   `.trim();
 
   const customerHtml = `
@@ -404,14 +404,14 @@ Dan Bourret Photography
         </p>
 
         <p style="margin-top:30px;">
-          — Dan Bourret Photography
+          — Dan Bourret Photos
         </p>
       </div>
     </div>
   `;
 
   await transporter.sendMail({
-    from: `"Dan Bourret Photography" <${process.env.ORDER_FROM_EMAIL}>`,
+    from: `"Dan Bourret Photos" <${process.env.ORDER_FROM_EMAIL}>`,
     to: customer.email,
     subject: customerSubject,
     text: customerText,
