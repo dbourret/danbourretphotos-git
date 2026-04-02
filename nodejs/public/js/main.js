@@ -1044,7 +1044,7 @@ async function loadSquareSdk(scriptUrl) {
     document.head.appendChild(script);
   });
 }
-a
+
 async function loadSquareSdk(scriptUrl) {
   if (window.Square) return;
 
