@@ -436,7 +436,7 @@ const squareEnvironment =
     : SquareEnvironment.Sandbox;
 
 const squareClient = new SquareClient({
-  token: process.env.SQUARE_ACCESS_TOKEN,/api/config/square
+  token: process.env.SQUARE_ACCESS_TOKEN,
   environment: squareEnvironment
 });
 
