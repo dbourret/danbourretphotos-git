@@ -431,7 +431,7 @@ console.log("Sent from:", process.env.ORDER_FROM_EMAIL);
 ============================= */
 
 const squareEnvironment =
-  process.env.SQUARE_ENVIRONMENT === "production"
+  String(process.env.SQUARE_ENVIRONMENT || "").toLowerCase() === "production"
     ? SquareEnvironment.Production
     : SquareEnvironment.Sandbox;
 

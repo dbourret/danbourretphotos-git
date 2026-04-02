@@ -1044,6 +1044,42 @@ async function loadSquareSdk(scriptUrl) {
     document.head.appendChild(script);
   });
 }
+a
+async function loadSquareSdk(scriptUrl) {
+  if (window.Square) return;
+
+  await new Promise((resolve, reject) => {
+    const existing = document.querySelector('script[data-square-sdk="true"]');
+
+    if (existing) {
+      if (existing.dataset.loaded === "true") {
+        resolve();
+        return;
+      }
+
+      existing.addEventListener("load", () => resolve(), { once: true });
+      existing.addEventListener("error", () => reject(new Error("Failed to load Square SDK")), { once: true });
+      return;
+    }
+
+    const script = document.createElement("script");
+    script.src = scriptUrl;
+    script.async = true;
+    script.dataset.squareSdk = "true";
+
+    script.onload = () => {
+      script.dataset.loaded = "true";
+      resolve();
+    };
+
+    script.onerror = () => {
+      reject(new Error(`Failed to load Square SDK from ${scriptUrl}`));
+    };
+
+    document.head.appendChild(script);
+  });
+}
+
 async function initSquare() {
   const cardContainer = document.getElementById("card-container");
   if (!cardContainer) {
