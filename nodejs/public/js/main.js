@@ -52,45 +52,57 @@ function saveCart(cart) {
   localStorage.setItem("cart", JSON.stringify(cart));
 }
 
-function getPrice(size, material, finish) {
-  const priceTable = {
-    Poster: {
-      "8x10": 25,
-      "11x14": 40,
-      "12x18": 55,
-      "16x20": 75,
-      "24x36": 120
-    },
-    Canvas: {
-      "8x10": 80,
-      "11x14": 110,
-      "12x18": 145,
-      "16x20": 190,
-      "24x36": 320
-    },
-    Metal: {
-      "8x10": 95,
-      "11x14": 130,
-      "12x18": 170,
-      "16x20": 230,
-      "24x36": 380
-    },
-    Wood: {
-      "8x10": 85,
-      "11x14": 120,
-      "12x18": 160,
-      "16x20": 210,
-      "24x36": 340
-    }
-  };
+const PRICING = {
+  Poster: {
+    "11x14": 20.79,
+    "12x18": 23.99,
+    "16x20": 31.99,
+    "20x30": 41.59,
+    "24x36": 51.19
+  },
+  Canvas: {
+    "8x10": 63.99,
+    "11x14": 79.99,
+    "12x12": 79.99,
+    "16x20": 143.99,
+    "20x24": 239.99,
+    "20x30": 271.99
+  },
+  Metal: {
+    "5x7": 47.99,
+    "8x10": 59.19,
+    "11x14": 95.99,
+    "12x12": 95.99,
+    "16x20": 111.99,
+    "20x24": 159.99,
+    "20x30": 207.99
+  },
+  Wood: {
+    "5x7": 39.99,
+    "8x10": 63.99,
+    "11x14": 95.99,
+    "12x12": 95.99,
+    "16x20": 111.99,
+    "20x30": 159.99
+  }
+};
 
-  let basePrice = priceTable[material]?.[size] || 0;
+function getAvailableSizes(material) {
+  return Object.keys(PRICING[material] || {});
+}
+
+function getPrice(size, material, finish) {
+  const basePrice = Number(PRICING[material]?.[size] || 0);
+
+  if (!basePrice) return 0;
+
+  let finalPrice = basePrice;
 
   if (finish === "Glossy") {
-    basePrice += 10;
+    finalPrice += 10;
   }
 
-  return basePrice;
+  return finalPrice;
 }
 
 function formatCurrency(amount) {
@@ -156,6 +168,13 @@ function renderCart() {
 let pendingImage = null;
 let pendingTitle = null;
 
+const FORMAT_OPTIONS = {
+  Poster: getAvailableSizes("Poster"),
+  Canvas: getAvailableSizes("Canvas"),
+  Metal: getAvailableSizes("Metal"),
+  Wood: getAvailableSizes("Wood")
+};
+
 function ensureFormatModal() {
   let modal = document.getElementById("format-modal");
   if (modal) return modal;
@@ -176,49 +195,50 @@ function ensureFormatModal() {
   modal.innerHTML = `
     <div id="format-modal-panel">
       <button id="format-modal-close" type="button" aria-label="Close">×</button>
-      <h2 id="format-modal-title">Choose Your Selections</h2>
+      <h2 id="format-modal-title">Choose Your Print Options</h2>
 
       <div id="format-preview-wrap">
         <img id="modal-preview" alt="Selected photo preview" />
       </div>
 
       <div class="format-field">
-        <label for="modal-size">Size</label>
-        <select id="modal-size">
-          <option value="">Select size</option>
-          <option>8x10</option>
-          <option>11x14</option>
-          <option>12x18</option>
-          <option>16x20</option>
-          <option>24x36</option>
+        <label for="modal-material">Format</label>
+        <select id="modal-material">
+          <option value="">Select format</option>
+          <option value="Poster">Poster</option>
+          <option value="Canvas">Canvas</option>
+          <option value="Metal">Metal</option>
+          <option value="Wood">Wood</option>
         </select>
       </div>
 
       <div class="format-field">
-        <label for="modal-material">Material</label>
-        <select id="modal-material">
-          <option value="">Select material</option>
-          <option>Poster</option>
-          <option>Canvas</option>
-          <option>Metal</option>
-          <option>Wood</option>
+        <label for="modal-size">Size</label>
+        <select id="modal-size" disabled>
+          <option value="">Select size</option>
         </select>
       </div>
 
       <div class="format-field">
         <label for="modal-finish">Finish</label>
-        <select id="modal-finish">
+        <select id="modal-finish" disabled>
           <option value="">Select finish</option>
-          <option>Matte</option>
-          <option>Glossy</option>
+          <option value="Matte">Matte</option>
+          <option value="Glossy">Glossy</option>
         </select>
       </div>
 
       <div id="format-price"></div>
+      <div id="format-error" style="
+  color:#ff6b6b;
+  font-size:0.9rem;
+  margin-bottom:12px;
+  display:none;
+"></div>
 
       <div id="format-actions">
-        <button id="modal-back" type="button">Back to Gallery</button>
-        <button id="modal-checkout" type="button" disabled>Checkout</button>
+        <button id="modal-back" type="button">Cancel</button>
+        <button id="modal-checkout" type="button" disabled>Add To Cart</button>
       </div>
     </div>
   `;
@@ -234,6 +254,7 @@ function ensureFormatModal() {
   const backBtn = document.getElementById("modal-back");
   const checkoutBtn = document.getElementById("modal-checkout");
   const priceEl = document.getElementById("format-price");
+  const errorEl = document.getElementById("format-error");
 
   panel.style.width = "min(620px, 100%)";
   panel.style.maxHeight = "90vh";
@@ -275,28 +296,21 @@ function ensureFormatModal() {
     label.style.fontWeight = "600";
   });
 
-[size, material, finish].forEach((select) => {
-  select.style.width = "100%";
-  select.style.padding = "14px 16px";
-  select.style.borderRadius = "12px";
-  select.style.border = "1px solid rgba(255,255,255,0.18)";
-  select.style.background = "#ffffff";
-  select.style.color = "#111111";
-  select.style.fontSize = "1rem";
-  select.style.boxSizing = "border-box";
-  select.style.appearance = "auto";
-  select.style.webkitAppearance = "menulist";
-  select.style.mozAppearance = "menulist";
-  select.style.outline = "none";
-  select.style.boxShadow = "none";
-});
-
-[size, material, finish].forEach((select) => {
-  Array.from(select.options).forEach((option) => {
-    option.style.backgroundColor = "#ffffff";
-    option.style.color = "#111111";
+  [material, size, finish].forEach((select) => {
+    select.style.width = "100%";
+    select.style.padding = "14px 16px";
+    select.style.borderRadius = "12px";
+    select.style.border = "1px solid rgba(255,255,255,0.18)";
+    select.style.background = "#ffffff";
+    select.style.color = "#111111";
+    select.style.fontSize = "1rem";
+    select.style.boxSizing = "border-box";
+    select.style.appearance = "auto";
+    select.style.webkitAppearance = "menulist";
+    select.style.mozAppearance = "menulist";
+    select.style.outline = "none";
+    select.style.boxShadow = "none";
   });
-});
 
   priceEl.style.margin = "8px 0 18px";
   priceEl.style.fontSize = "1rem";
@@ -310,6 +324,7 @@ function ensureFormatModal() {
     btn.style.cursor = "pointer";
     btn.style.fontSize = "0.95rem";
     btn.style.fontWeight = "600";
+
     if (primary) {
       btn.style.border = "none";
       btn.style.background = "linear-gradient(180deg, #f4dfac, #d6b36a)";
@@ -328,61 +343,264 @@ function ensureFormatModal() {
 
   styleButton(backBtn, false);
   styleButton(checkoutBtn, true);
-  checkoutBtn.disabled = true;
-  checkoutBtn.style.opacity = "0.55";
-
-  function updateCheckoutState() {
-    const ready = size.value && material.value && finish.value;
-
-    checkoutBtn.disabled = !ready;
-    checkoutBtn.style.opacity = ready ? "1" : "0.55";
-
-    if (ready) {
-      const price = getPrice(size.value, material.value, finish.value);
-      priceEl.textContent = `Price: ${formatCurrency(price)}`;
-    } else {
-      priceEl.textContent = "";
-    }
-  }
-
-  [size, material, finish].forEach((select) => {
-    select.addEventListener("change", updateCheckoutState);
-  });
-
-  function closeFormatModal() {
-    modal.style.display = "none";
-    pendingImage = null;
-    pendingTitle = null;
-  }
-
-  closeBtn.onclick = closeFormatModal;
-  backBtn.onclick = closeFormatModal;
 
   checkoutBtn.onclick = () => {
+    if (!material.value || !size.value || !finish.value) {
+  errorEl.style.display = "block";
+
+  if (!material.value) {
+    errorEl.textContent = "Please select a format.";
+  } else if (!size.value) {
+    errorEl.textContent = "Please select a size.";
+  } else if (!finish.value) {
+    errorEl.textContent = "Please select a finish.";
+  }
+
+  return;
+}
     const cart = getCart();
 
-    console.log("pendingTitle before cart push =", pendingTitle);
-
-    cart.push({
+    const newItem = {
   title: pendingTitle || "",
   image: pendingImage,
   size: size.value,
   material: material.value,
   finish: finish.value,
   price: getPrice(size.value, material.value, finish.value)
+};
+
+cart.push(newItem);
+
+saveCart(cart);
+renderCart();
+closeFormatModal();
+showAddToCartSuccess(newItem);
+
+  checkoutBtn.disabled = true;
+  checkoutBtn.style.opacity = "0.55";
+}; // ✅ THIS LINE FIXES EVERYTHING
+
+function populateSizes(selectedMaterial) {
+    size.innerHTML = `<option value="">Select size</option>`;
+
+    const sizes = FORMAT_OPTIONS[selectedMaterial] || [];
+    sizes.forEach((sizeValue) => {
+      const option = document.createElement("option");
+      option.value = sizeValue;
+      option.textContent = sizeValue;
+      size.appendChild(option);
+    });
+  }
+
+ function updateCheckoutState() {
+  if (material.value) {
+    size.disabled = false;
+  } else {
+    size.disabled = true;
+    size.innerHTML = `<option value="">Select size</option>`;
+    size.value = "";
+    finish.disabled = true;
+    finish.value = "";
+  }
+
+  if (material.value && size.value) {
+    finish.disabled = false;
+  } else {
+    finish.disabled = true;
+    finish.value = "";
+  }
+
+  const ready = Boolean(material.value && size.value && finish.value);
+
+  checkoutBtn.disabled = !ready;
+  checkoutBtn.style.opacity = ready ? "1" : "0.55";
+
+  if (ready) {
+    const price = getPrice(size.value, material.value, finish.value);
+    priceEl.textContent = `Price: ${formatCurrency(price)}`;
+    errorEl.style.display = "none";
+  } else {
+    priceEl.textContent = "";
+  }
+}
+
+function closeFormatModal() {
+  modal.style.display = "none";
+  pendingImage = null;
+  pendingTitle = null;
+}
+
+  material.addEventListener("change", () => {
+  errorEl.style.display = "none";
+  populateSizes(material.value);
+  size.value = "";
+  size.disabled = !material.value;
+
+  finish.value = "";
+  finish.disabled = true;
+
+  updateCheckoutState();
 });
 
-    saveCart(cart);
-    renderCart();
-    closeFormatModal();
-    showPage("order");
+size.addEventListener("change", () => {
+  errorEl.style.display = "none";
+  finish.value = "";
+  updateCheckoutState();
+});
+
+finish.addEventListener("change", () => {
+  errorEl.style.display = "none";
+  updateCheckoutState();
+});
+
+function showAddToCartSuccess(item) {
+  let successModal = document.getElementById("cart-success-modal");
+
+  const getSuccessPanelHtml = () => `
+    <h3 style="margin-bottom:12px;">Added to Cart</h3>
+    <p style="margin-bottom:18px; color:#ccc;">
+      Your print has been added to your cart.
+    </p>
+
+    <div style="
+      display:flex;
+      gap:14px;
+      align-items:center;
+      text-align:left;
+      background:rgba(255,255,255,0.04);
+      border:1px solid rgba(255,255,255,0.08);
+      border-radius:16px;
+      padding:14px;
+      margin-bottom:22px;
+    ">
+      <img
+        src="${item?.image || ""}"
+        alt="${item?.title || "Selected print"}"
+        style="
+          width:88px;
+          height:88px;
+          object-fit:cover;
+          border-radius:12px;
+          display:block;
+          flex-shrink:0;
+        "
+      />
+
+      <div style="min-width:0; flex:1;">
+        <div style="
+          font-size:1rem;
+          font-weight:600;
+          color:#fff;
+          margin-bottom:8px;
+        ">
+          ${item?.title || "Photo Print"}
+        </div>
+
+        <div style="font-size:0.92rem; color:#d7d7d7; margin-bottom:4px;">
+          <strong style="color:#fff;">Format:</strong> ${item?.material || ""}
+        </div>
+
+        <div style="font-size:0.92rem; color:#d7d7d7; margin-bottom:4px;">
+          <strong style="color:#fff;">Size:</strong> ${item?.size || ""}
+        </div>
+
+        <div style="font-size:0.92rem; color:#d7d7d7; margin-bottom:6px;">
+          <strong style="color:#fff;">Finish:</strong> ${item?.finish || ""}
+        </div>
+
+        <div style="
+          font-size:1rem;
+          font-weight:700;
+          color:#f4dfac;
+        ">
+          ${formatCurrency(item?.price || 0)}
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex; gap:12px; justify-content:center;">
+      <button id="continue-shopping">Back to Gallery</button>
+      <button id="go-to-cart">View Cart</button>
+    </div>
+  `;
+
+  const wireSuccessModal = () => {
+    const successPanel = successModal.querySelector("#cart-success-panel");
+    const continueBtn = successModal.querySelector("#continue-shopping");
+    const cartBtn = successModal.querySelector("#go-to-cart");
+
+    if (!successPanel || !continueBtn || !cartBtn) return;
+
+    styleButton(continueBtn, false);
+    styleButton(cartBtn, true);
+
+    continueBtn.onclick = () => {
+      successModal.style.opacity = "0";
+      successPanel.style.opacity = "0";
+      successPanel.style.transform = "translateY(10px) scale(0.98)";
+      setTimeout(() => {
+        successModal.style.display = "none";
+      }, 200);
+    };
+
+    cartBtn.onclick = () => {
+      successModal.style.display = "none";
+      showPage("order");
+    };
+
+    requestAnimationFrame(() => {
+      successModal.style.opacity = "1";
+      successPanel.style.opacity = "1";
+      successPanel.style.transform = "translateY(0) scale(1)";
+    });
   };
 
-  modal.addEventListener("click", (e) => {
-    if (e.target === modal) {
-      closeFormatModal();
+  if (!successModal) {
+    successModal = document.createElement("div");
+    successModal.id = "cart-success-modal";
+
+    successModal.style.position = "fixed";
+    successModal.style.inset = "0";
+    successModal.style.zIndex = "99999";
+    successModal.style.display = "flex";
+    successModal.style.alignItems = "center";
+    successModal.style.justifyContent = "center";
+    successModal.style.background = "rgba(0,0,0,0.6)";
+    successModal.style.backdropFilter = "blur(8px)";
+    successModal.style.opacity = "0";
+    successModal.style.transition = "opacity 0.2s ease";
+
+    successModal.innerHTML = `
+      <div id="cart-success-panel" style="
+        background:#111;
+        border-radius:20px;
+        padding:28px;
+        width:min(460px, 92%);
+        text-align:center;
+        border:1px solid rgba(255,255,255,0.1);
+        transform:translateY(10px) scale(0.98);
+        opacity:0;
+        transition:all 0.2s ease;
+      ">
+        ${getSuccessPanelHtml()}
+      </div>
+    `;
+
+    document.body.appendChild(successModal);
+    wireSuccessModal();
+  } else {
+    successModal.style.display = "flex";
+
+    const successPanel = successModal.querySelector("#cart-success-panel");
+    if (successPanel) {
+      successPanel.innerHTML = getSuccessPanelHtml();
     }
-  });
+
+    wireSuccessModal();
+  }
+}
+
+  
 
   return modal;
 }
@@ -394,16 +612,19 @@ function openFormatModal(image, title = "") {
   pendingTitle = title;
 
   const preview = document.getElementById("modal-preview");
-  const size = document.getElementById("modal-size");
   const material = document.getElementById("modal-material");
+  const size = document.getElementById("modal-size");
   const finish = document.getElementById("modal-finish");
   const checkoutBtn = document.getElementById("modal-checkout");
   const priceEl = document.getElementById("format-price");
 
   preview.src = image;
-  size.value = "";
   material.value = "";
+  size.innerHTML = `<option value="">Select size</option>`;
+  size.value = "";
+  size.disabled = true;
   finish.value = "";
+  finish.disabled = true;
   checkoutBtn.disabled = true;
   checkoutBtn.style.opacity = "0.55";
   priceEl.textContent = "";
@@ -1221,8 +1442,8 @@ console.log("Parsed payment data:", paymentData);
 document.addEventListener("DOMContentLoaded", () => {
   bindPageNavigation();
   const params = new URLSearchParams(window.location.search);
-const page = params.get("page") || "home";
-showPage(page);
+  const page = params.get("page") || "home";
+  showPage(page);
   renderCart();
 
   const squarePayBtn = document.getElementById("square-pay-btn");
@@ -1242,4 +1463,4 @@ showPage(page);
   if (copyrightYear) {
     copyrightYear.textContent = new Date().getFullYear();
   }
-});
+}); 
