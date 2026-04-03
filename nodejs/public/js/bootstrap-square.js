@@ -16,7 +16,6 @@
     });
 
     const mainScript = document.createElement("script");
-    mainScript.src = "js/main.js";
     document.body.appendChild(mainScript);
   } catch (err) {
     console.error("Bootstrap Square error:", err);
