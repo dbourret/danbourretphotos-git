@@ -80,6 +80,39 @@ app.get("/api/health", (req, res) => {
   });
 });
 
+app.post("/api/contact", async (req, res) => {
+  try {
+    const name = String(req.body.name || "").trim();
+    const email = String(req.body.email || "").trim();
+    const subject = String(req.body.subject || "").trim();
+    const message = String(req.body.message || "").trim();
+
+    if (!name || !email || !message) {
+      return res.status(400).json({
+        error: "Name, email, and message are required."
+      });
+    }
+
+    await sendContactInquiry({
+      name,
+      email,
+      subject,
+      message
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: "Inquiry sent successfully."
+    });
+  } catch (error) {
+    console.error("Contact inquiry error:", error);
+
+    return res.status(500).json({
+      error: "Failed to send inquiry."
+    });
+  }
+});
+
 /* =============================
    EMAIL
 ============================= */
@@ -103,14 +136,6 @@ transporter.verify((err, success) => {
     console.error("SMTP ERROR:", err);
   } else {
     console.log("SMTP server is ready");
-  }
-});
-
-transporter.verify((error, success) => {
-  if (error) {
-    console.error("SMTP verify failed:", error);
-  } else {
-    console.log("SMTP server is ready to send mail");
   }
 });
 
@@ -202,7 +227,165 @@ function formatSelectionsForHtml(selections) {
     .join("");
 }
 
-async function sendOrderNotification({
+async function sendContactInquiry({ name, email, subject, message }) {
+  if (!process.env.ORDER_NOTIFY_EMAIL || !process.env.ORDER_FROM_EMAIL) {
+    throw new Error("Missing ORDER_NOTIFY_EMAIL or ORDER_FROM_EMAIL");
+  }
+
+  const safeName = name || "Not provided";
+  const safeEmail = email || "Not provided";
+  const safeSubject = subject || "General Inquiry";
+  const safeMessage = message || "";
+  
+  const receivedAt = new Date().toLocaleString("en-US", {
+  dateStyle: "medium",
+  timeStyle: "short"
+});
+
+  const mailSubject = `Contact Inquiry • ${safeSubject}`;
+
+  const textBody = `
+New contact inquiry received
+
+Name: ${safeName}
+Email: ${safeEmail}
+Subject: ${safeSubject}
+
+Message:
+${safeMessage}
+  `.trim();
+
+  const htmlBody = `
+  <div style="margin:0;padding:24px;background:#f5f5f5;font-family:Arial,Helvetica,sans-serif;color:#111827;">
+    <div style="max-width:720px;margin:0 auto;background:#0f0f10;border-radius:24px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.18);">
+
+      <!-- Header -->
+      <div style="padding:28px 32px;background:linear-gradient(180deg,#171717 0%,#101010 100%);border-bottom:1px solid rgba(255,255,255,0.08);">
+        <div style="font-size:12px;letter-spacing:0.22em;text-transform:uppercase;color:#d6b36a;margin-bottom:10px;">
+          Dan Bourret Photos
+        </div>
+        <h1 style="margin:0;font-size:28px;line-height:1.2;color:#ffffff;">
+          New Contact Inquiry
+        </h1>
+        <p style="margin:10px 0 0;color:#d1d5db;font-size:15px;line-height:1.7;">
+          A visitor submitted the contact form on your website.
+        </p>
+      </div>
+
+      <!-- Content -->
+      <div style="padding:28px 32px;background:#faf7f1;">
+
+        <!-- Contact Details -->
+        <div style="padding:18px;border:1px solid #eadfca;border-radius:16px;background:#ffffff;margin-bottom:18px;">
+          <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8b7355;margin-bottom:10px;">
+            Contact Details
+          </div>
+          <div style="font-size:14px;line-height:1.8;color:#374151;">
+            <div><strong>Name:</strong> ${safeName}</div>
+            <div><strong>Email:</strong> ${safeEmail}</div>
+            <div><strong>Subject:</strong> ${safeSubject}</div>
+            <div><strong>Received:</strong> ${receivedAt}
+})}</div>
+          </div>
+        </div>
+
+        <!-- Message -->
+        <div style="padding:18px;border:1px solid #eadfca;border-radius:16px;background:#ffffff;">
+          <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8b7355;margin-bottom:10px;">
+            Message
+          </div>
+          <div style="font-size:14px;line-height:1.8;color:#374151;white-space:pre-wrap;">
+            ${safeMessage}
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+`;
+
+  await transporter.sendMail({
+    from: `"Dan Bourret Photos" <${process.env.ORDER_FROM_EMAIL}>`,
+    to: process.env.ORDER_NOTIFY_EMAIL,
+    replyTo: safeEmail.includes("@") ? safeEmail : process.env.ORDER_FROM_EMAIL,
+    subject: mailSubject,
+    text: textBody,
+    html: htmlBody
+  });
+
+  // Send confirmation email to customer
+if (safeEmail.includes("@")) {
+  await transporter.sendMail({
+    from: `"Dan Bourret Photos" <${process.env.ORDER_FROM_EMAIL}>`,
+    to: safeEmail,
+    subject: "We received your inquiry - Dan Bourret Photos",
+    text: `
+Thank you for reaching out.
+
+Your inquiry has been received, and I’ll get back to you as soon as possible.
+
+Subject: ${safeSubject}
+Received: ${new Date().toLocaleString("en-US", {
+  dateStyle: "medium",
+  timeStyle: "short"
+})}
+
+Dan Bourret Photos
+    `.trim(),
+    html: `
+      <div style="margin:0;padding:24px;background:#f5f5f5;font-family:Arial,Helvetica,sans-serif;color:#111827;">
+        <div style="max-width:720px;margin:0 auto;background:#0f0f10;border-radius:24px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.18);">
+          <div style="padding:28px 32px;background:linear-gradient(180deg,#171717 0%,#101010 100%);border-bottom:1px solid rgba(255,255,255,0.08);">
+            <div style="font-size:12px;letter-spacing:0.22em;text-transform:uppercase;color:#d6b36a;margin-bottom:10px;">
+              Dan Bourret Photos
+            </div>
+            <h1 style="margin:0;font-size:28px;line-height:1.2;color:#ffffff;">
+              Inquiry Received
+            </h1>
+            <p style="margin:10px 0 0;color:#d1d5db;font-size:15px;line-height:1.7;">
+              Thank you for reaching out. Your message has been received, and I’ll respond as soon as possible.
+            </p>
+          </div>
+
+          <div style="padding:28px 32px;background:#faf7f1;">
+            <div style="padding:18px;border:1px solid #eadfca;border-radius:16px;background:#ffffff;margin-bottom:18px;">
+              <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8b7355;margin-bottom:10px;">
+                Inquiry Details
+              </div>
+              <div style="font-size:14px;line-height:1.8;color:#374151;">
+                <div><strong>Subject:</strong> ${escapeHtml(safeSubject)}</div>
+                <div><strong>Received:</strong> ${escapeHtml(new Date().toLocaleString("en-US", {
+                  dateStyle: "medium",
+                  timeStyle: "short"
+                }))}</div>
+              </div>
+            </div>
+
+            <div style="padding:18px;border:1px solid #eadfca;border-radius:16px;background:#ffffff;margin-bottom:18px;">
+              <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8b7355;margin-bottom:10px;">
+                Your Message
+              </div>
+              <div style="font-size:14px;line-height:1.8;color:#374151;white-space:pre-wrap;">
+                ${escapeHtml(safeMessage)}
+              </div>
+            </div>
+
+            <div style="padding:18px;border:1px solid #eadfca;border-radius:16px;background:#ffffff;">
+              <div style="font-size:14px;line-height:1.8;color:#374151;">
+                I appreciate your interest and will be in touch soon.
+              </div>
+              <div style="margin-top:16px;font-size:15px;line-height:1.8;color:#374151;">
+                — Dan Bourret Photos
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    `
+  });
+}}
+
+  async function sendOrderNotification({
   paymentId,
   receiptUrl,
   amount,

@@ -214,10 +214,9 @@
     }
 
     .success-summary-item {
-      padding: 12px 14px;
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 14px;
-      background: rgba(255,255,255,0.025);
+        display: flex;
+  gap: 14px;
+  align-items: center;
     }
 
     .success-summary-item__title {
@@ -226,6 +225,20 @@
       color: var(--text);
       margin-bottom: 4px;
     }
+
+    .success-summary-item__thumb {
+  width: 88px;
+  height: 88px;
+  object-fit: cover;
+  border-radius: 12px;
+  flex-shrink: 0;
+  display: block;
+}
+
+.success-summary-item__content {
+  min-width: 0;
+  flex: 1;
+}
 
     .success-summary-item__meta,
     .success-summary-empty,
@@ -387,20 +400,30 @@
 
   const itemsEl = document.getElementById("success-items");
 
-  if (itemsEl && order.items) {
-    itemsEl.innerHTML = order.items.map((item, index) => `
-  <div class="success-summary-item">
-    <div class="success-summary-item__title">
-      ${index + 1}. ${item.title || "Untitled Photo"}
+  if (itemsEl && order.items && order.items.length) {
+  itemsEl.innerHTML = order.items.map((item, index) => `
+    <div class="success-summary-item">
+      <img
+        class="success-summary-item__thumb"
+        src="${item.image || ""}"
+        alt="${item.title || "Ordered print"}"
+      />
+
+      <div class="success-summary-item__content">
+        <div class="success-summary-item__title">
+          ${index + 1}. ${item.title || "Untitled Photo"}
+        </div>
+        <div class="success-summary-item__meta">
+          Size: ${item.size}<br/>
+          Material: ${item.material}<br/>
+          Finish: ${item.finish}<br/>
+          Price: $${Number(item.price || 0).toFixed(2)}
+        </div>
+      </div>
     </div>
-    <div class="success-summary-item__meta">
-      Size: ${item.size}<br/>
-      Material: ${item.material}<br/>
-      Finish: ${item.finish}
-    </div>
-  </div>
-`).join("");
-  }
+  `).join("");
+}
+  
 </script>
 </body>
 </html>

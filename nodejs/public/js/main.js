@@ -109,6 +109,14 @@ function formatCurrency(amount) {
   return `$${Number(amount || 0).toFixed(2)}`;
 }
 
+function showPaymentStatus(message, type = "error") {
+  const el = document.getElementById("payment-status");
+  if (!el) return;
+
+  el.textContent = message;
+  el.className = `payment-status ${type}`;
+}
+
 function renderCart() {
   const container = document.getElementById("cart-items");
   const totalEl = document.getElementById("cart-total");
@@ -455,6 +463,14 @@ finish.addEventListener("change", () => {
 
 function showAddToCartSuccess(item) {
   let successModal = document.getElementById("cart-success-modal");
+
+  function showPaymentStatus(message, type = "error") {
+  const el = document.getElementById("payment-status");
+  if (!el) return;
+
+  el.textContent = message;
+  el.className = `payment-status ${type}`;
+}
 
   const getSuccessPanelHtml = () => `
     <h3 style="margin-bottom:12px;">Added to Cart</h3>
@@ -882,7 +898,7 @@ function ensureLightbox() {
         justify-content: center;
         width: 100vw;
         height: 100vh;
-        padding: 8px;
+        padding: 8px 8px 84px;
         box-sizing: border-box;
         opacity: 0;
         transform: scale(0.985);
@@ -975,22 +991,25 @@ function ensureLightbox() {
         "
       >&#10095;</button>
 
-      <div
-        id="lightbox-caption"
-        style="
-          position: absolute;
-          bottom: 8px;
-          left: 50%;
-          transform: translateX(-50%);
-          width: min(90vw, 900px);
-          text-align: center;
-          color: #fff;
-          background: rgba(0,0,0,0.4);
-          padding: 6px 10px;
-          border-radius: 12px;
-          z-index: 100001;
-        "
-      ></div>
+<div
+  id="lightbox-caption"
+  style="
+    position: absolute;
+    left: 50%;
+    bottom: max(18px, env(safe-area-inset-bottom));
+    transform: translateX(-50%);
+    width: min(92vw, 760px);
+    text-align: center;
+    color: #fff;
+    background: rgba(0,0,0,0.58);
+    padding: 10px 14px;
+    border-radius: 12px;
+    z-index: 100001;
+    line-height: 1.5;
+    font-size: 0.92rem;
+    box-sizing: border-box;
+  "
+></div>
     </div>
   `;
 
@@ -1353,23 +1372,29 @@ async function initSquare() {
 
 async function handleSquarePayment() {
   try {
+
+    //showPaymentStatus(""); // ✅ clears previous messages
+    showPaymentStatus("", "error");
+
     const payBtn = document.getElementById("square-pay-btn");
 
     if (!squareCard) {
-      alert("Payment form is not ready yet.");
-      return;
-    }
+  showPaymentStatus("Payment form is still loading. Please wait a moment and try again.");
+  return;
+}
 
     const cart = getCart();
     if (!cart.length) {
-      alert("Your cart is empty.");
-      return;
-    }
+  showPaymentStatus("Your cart is empty.");
+  return;
+}
 
     if (payBtn) {
       payBtn.disabled = true;
       payBtn.textContent = "Processing Payment...";
     }
+
+    showPaymentStatus("Processing payment...", "info");
 
     const total = cart.reduce((sum, item) => {
       return sum + (item.price ?? getPrice(item.size, item.material, item.finish));
@@ -1378,8 +1403,9 @@ async function handleSquarePayment() {
     const result = await squareCard.tokenize();
 
     if (result.status !== "OK") {
-      throw new Error("Card tokenization failed");
-    }
+  showPaymentStatus("Your card details could not be verified. Please review them and try again.");
+  throw new Error("Card tokenization failed");
+}
 
     const customer = {
   name: document.getElementById("cust-name")?.value?.trim() || "",
@@ -1413,6 +1439,7 @@ const paymentRes = await fetch("/api/payments/square", {
 if (!paymentRes.ok) {
   const errorText = await paymentRes.text();
   console.error("Payment failed response:", errorText);
+  showPaymentStatus("We couldn’t complete the payment right now. Please try again.");
   throw new Error("Payment request failed");
 }
 
@@ -1430,9 +1457,9 @@ console.log("Parsed payment data:", paymentData);
 
     window.location.href = "/success.html";
   } catch (err) {
-    console.error("Square payment error:", err);
-    alert("Payment failed. Please try again.");
-  } finally {
+  console.error("Square payment error:", err);
+  showPaymentStatus("Payment failed. Please check your details and try again.");
+} finally {
     const payBtn = document.getElementById("square-pay-btn");
     if (payBtn) {
       payBtn.disabled = false;
@@ -1441,16 +1468,124 @@ console.log("Parsed payment data:", paymentData);
   }
 }
 
+function renderPricingCards() {
+  const pricingContainer = document.getElementById("pricing-cards");
+
+  if (!pricingContainer) {
+    return;
+  }
+
+  if (!PRICING) {
+    console.error("PRICING object not found");
+    return;
+  }
+
+  const titleMap = {
+    Poster: "Prints",
+    Canvas: "Canvas",
+    Metal: "Metal",
+    Wood: "Wood"
+  };
+
+  pricingContainer.innerHTML = Object.entries(PRICING)
+    .map(([formatKey, sizes]) => {
+      const rows = Object.entries(sizes)
+        .map(([size, price], index) => `
+          ${index === 0 ? `
+            <div class="pricing-header">Size</div>
+            <div class="pricing-header">Price</div>
+          ` : ""}
+          <div>${size}</div>
+          <div>$${Number(price).toFixed(2)}</div>
+        `)
+        .join("");
+
+      return `
+        <div class="card">
+          <h3 class="service-title">${titleMap[formatKey] || formatKey}</h3>
+          <div class="pricing-block">
+            <div class="pricing-title">Price</div>
+            <div class="pricing-grid">
+              ${rows}
+            </div>
+          </div>
+        </div>
+      `;
+    })
+    .join("");
+}
+
+function initContactForm() {
+  const form = document.getElementById("contact-form");
+  if (!form) return;
+
+  const statusEl = document.getElementById("contact-status");
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const name = document.getElementById("contact-name")?.value.trim();
+    const email = document.getElementById("contact-email")?.value.trim();
+    const subject = document.getElementById("contact-subject")?.value.trim();
+    const message = document.getElementById("contact-message")?.value.trim();
+
+    if (!name || !email || !message) {
+      if (statusEl) {
+        statusEl.textContent = "Please fill in all required fields.";
+        statusEl.className = "contact-status";
+      }
+      return;
+    }
+
+    try {
+      if (statusEl) {
+        statusEl.textContent = "Sending message...";
+        statusEl.className = "contact-status";
+      }
+
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ name, email, subject, message })
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to send message");
+      }
+
+      if (statusEl) {
+        statusEl.textContent = "Message sent successfully.";
+        statusEl.className = "contact-status success";
+      }
+
+      form.reset();
+    } catch (err) {
+      console.error("Contact form error:", err);
+
+      if (statusEl) {
+        statusEl.textContent = "Something went wrong. Please try again.";
+        statusEl.className = "contact-status";
+      }
+    }
+  });
+}
+
 /* =============================
    INIT
 ============================= */
 
 document.addEventListener("DOMContentLoaded", () => {
   bindPageNavigation();
+
   const params = new URLSearchParams(window.location.search);
   const page = params.get("page") || "home";
   showPage(page);
+
   renderCart();
+  renderPricingCards();
+  initContactForm();
 
   const squarePayBtn = document.getElementById("square-pay-btn");
   if (squarePayBtn) {
@@ -1469,4 +1604,4 @@ document.addEventListener("DOMContentLoaded", () => {
   if (copyrightYear) {
     copyrightYear.textContent = new Date().getFullYear();
   }
-}); 
+});

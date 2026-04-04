@@ -621,6 +621,43 @@ textarea {
   line-height: 1.7;
 }
 
+.site-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(0, 0, 0, 0.72);
+  backdrop-filter: blur(6px);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.site-modal.show {
+  display: flex;
+  opacity: 1;
+}
+
+.site-modal-card {
+  width: min(560px, 100%);
+  position: relative;
+  border: 1px solid var(--border);
+  background: #111111;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 28px;
+  opacity: 0;
+  transform: translateY(16px) scale(0.98);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.site-modal.show .site-modal-card {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
 /* =============================
    FOOTER
 ============================= */
@@ -791,4 +828,35 @@ textarea {
 #page-pricing .services-grid > .card {
   width: 100% !important;
   min-width: 0 !important;
+}
+
+.payment-status {
+  margin-top: 12px;
+  font-size: 0.95rem;
+  color: #ff6b6b;
+  min-height: 18px;
+  transition: opacity 0.2s ease;
+}
+
+.payment-status.info {
+  color: #b8b2a8;
+}
+
+.payment-status.success {
+  color: #4caf50;
+}
+
+#contact-form {
+  display: grid;
+  gap: 14px;
+}
+
+.contact-status {
+  min-height: 20px;
+  font-size: 0.95rem;
+  color: #ff6b6b;
+}
+
+.contact-status.success {
+  color: #4caf50;
 }
