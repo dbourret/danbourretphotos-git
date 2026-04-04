@@ -809,8 +809,14 @@ function showLightbox(index) {
 
   lightboxImg.src = sourceImg.src;
   lightboxImg.alt = sourceImg.alt || "Expanded gallery image";
-  caption.textContent = sourceImg.dataset.caption || "";
+  const baseCaption = sourceImg.dataset.caption || "";
 
+caption.innerHTML = `
+  ${baseCaption}
+  <div style="font-size:0.8rem; color:#aaa; font-style:italic; margin-top:6px;">
+    Preview optimized for web — prints use full-resolution originals
+  </div>
+`;
   resetLightboxTransform();
   lightboxIsOpen = true;
 

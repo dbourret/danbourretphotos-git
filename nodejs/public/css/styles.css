@@ -465,6 +465,8 @@ textarea {
   gap: 14px;
 }
 
+
+
 /* =============================
    CART
 ============================= */
@@ -534,6 +536,7 @@ textarea {
   background: rgba(255, 255, 255, 0.04);
   min-height: 60px;
 }
+
 
 /* =============================
    LIGHTBOX
@@ -775,4 +778,17 @@ textarea {
   gap: 14px;
   justify-content: center;
   flex-wrap: wrap;
+}
+
+/* FINAL PRICING OVERRIDE - ALWAYS 4 CARDS IN ONE ROW */
+#page-pricing .services-grid {
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  gap: 22px !important;
+  align-items: stretch !important;
+}
+
+#page-pricing .services-grid > .card {
+  width: 100% !important;
+  min-width: 0 !important;
 }
