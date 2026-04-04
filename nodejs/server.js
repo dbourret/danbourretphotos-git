@@ -4,6 +4,7 @@ const express = require("express");
 const path = require("path");
 const crypto = require("crypto");
 const nodemailer = require("nodemailer");
+const mysql = require("mysql2/promise");
 const {
   SquareClient,
   SquareEnvironment,
@@ -13,6 +14,26 @@ const {
 const app = express();
 const PORT = Number(process.env.PORT) || 3000;
 const publicDir = path.join(__dirname, "public");
+
+const db = mysql.createPool({
+  host: process.env.DB_HOST || "localhost",
+  user: process.env.DB_USER || "root",
+  password: process.env.DB_PASSWORD || "",
+  database: process.env.DB_NAME || "danbourret_photos_local",
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0,
+});
+
+(async () => {
+  try {
+    const connection = await db.getConnection();
+    console.log("✅ MySQL connected successfully");
+    connection.release();
+  } catch (error) {
+    console.error("❌ MySQL connection failed:", error.message);
+  }
+})();
 
 console.log("__dirname =", __dirname);
 console.log("publicDir =", publicDir);
@@ -99,6 +120,36 @@ app.post("/api/contact", async (req, res) => {
       subject,
       message
     });
+
+    try {
+      console.log("CONTACT DB PAYLOAD:", {
+        name,
+        email,
+        subject,
+        message
+      });
+
+      await db.execute(
+        `
+        INSERT INTO contact_submissions (
+          name,
+          email,
+          subject,
+          message
+        ) VALUES (?, ?, ?, ?)
+        `,
+        [
+          name || null,
+          email || null,
+          subject || null,
+          message || null
+        ]
+      );
+
+      console.log("✅ Contact submission saved to database");
+    } catch (dbError) {
+      console.error("❌ Failed to save contact submission to DB:", dbError);
+    }
 
     return res.status(200).json({
       success: true,
@@ -188,38 +239,33 @@ function formatSelectionsForText(selections) {
 
 function formatSelectionsForHtml(selections) {
   if (!Array.isArray(selections) || selections.length === 0) {
-    return `<div style="padding:16px;border:1px solid #e5e7eb;border-radius:14px;background:#ffffff;">No items provided</div>`;
+    return `<div style="padding:16px;border:1px solid #eadfca;border-radius:16px;background:#ffffff;font-size:14px;line-height:1.7;color:#374151;">No items provided</div>`;
   }
 
   return selections
     .map((item, index) => {
       const title = escapeHtml(
-  item.title ||
-  [item.size, item.material].filter(Boolean).join(" ") ||
-  "Untitled Photo"
-);
-      const size = escapeHtml(item.size || "Not selected");
-      const material = escapeHtml(item.material || "Not selected");
-      const finish = escapeHtml(item.finish || "Not selected");
-      const price =
-        item.price != null
-          ? escapeHtml(typeof item.price === "number" ? formatMoney(item.price) : item.price)
-          : "Not available";
-      const image = item.image
-        ? `<div style="margin-top:8px;"><a href="${escapeHtml(item.image)}" target="_blank" rel="noopener noreferrer" style="color:#9f7a2f;text-decoration:none;">View selected image</a></div>`
-        : "";
+        item.title ||
+        [item.size, item.material].filter(Boolean).join(" ") ||
+        "Untitled Photo"
+      );
+
+      const size = escapeHtml(item.size || "Not specified");
+      const material = escapeHtml(item.material || "Not specified");
+      const finish = escapeHtml(item.finish || "Not specified");
+      const price = formatMoney(Number(item.price || 0));
 
       return `
-        <div style="padding:18px;border:1px solid #e5e7eb;border-radius:16px;background:#ffffff;margin-bottom:14px;">
-          <div style="font-size:16px;font-weight:700;color:#111827;margin-bottom:10px;">
+        <div style="padding:18px;border:1px solid #eadfca;border-radius:16px;background:#ffffff;margin-bottom:18px;">
+          <div style="font-size:16px;line-height:1.4;font-weight:700;color:#111827;margin:0 0 14px 0;">
             ${index + 1}. ${title}
           </div>
-          <div style="color:#374151;font-size:14px;line-height:1.7;">
+
+          <div style="font-size:14px;line-height:1.8;color:#374151;">
             <div><strong>Size:</strong> ${size}</div>
             <div><strong>Material:</strong> ${material}</div>
             <div><strong>Finish:</strong> ${finish}</div>
             <div><strong>Price:</strong> ${price}</div>
-            ${image}
           </div>
         </div>
       `;
@@ -232,159 +278,171 @@ async function sendContactInquiry({ name, email, subject, message }) {
     throw new Error("Missing ORDER_NOTIFY_EMAIL or ORDER_FROM_EMAIL");
   }
 
-  const safeName = name || "Not provided";
+  const safeName = name || "Customer";
   const safeEmail = email || "Not provided";
   const safeSubject = subject || "General Inquiry";
   const safeMessage = message || "";
-  
+
   const receivedAt = new Date().toLocaleString("en-US", {
-  dateStyle: "medium",
-  timeStyle: "short"
-});
+    dateStyle: "medium",
+    timeStyle: "short"
+  });
 
-  const mailSubject = `Contact Inquiry • ${safeSubject}`;
+  const adminSubject = `Contact Inquiry • ${safeSubject}`;
 
-  const textBody = `
+  const adminTextBody = `
 New contact inquiry received
 
 Name: ${safeName}
 Email: ${safeEmail}
 Subject: ${safeSubject}
+Received: ${receivedAt}
 
 Message:
 ${safeMessage}
   `.trim();
 
-  const htmlBody = `
-  <div style="margin:0;padding:24px;background:#f5f5f5;font-family:Arial,Helvetica,sans-serif;color:#111827;">
-    <div style="max-width:720px;margin:0 auto;background:#0f0f10;border-radius:24px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.18);">
+  const adminHtmlBody = `
+    <div style="margin:0;padding:24px;background:#f5f5f5;font-family:Arial,Helvetica,sans-serif;color:#111827;">
+      <div style="max-width:720px;margin:0 auto;background:#0f0f10;border-radius:24px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.18);">
 
-      <!-- Header -->
-      <div style="padding:28px 32px;background:linear-gradient(180deg,#171717 0%,#101010 100%);border-bottom:1px solid rgba(255,255,255,0.08);">
-        <div style="font-size:12px;letter-spacing:0.22em;text-transform:uppercase;color:#d6b36a;margin-bottom:10px;">
-          Dan Bourret Photos
-        </div>
-        <h1 style="margin:0;font-size:28px;line-height:1.2;color:#ffffff;">
-          New Contact Inquiry
-        </h1>
-        <p style="margin:10px 0 0;color:#d1d5db;font-size:15px;line-height:1.7;">
-          A visitor submitted the contact form on your website.
-        </p>
-      </div>
-
-      <!-- Content -->
-      <div style="padding:28px 32px;background:#faf7f1;">
-
-        <!-- Contact Details -->
-        <div style="padding:18px;border:1px solid #eadfca;border-radius:16px;background:#ffffff;margin-bottom:18px;">
-          <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8b7355;margin-bottom:10px;">
-            Contact Details
+        <div style="padding:28px 32px;background:linear-gradient(180deg,#171717 0%,#101010 100%);border-bottom:1px solid rgba(255,255,255,0.08);">
+          <div style="font-size:12px;letter-spacing:0.22em;text-transform:uppercase;color:#d6b36a;margin-bottom:10px;">
+            Dan Bourret Photos
           </div>
-          <div style="font-size:14px;line-height:1.8;color:#374151;">
-            <div><strong>Name:</strong> ${safeName}</div>
-            <div><strong>Email:</strong> ${safeEmail}</div>
-            <div><strong>Subject:</strong> ${safeSubject}</div>
-            <div><strong>Received:</strong> ${receivedAt}
-})}</div>
-          </div>
+          <h1 style="margin:0;font-size:28px;line-height:1.2;color:#ffffff;">
+            New Contact Inquiry
+          </h1>
+          <p style="margin:10px 0 0;color:#d1d5db;font-size:15px;line-height:1.7;">
+            A visitor submitted the contact form on your website.
+          </p>
         </div>
 
-        <!-- Message -->
-        <div style="padding:18px;border:1px solid #eadfca;border-radius:16px;background:#ffffff;">
-          <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8b7355;margin-bottom:10px;">
-            Message
+        <div style="padding:28px 32px;background:#faf7f1;">
+          <div style="padding:18px;border:1px solid #eadfca;border-radius:16px;background:#ffffff;margin-bottom:18px;">
+            <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8b7355;margin-bottom:10px;">
+              Contact Details
+            </div>
+            <div style="font-size:14px;line-height:1.8;color:#374151;">
+              <div><strong>Name:</strong> ${escapeHtml(safeName)}</div>
+              <div><strong>Email:</strong> ${escapeHtml(safeEmail)}</div>
+              <div><strong>Subject:</strong> ${escapeHtml(safeSubject)}</div>
+              <div><strong>Received:</strong> ${escapeHtml(receivedAt)}</div>
+            </div>
           </div>
-          <div style="font-size:14px;line-height:1.8;color:#374151;white-space:pre-wrap;">
-            ${safeMessage}
+
+          <div style="padding:18px;border:1px solid #eadfca;border-radius:16px;background:#ffffff;">
+            <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8b7355;margin-bottom:10px;">
+              Message
+            </div>
+            <div style="font-size:14px;line-height:1.8;color:#374151;white-space:pre-wrap;">
+              ${escapeHtml(safeMessage)}
+            </div>
           </div>
         </div>
-
       </div>
     </div>
-  </div>
-`;
+  `;
 
   await transporter.sendMail({
-    from: `"Dan Bourret Photos" <${process.env.ORDER_FROM_EMAIL}>`,
+    from: `"Dan Bourret Photography" <${process.env.ORDER_FROM_EMAIL}>`,
     to: process.env.ORDER_NOTIFY_EMAIL,
-    replyTo: safeEmail.includes("@") ? safeEmail : process.env.ORDER_FROM_EMAIL,
-    subject: mailSubject,
-    text: textBody,
-    html: htmlBody
+    replyTo: safeEmail,
+    subject: adminSubject,
+    text: adminTextBody,
+    html: adminHtmlBody
   });
 
-  // Send confirmation email to customer
-if (safeEmail.includes("@")) {
-  await transporter.sendMail({
-    from: `"Dan Bourret Photos" <${process.env.ORDER_FROM_EMAIL}>`,
-    to: safeEmail,
-    subject: "We received your inquiry - Dan Bourret Photos",
-    text: `
-Thank you for reaching out.
+  const customerSubject = `We received your message • ${safeSubject}`;
 
-Your inquiry has been received, and I’ll get back to you as soon as possible.
+  const customerTextBody = `
+Hi ${safeName},
 
+Thank you for reaching out to Dan Bourret Photography.
+
+We received your message and will get back to you as soon as possible.
+
+Submitted details:
+Name: ${safeName}
+Email: ${safeEmail}
 Subject: ${safeSubject}
-Received: ${new Date().toLocaleString("en-US", {
-  dateStyle: "medium",
-  timeStyle: "short"
-})}
+Message: ${safeMessage}
 
-Dan Bourret Photos
-    `.trim(),
-    html: `
-      <div style="margin:0;padding:24px;background:#f5f5f5;font-family:Arial,Helvetica,sans-serif;color:#111827;">
-        <div style="max-width:720px;margin:0 auto;background:#0f0f10;border-radius:24px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.18);">
-          <div style="padding:28px 32px;background:linear-gradient(180deg,#171717 0%,#101010 100%);border-bottom:1px solid rgba(255,255,255,0.08);">
-            <div style="font-size:12px;letter-spacing:0.22em;text-transform:uppercase;color:#d6b36a;margin-bottom:10px;">
-              Dan Bourret Photos
-            </div>
-            <h1 style="margin:0;font-size:28px;line-height:1.2;color:#ffffff;">
-              Inquiry Received
-            </h1>
-            <p style="margin:10px 0 0;color:#d1d5db;font-size:15px;line-height:1.7;">
-              Thank you for reaching out. Your message has been received, and I’ll respond as soon as possible.
-            </p>
-          </div>
+Received: ${receivedAt}
 
-          <div style="padding:28px 32px;background:#faf7f1;">
-            <div style="padding:18px;border:1px solid #eadfca;border-radius:16px;background:#ffffff;margin-bottom:18px;">
-              <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8b7355;margin-bottom:10px;">
-                Inquiry Details
-              </div>
-              <div style="font-size:14px;line-height:1.8;color:#374151;">
-                <div><strong>Subject:</strong> ${escapeHtml(safeSubject)}</div>
-                <div><strong>Received:</strong> ${escapeHtml(new Date().toLocaleString("en-US", {
-                  dateStyle: "medium",
-                  timeStyle: "short"
-                }))}</div>
-              </div>
-            </div>
+- Dan Bourret Photography
+  `.trim();
 
-            <div style="padding:18px;border:1px solid #eadfca;border-radius:16px;background:#ffffff;margin-bottom:18px;">
-              <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8b7355;margin-bottom:10px;">
-                Your Message
-              </div>
-              <div style="font-size:14px;line-height:1.8;color:#374151;white-space:pre-wrap;">
-                ${escapeHtml(safeMessage)}
-              </div>
-            </div>
+  const customerHtmlBody = `
+    <div style="margin:0; padding:0; background-color:#f4f4f4; font-family:Arial, sans-serif;">
+      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color:#f4f4f4; padding:30px 0;">
+        <tr>
+          <td align="center">
+            <table role="presentation" width="600" cellspacing="0" cellpadding="0" style="max-width:600px; width:100%; background:#ffffff; border-radius:12px; overflow:hidden; box-shadow:0 4px 14px rgba(0,0,0,0.08);">
+              <tr>
+                <td style="background:#111111; color:#ffffff; padding:24px 32px; text-align:center;">
+                  <h1 style="margin:0; font-size:24px; font-weight:600;">Dan Bourret Photography</h1>
+                  <p style="margin:8px 0 0; font-size:14px; color:#d1d1d1;">Contact Confirmation</p>
+                </td>
+              </tr>
 
-            <div style="padding:18px;border:1px solid #eadfca;border-radius:16px;background:#ffffff;">
-              <div style="font-size:14px;line-height:1.8;color:#374151;">
-                I appreciate your interest and will be in touch soon.
-              </div>
-              <div style="margin-top:16px;font-size:15px;line-height:1.8;color:#374151;">
-                — Dan Bourret Photos
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    `
+              <tr>
+                <td style="padding:32px;">
+                  <p style="margin:0 0 16px; font-size:16px; color:#222222;">Hi ${escapeHtml(safeName)},</p>
+
+                  <p style="margin:0 0 16px; font-size:15px; line-height:1.6; color:#444444;">
+                    Thank you for reaching out. Your message has been received, and I’ll get back to you as soon as possible.
+                  </p>
+
+                  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin:24px 0; border-collapse:collapse;">
+                    <tr>
+                      <td style="padding:12px; border:1px solid #e5e5e5; background:#fafafa; font-weight:600; width:140px;">Name</td>
+                      <td style="padding:12px; border:1px solid #e5e5e5;">${escapeHtml(safeName)}</td>
+                    </tr>
+                    <tr>
+                      <td style="padding:12px; border:1px solid #e5e5e5; background:#fafafa; font-weight:600;">Email</td>
+                      <td style="padding:12px; border:1px solid #e5e5e5;">${escapeHtml(safeEmail)}</td>
+                    </tr>
+                    <tr>
+                      <td style="padding:12px; border:1px solid #e5e5e5; background:#fafafa; font-weight:600;">Subject</td>
+                      <td style="padding:12px; border:1px solid #e5e5e5;">${escapeHtml(safeSubject)}</td>
+                    </tr>
+                    <tr>
+                      <td style="padding:12px; border:1px solid #e5e5e5; background:#fafafa; font-weight:600;">Received</td>
+                      <td style="padding:12px; border:1px solid #e5e5e5;">${escapeHtml(receivedAt)}</td>
+                    </tr>
+                    <tr>
+                      <td style="padding:12px; border:1px solid #e5e5e5; background:#fafafa; font-weight:600; vertical-align:top;">Message</td>
+                      <td style="padding:12px; border:1px solid #e5e5e5; white-space:pre-wrap;">${escapeHtml(safeMessage)}</td>
+                    </tr>
+                  </table>
+
+                  <p style="margin:0; font-size:15px; line-height:1.6; color:#444444;">
+                    Best,<br>
+                    Dan Bourret Photography
+                  </p>
+                </td>
+              </tr>
+
+              <tr>
+                <td style="padding:20px 32px; background:#f8f8f8; text-align:center; font-size:12px; color:#777777;">
+                  This is an automated confirmation that your contact form was received.
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </div>
+  `;
+
+  await transporter.sendMail({
+    from: `"Dan Bourret Photography" <${process.env.ORDER_FROM_EMAIL}>`,
+    to: safeEmail,
+    subject: customerSubject,
+    html: customerHtmlBody
   });
-}}
-
+}
   async function sendOrderNotification({
   paymentId,
   receiptUrl,
@@ -507,12 +565,12 @@ ${notes || "None"}
             </div>
           </div>
 
-          <div style="margin-bottom:18px;">
-            <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8b7355;margin:0 0 10px 0;">
-              Ordered Items
-            </div>
-            ${formatSelectionsForHtml(selections)}
-          </div>
+<div style="margin-bottom:18px;">
+  <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8b7355;margin:0 0 10px 0;">
+    Ordered Items
+  </div>
+  ${formatSelectionsForHtml(selections)}
+</div>
 
           <div style="padding:18px;border:1px solid #eadfca;border-radius:16px;background:#ffffff;">
             <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8b7355;margin-bottom:10px;">
@@ -567,39 +625,66 @@ Dan Bourret Photos
   `.trim();
 
   const customerHtml = `
-    <div style="font-family:Arial,Helvetica,sans-serif;padding:24px;background:#f5f5f5;">
-      <div style="max-width:600px;margin:0 auto;background:#ffffff;border-radius:16px;padding:24px;">
-        <h2 style="margin-top:0;">Thank you for your order!</h2>
+  <div style="margin:0;padding:24px;background:#f5f5f5;font-family:Arial,Helvetica,sans-serif;color:#111827;">
+    <div style="max-width:720px;margin:0 auto;background:#0f0f10;border-radius:24px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.18);">
 
-        <p>Your order has been received and is now being processed.</p>
-
-        <div style="margin-top:20px;">
-          <strong>Payment ID:</strong> ${escapeHtml(paymentId || "Not available")}<br/>
-          <strong>Total:</strong> ${formatMoney(Number(amount || 0) / 100)}
+      <div style="padding:28px 32px;background:linear-gradient(180deg,#171717 0%,#101010 100%);border-bottom:1px solid rgba(255,255,255,0.08);">
+        <div style="font-size:12px;letter-spacing:0.22em;text-transform:uppercase;color:#d6b36a;margin-bottom:10px;">
+          Dan Bourret Photos
         </div>
-
-        <p style="margin-top:20px;">
-          We’ll notify you when your order ships.
-        </p>
-
-        <p style="margin-top:20px;">
-          If you have questions, just reply to this email.
-        </p>
-
-        <p style="margin-top:30px;">
-          — Dan Bourret Photos
+        <h1 style="margin:0;font-size:28px;line-height:1.2;color:#ffffff;">
+          Order Confirmed
+        </h1>
+        <p style="margin:10px 0 0;color:#d1d5db;font-size:15px;line-height:1.7;">
+          Thank you for your purchase. Your order has been received and is now being processed.
         </p>
       </div>
-    </div>
-  `;
 
-  await transporter.sendMail({
-    from: `"Dan Bourret Photos" <${process.env.ORDER_FROM_EMAIL}>`,
-    to: customer.email,
-    subject: customerSubject,
-    text: customerText,
-    html: customerHtml
-  });
+              <div style="padding:28px 32px;background:#faf7f1;">
+          <div style="padding:18px;border:1px solid #eadfca;border-radius:16px;background:#ffffff;margin-bottom:18px;">
+            <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8b7355;margin-bottom:10px;">
+              Order Summary
+            </div>
+            <div style="font-size:14px;line-height:1.8;color:#374151;">
+              <div><strong>Payment ID:</strong> ${escapeHtml(paymentId || "Not available")}</div>
+              <div><strong>Total:</strong> ${formatMoney(Number(amount || 0) / 100)}</div>
+            </div>
+          </div>
+
+          <div style="margin-bottom:18px;">
+            <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8b7355;margin:0 0 10px 0;">
+              Ordered Items
+            </div>
+            ${formatSelectionsForHtml(selections)}
+          </div>
+
+          <div style="padding:18px;border:1px solid #eadfca;border-radius:16px;background:#ffffff;margin-bottom:18px;">
+            <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8b7355;margin-bottom:10px;">
+              Next Step
+            </div>
+            <div style="font-size:14px;line-height:1.8;color:#374151;">
+              We’ll notify you when your order ships.
+            </div>
+          </div>
+
+          <div style="padding:18px;border:1px solid #eadfca;border-radius:16px;background:#ffffff;">
+            <div style="font-size:14px;line-height:1.8;color:#374151;">
+              If you have any questions, just reply to this email.<br><br>
+              — Dan Bourret Photos
+            </div>
+          </div>
+        </div>
+    </div>
+  </div>
+`;
+
+await transporter.sendMail({
+  from: `"Dan Bourret Photos" <${process.env.ORDER_FROM_EMAIL}>`,
+  to: customer.email,
+  subject: customerSubject,
+  text: customerText,
+  html: customerHtml
+});
 
   console.log("Customer confirmation email sent to:", customer.email);
 }
@@ -671,8 +756,8 @@ app.post("/api/payments/square", async (req, res) => {
       });
     }
 
-console.log("Square payment req.body:", JSON.stringify(req.body, null, 2));
-console.log("orderDetails:", JSON.stringify(orderDetails, null, 2));
+    console.log("Square payment req.body:", JSON.stringify(req.body, null, 2));
+    console.log("orderDetails:", JSON.stringify(orderDetails, null, 2));
 
     const amountInCents = BigInt(Math.round(Number(amount)));
 
@@ -687,7 +772,86 @@ console.log("orderDetails:", JSON.stringify(orderDetails, null, 2));
     });
 
     const payment = paymentResponse.payment;
-    console.log("items received by server =", JSON.stringify(orderDetails.items || [], null, 2));
+
+    console.log(
+      "items received by server =",
+      JSON.stringify(orderDetails.items || [], null, 2)
+    );
+
+    try {
+      const customer = orderDetails.customer || {};
+
+      const squarePaymentId = payment?.id || null;
+      const squareOrderId = payment?.orderId || null;
+
+      const customerName = customer.name || null;
+      const customerEmail = customer.email || null;
+      const customerPhone = customer.phone || null;
+      const customerAddress = customer.address || null;
+      const customerCity = customer.city || null;
+      const customerState = customer.state || null;
+      const customerZip = customer.zip || null;
+
+      const orderTotal = Number(amount || 0) / 100;
+      const currency = "USD";
+
+      const items =
+        orderDetails.items ||
+        orderDetails.selections ||
+        [];
+
+      console.log("ORDER DB PAYLOAD:", {
+        squarePaymentId,
+        squareOrderId,
+        customerName,
+        customerEmail,
+        customerPhone,
+        customerAddress,
+        customerCity,
+        customerState,
+        customerZip,
+        orderTotal,
+        currency,
+        items
+      });
+
+      await db.execute(
+        `
+        INSERT INTO orders (
+          square_payment_id,
+          square_order_id,
+          customer_name,
+          customer_email,
+          customer_phone,
+          customer_address,
+          customer_city,
+          customer_state,
+          customer_zip,
+          order_total,
+          currency,
+          items_json
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        `,
+        [
+          squarePaymentId,
+          squareOrderId,
+          customerName,
+          customerEmail,
+          customerPhone,
+          customerAddress,
+          customerCity,
+          customerState,
+          customerZip,
+          orderTotal,
+          currency,
+          JSON.stringify(items)
+        ]
+      );
+
+      console.log("✅ Order saved to database");
+    } catch (dbError) {
+      console.error("❌ Failed to save order to DB:", dbError);
+    }
 
     await sendOrderNotification({
       paymentId: payment?.id || null,
@@ -708,7 +872,6 @@ console.log("orderDetails:", JSON.stringify(orderDetails, null, 2));
   } catch (error) {
     console.error("Square payment error:", error);
 
-  
     if (error instanceof SquareError) {
       const detail =
         error.errors?.[0]?.detail ||
