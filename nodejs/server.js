@@ -374,67 +374,51 @@ Received: ${receivedAt}
   `.trim();
 
   const customerHtmlBody = `
-    <div style="margin:0; padding:0; background-color:#f4f4f4; font-family:Arial, sans-serif;">
-      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color:#f4f4f4; padding:30px 0;">
-        <tr>
-          <td align="center">
-            <table role="presentation" width="600" cellspacing="0" cellpadding="0" style="max-width:600px; width:100%; background:#ffffff; border-radius:12px; overflow:hidden; box-shadow:0 4px 14px rgba(0,0,0,0.08);">
-              <tr>
-                <td style="background:#111111; color:#ffffff; padding:24px 32px; text-align:center;">
-                  <h1 style="margin:0; font-size:24px; font-weight:600;">Dan Bourret Photography</h1>
-                  <p style="margin:8px 0 0; font-size:14px; color:#d1d1d1;">Contact Confirmation</p>
-                </td>
-              </tr>
+  <div style="margin:0;padding:24px;background:#f5f5f5;font-family:Arial,Helvetica,sans-serif;color:#111827;">
+    <div style="max-width:720px;margin:0 auto;background:#0f0f10;border-radius:24px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.18);">
 
-              <tr>
-                <td style="padding:32px;">
-                  <p style="margin:0 0 16px; font-size:16px; color:#222222;">Hi ${escapeHtml(safeName)},</p>
+      <div style="padding:28px 32px;background:linear-gradient(180deg,#171717 0%,#101010 100%);border-bottom:1px solid rgba(255,255,255,0.08);">
+        <div style="font-size:12px;letter-spacing:0.22em;text-transform:uppercase;color:#d6b36a;margin-bottom:10px;">
+          Dan Bourret Photos
+        </div>
+        <h1 style="margin:0;font-size:28px;line-height:1.2;color:#ffffff;">
+          Inquiry Received
+        </h1>
+        <p style="margin:10px 0 0;color:#d1d5db;font-size:15px;line-height:1.7;">
+          Thank you for reaching out. Your message has been received, and I’ll respond as soon as possible.
+        </p>
+      </div>
 
-                  <p style="margin:0 0 16px; font-size:15px; line-height:1.6; color:#444444;">
-                    Thank you for reaching out. Your message has been received, and I’ll get back to you as soon as possible.
-                  </p>
+      <div style="padding:28px 32px;background:#faf7f1;">
+        <div style="padding:18px;border:1px solid #eadfca;border-radius:16px;background:#ffffff;margin-bottom:18px;">
+          <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8b7355;margin-bottom:10px;">
+            Inquiry Details
+          </div>
+          <div style="font-size:14px;line-height:1.8;color:#374151;">
+            <div><strong>Subject:</strong> ${escapeHtml(subject || "General Inquiry")}</div>
+            <div><strong>Received:</strong> ${escapeHtml(receivedAt)}</div>
+          </div>
+        </div>
 
-                  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin:24px 0; border-collapse:collapse;">
-                    <tr>
-                      <td style="padding:12px; border:1px solid #e5e5e5; background:#fafafa; font-weight:600; width:140px;">Name</td>
-                      <td style="padding:12px; border:1px solid #e5e5e5;">${escapeHtml(safeName)}</td>
-                    </tr>
-                    <tr>
-                      <td style="padding:12px; border:1px solid #e5e5e5; background:#fafafa; font-weight:600;">Email</td>
-                      <td style="padding:12px; border:1px solid #e5e5e5;">${escapeHtml(safeEmail)}</td>
-                    </tr>
-                    <tr>
-                      <td style="padding:12px; border:1px solid #e5e5e5; background:#fafafa; font-weight:600;">Subject</td>
-                      <td style="padding:12px; border:1px solid #e5e5e5;">${escapeHtml(safeSubject)}</td>
-                    </tr>
-                    <tr>
-                      <td style="padding:12px; border:1px solid #e5e5e5; background:#fafafa; font-weight:600;">Received</td>
-                      <td style="padding:12px; border:1px solid #e5e5e5;">${escapeHtml(receivedAt)}</td>
-                    </tr>
-                    <tr>
-                      <td style="padding:12px; border:1px solid #e5e5e5; background:#fafafa; font-weight:600; vertical-align:top;">Message</td>
-                      <td style="padding:12px; border:1px solid #e5e5e5; white-space:pre-wrap;">${escapeHtml(safeMessage)}</td>
-                    </tr>
-                  </table>
+        <div style="padding:18px;border:1px solid #eadfca;border-radius:16px;background:#ffffff;margin-bottom:18px;">
+          <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8b7355;margin-bottom:10px;">
+            Your Message
+          </div>
+          <div style="font-size:14px;line-height:1.8;color:#374151;white-space:pre-wrap;">
+            ${escapeHtml(message || "")}
+          </div>
+        </div>
 
-                  <p style="margin:0; font-size:15px; line-height:1.6; color:#444444;">
-                    Best,<br>
-                    Dan Bourret Photography
-                  </p>
-                </td>
-              </tr>
-
-              <tr>
-                <td style="padding:20px 32px; background:#f8f8f8; text-align:center; font-size:12px; color:#777777;">
-                  This is an automated confirmation that your contact form was received.
-                </td>
-              </tr>
-            </table>
-          </td>
-        </tr>
-      </table>
+        <div style="padding:18px;border:1px solid #eadfca;border-radius:16px;background:#ffffff;">
+          <div style="font-size:14px;line-height:1.8;color:#374151;">
+            I appreciate your interest and will be in touch soon.<br><br>
+            — Dan Bourret Photos
+          </div>
+        </div>
+      </div>
     </div>
-  `;
+  </div>
+`;
 
   await transporter.sendMail({
     from: `"Dan Bourret Photography" <${process.env.ORDER_FROM_EMAIL}>`,
