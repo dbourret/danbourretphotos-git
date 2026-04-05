@@ -159,8 +159,8 @@ const [result] = await db.execute(
    VALUES (?, ?, ?, ?)`,
   [name, email, subject, message]
 );
-  console.log("CONTACT INSERT COMPLETE:", result);
 
+console.log("CONTACT INSERT COMPLETE:", result);
 
       console.log("✅ Contact submission saved to database");
     } catch (dbError) {
