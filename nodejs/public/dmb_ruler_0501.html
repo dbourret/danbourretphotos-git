@@ -169,7 +169,28 @@
       </thead>
       <tbody></tbody>
     </table>
-  </div>
+<h2 style="margin-top: 36px;">Orders</h2>
+
+<div style="margin: 12px 0 18px;">
+  <button onclick="loadOrders()">Refresh Orders</button>
+</div>
+
+<table id="orders-table">
+  <thead>
+    <tr>
+      <th>Order ID</th>
+      <th>Customer</th>
+      <th>Email</th>
+      <th>Total</th>
+      <th>Date</th>
+      <th>Status</th>
+      <th>Details</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+</div>
+
 
 <script>
 let adminPassword = "";
@@ -282,6 +303,153 @@ async function loadPricing() {
 
   setStatus(`Loaded ${filteredData.length} pricing row(s).`);
 }
+async function loadOrders() {
+  const res = await fetch("/api/orders", {
+    headers: {
+      "Authorization": `Bearer ${adminPassword}`
+    }
+  });
+
+  if (!res.ok) {
+    setStatus("Failed to load orders.", true);
+    return;
+  }
+
+  const data = await res.json();
+  const tbody = document.querySelector("#orders-table tbody");
+
+  if (!tbody) return;
+
+  tbody.innerHTML = "";
+
+  data.forEach((order) => {
+  const tr = document.createElement("tr");
+
+  tr.innerHTML = `
+    <td>${order.id}</td>
+    <td>${order.customer_name || ""}</td>
+    <td>${order.customer_email || ""}</td>
+    <td>$${Number(order.order_total || 0).toFixed(2)}</td>
+    <td>${formatDate(order.created_at)}</td>
+    <td>
+      <select id="status-${order.id}" onchange="updateOrderStatus(${order.id})">
+        <option value="pending" ${order.status === "pending" ? "selected" : ""}>Pending</option>
+        <option value="paid" ${order.status === "paid" ? "selected" : ""}>Paid</option>
+        <option value="processing" ${order.status === "processing" ? "selected" : ""}>Processing</option>
+        <option value="shipped" ${order.status === "shipped" ? "selected" : ""}>Shipped</option>
+        <option value="completed" ${order.status === "completed" ? "selected" : ""}>Completed</option>
+        <option value="cancelled" ${order.status === "cancelled" ? "selected" : ""}>Cancelled</option>
+      </select>
+    </td>
+    <td>
+      <button onclick="toggleOrderDetails(${order.id}, this)">View</button>
+    </td>
+  `;
+
+    const detailsTr = document.createElement("tr");
+    detailsTr.id = `order-details-${order.id}`;
+    detailsTr.className = "hidden";
+
+    let itemsHtml = "<div>No items found.</div>";
+
+try {
+  let items = order.items_json;
+
+  if (typeof items === "string") {
+    items = JSON.parse(items);
+  }
+
+  if (!Array.isArray(items)) {
+    items = [];
+  }
+
+  if (items.length) {
+    itemsHtml = items.map((item) => `
+      <div style="padding:8px 0; border-bottom:1px solid #2d2d2d;">
+        <div><strong>${item.title || "Photo Print"}</strong></div>
+        <div>Material: ${item.material || ""}</div>
+        <div>Size: ${item.size || ""}</div>
+        <div>Finish: ${item.finish || ""}</div>
+        <div>Price: $${Number(item.price || 0).toFixed(2)}</div>
+      </div>
+    `).join("");
+  }
+} catch (err) {
+  console.error("Order items parse error:", err, order.items_json);
+  itemsHtml = "<div>Unable to read order items.</div>";
+}
+
+    detailsTr.innerHTML = `
+      <td colspan="7" style="background:#101010; padding:16px;">
+        <div style="margin-bottom:12px;">
+          <strong>Phone:</strong> ${order.customer_phone || ""}<br>
+          <strong>Address:</strong> ${order.customer_address || ""}<br>
+          <strong>City:</strong> ${order.customer_city || ""}<br>
+          <strong>State:</strong> ${order.customer_state || ""}<br>
+          <strong>ZIP:</strong> ${order.customer_zip || ""}
+        </div>
+
+        <div>
+          <strong>Items:</strong>
+          <div style="margin-top:8px;">
+            ${itemsHtml}
+          </div>
+        </div>
+      </td>
+    `;
+
+    tbody.appendChild(tr);
+    tbody.appendChild(detailsTr);
+  });
+
+  const totalRevenue = data.reduce(
+  (sum, o) => sum + Number(o.order_total || 0),
+  0
+);
+
+setStatus(
+  `Loaded ${data.length} order(s) • Total Revenue: $${totalRevenue.toFixed(2)}`
+);
+}
+
+function toggleOrderDetails(orderId, btn) {
+  const row = document.getElementById(`order-details-${orderId}`);
+  if (!row) return;
+
+  const isHidden = row.classList.toggle("hidden");
+
+  if (btn) {
+    btn.textContent = isHidden ? "View" : "Hide";
+  }
+}
+
+async function updateOrderStatus(orderId) {
+  const select = document.getElementById(`status-${orderId}`);
+  if (!select) return;
+
+  const status = select.value;
+
+  const res = await fetch(`/api/orders/${orderId}/status`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${adminPassword}`
+    },
+    body: JSON.stringify({ status })
+  });
+
+  if (!res.ok) {
+    setStatus("Failed to update order status.", true);
+    return;
+  }
+
+  setStatus(`Order #${orderId} status updated to ${status}.`);
+
+  select.style.border = "1px solid #4CAF50";
+  setTimeout(() => {
+    select.style.border = "";
+  }, 1000);
+}
 
 async function savePrice(id) {
   const input = document.getElementById(`price-${id}`);
@@ -302,6 +470,16 @@ async function savePrice(id) {
   }
 
   setStatus("Price saved.");
+
+  // ✅ visual feedback
+  input.style.border = "1px solid #4CAF50";
+
+  setTimeout(() => {
+    input.style.border = "";
+  }, 1000);
+
+  // ✅ refresh table with latest DB data
+  await loadPricing();
 }
 
 async function addPrice() {
@@ -375,6 +553,20 @@ function initializeAdmin() {
     if (event.key === "Enter") {
       login();
     }
+  });
+}
+
+  function formatDate(dateStr) {
+  if (!dateStr) return "";
+
+  const date = new Date(dateStr);
+
+  return date.toLocaleString(undefined, {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit"
   });
 }
 

@@ -13,6 +13,7 @@ const {
 } = require("square");
 
 const app = express();
+app.use(express.json());
 const PORT = Number(process.env.PORT) || 3000;
 const publicDir = path.join(__dirname, "public");
 
@@ -1010,39 +1011,121 @@ const amountInCents = BigInt(Math.round(calculatedTotal * 100));
 /* =============================
    ROUTES
 ============================= */
+app.put("/api/orders/:id/status", async (req, res) => {
+    console.log("PUT /api/orders/:id/status hit");
+  console.log("params:", req.params);
+  console.log("body:", req.body);
+  const authHeader = req.headers.authorization || "";
+  const token = authHeader.replace("Bearer ", "").trim();
 
-app.get("/", (req, res) => {
-  res.sendFile(path.join(publicDir, "index.html"));
-});
+  if (!process.env.ADMIN_PASSWORD || token !== process.env.ADMIN_PASSWORD) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
 
-app.get("/success.html", (req, res) => {
-  res.sendFile(path.join(publicDir, "success.html"));
-});
+  const { id } = req.params;
+  const { status } = req.body;
 
-app.delete("/api/pricing/:id", checkAdmin, async (req, res) => {
+  const allowedStatuses = [
+  "pending",
+  "paid",
+  "processing",
+  "shipped",
+  "completed",
+  "cancelled"
+];
+
+  if (!allowedStatuses.includes(status)) {
+    return res.status(400).json({ error: "Invalid status" });
+  }
+
   try {
-    const id = Number(req.params.id);
+    const [result] = await db.query(
+      "UPDATE orders SET status = ? WHERE id = ?",
+      [status, id]
+    );
 
-    if (!id) {
+    if (!result.affectedRows) {
+      return res.status(404).json({ error: "Order not found" });
+    }
+
+    res.json({ success: true });
+  } catch (err) {
+    console.error("Error updating order status:", err);
+    res.status(500).json({ error: "Failed to update order status" });
+  }
+});
+
+app.get("/api/orders", async (req, res) => {
+  const authHeader = req.headers.authorization || "";
+  const token = authHeader.replace("Bearer ", "").trim();
+
+  if (!process.env.ADMIN_PASSWORD || token !== process.env.ADMIN_PASSWORD) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+
+  try {
+    const [rows] = await db.query(`
+      SELECT
+  id,
+  customer_name,
+  customer_email,
+  customer_phone,
+  customer_address,
+  customer_city,
+  customer_state,
+  customer_zip,
+  order_total,
+  items_json,
+  status,
+  created_at
+FROM orders
+      ORDER BY created_at DESC
+    `);
+
+    res.json(rows);
+  } catch (err) {
+    console.error("Error loading orders:", err);
+    res.status(500).json({ error: "Failed to load orders" });
+  }
+});
+
+app.put("/api/pricing/:id", async (req, res) => {
+  const { id } = req.params;
+  const { material, size, price } = req.body;
+
+  try {
+    const [rows] = await db.query("SELECT * FROM pricing WHERE id = ?", [id]);
+
+    if (!rows.length) {
+      return res.status(404).json({ error: "Pricing row not found" });
+    }
+
+    const existing = rows[0];
+
+    const nextMaterial = material ?? existing.material;
+    const nextSize = size ?? existing.size;
+    const nextPrice = price ?? existing.price;
+
+    const [duplicateRows] = await db.query(
+      "SELECT id FROM pricing WHERE material = ? AND size = ? AND id <> ?",
+      [nextMaterial, nextSize, id]
+    );
+
+    if (duplicateRows.length) {
       return res.status(400).json({
-        error: "Valid ID is required"
+        error: "Another pricing row already uses that material and size"
       });
     }
 
-    await db.execute(
-      `
-      DELETE FROM pricing
-      WHERE id = ?
-      `,
-      [id]
+    await db.query(
+      "UPDATE pricing SET material = ?, size = ?, price = ? WHERE id = ?",
+      [nextMaterial, nextSize, nextPrice, id]
     );
 
-    return res.json({ success: true });
-  } catch (error) {
-    console.error("Failed to delete pricing row:", error);
-    return res.status(500).json({
-      error: "Failed to delete pricing row"
-    });
+    res.json({ success: true });
+  } catch (err) {
+    console.error("Error updating pricing:", err);
+    res.status(500).json({ error: "Failed to update pricing" });
   }
 });
 

@@ -148,13 +148,7 @@ function getPrice(size, material, finish) {
 
   if (!basePrice) return 0;
 
-  let finalPrice = basePrice;
-
-  if (finish === "Glossy") {
-    finalPrice += 10;
-  }
-
-  return finalPrice;
+  return basePrice;
 }
 
 function formatCurrency(amount) {
@@ -238,15 +232,43 @@ let FORMAT_OPTIONS = {
   Wood: []
 };
 
-function refreshFormatOptions() {
-  FORMAT_OPTIONS = {
-    Poster: getAvailableSizes("Poster"),
-    Canvas: getAvailableSizes("Canvas"),
-    Metal: getAvailableSizes("Metal"),
-    Wood: getAvailableSizes("Wood")
-  };
+
+function getAvailableMaterials() {
+  if (pricingLoaded && pricingData.length) {
+    return [...new Set(
+      pricingData
+        .map((item) => item.material)
+        .filter(Boolean)
+    )].sort((a, b) => String(a).localeCompare(String(b)));
+  }
+
+  return Object.keys(PRICING);
 }
 
+function refreshFormatOptions() {
+  const materials = getAvailableMaterials();
+
+  FORMAT_OPTIONS = {};
+
+  materials.forEach((material) => {
+    FORMAT_OPTIONS[material] = getAvailableSizes(material);
+  });
+}
+
+function populateMaterials(selectEl) {
+  if (!selectEl) return;
+
+  selectEl.innerHTML = `<option value="">Select format</option>`;
+
+  const materials = getAvailableMaterials();
+
+  materials.forEach((material) => {
+    const option = document.createElement("option");
+    option.value = material;
+    option.textContent = material;
+    selectEl.appendChild(option);
+  });
+}
 function ensureFormatModal() {
   let modal = document.getElementById("format-modal");
   if (modal) return modal;
@@ -274,15 +296,11 @@ function ensureFormatModal() {
       </div>
 
       <div class="format-field">
-        <label for="modal-material">Format</label>
-        <select id="modal-material">
-          <option value="">Select format</option>
-          <option value="Poster">Poster</option>
-          <option value="Canvas">Canvas</option>
-          <option value="Metal">Metal</option>
-          <option value="Wood">Wood</option>
-        </select>
-      </div>
+  <label for="modal-material">Format</label>
+  <select id="modal-material">
+    <option value="">Select format</option>
+  </select>
+</div>
 
       <div class="format-field">
         <label for="modal-size">Size</label>
@@ -455,16 +473,19 @@ showAddToCartSuccess(newItem);
 }; // ✅ THIS LINE FIXES EVERYTHING
 
 function populateSizes(selectedMaterial) {
-    size.innerHTML = `<option value="">Select size</option>`;
+  size.innerHTML = `<option value="">Select size</option>`;
 
-    const sizes = FORMAT_OPTIONS[selectedMaterial] || [];
-    sizes.forEach((sizeValue) => {
-      const option = document.createElement("option");
-      option.value = sizeValue;
-      option.textContent = sizeValue;
-      size.appendChild(option);
-    });
-  }
+  if (!selectedMaterial) return;
+
+  const sizes = getAvailableSizes(selectedMaterial);
+
+  sizes.forEach((sizeValue) => {
+    const option = document.createElement("option");
+    option.value = sizeValue;
+    option.textContent = sizeValue;
+    size.appendChild(option);
+  });
+}
 
  function updateCheckoutState() {
   if (material.value) {
@@ -687,11 +708,14 @@ function showAddToCartSuccess(item) {
   return modal;
 }
 
-function openFormatModal(image, title = "") {
+async function openFormatModal(image, title = "") {
   const modal = ensureFormatModal();
 
   pendingImage = image;
   pendingTitle = title;
+
+  await loadPricing();
+refreshFormatOptions();
 
   const preview = document.getElementById("modal-preview");
   const material = document.getElementById("modal-material");
@@ -699,9 +723,9 @@ function openFormatModal(image, title = "") {
   const finish = document.getElementById("modal-finish");
   const checkoutBtn = document.getElementById("modal-checkout");
   const priceEl = document.getElementById("format-price");
-  
 
   preview.src = image;
+  populateMaterials(material);
   material.value = "";
   size.innerHTML = `<option value="">Select size</option>`;
   size.value = "";
@@ -1298,7 +1322,7 @@ window.App = {
     showLightbox(index);
   },
 
-  buyNowFromGallery(photo) {
+    async buyNowFromGallery(photo) {
     if (!photo || !photo.src) {
       console.error("Invalid photo passed to buyNowFromGallery:", photo);
       return;
@@ -1306,7 +1330,13 @@ window.App = {
 
     console.log("buyNowFromGallery photo =", photo);
 
-openFormatModal(photo.src, photo.title || "");  }
+    try {
+      await openFormatModal(photo.src, photo.title || "");
+    } catch (err) {
+      console.error("Failed to open format modal:", err);
+      alert("Unable to load print options right now. Please try again.");
+    }
+  }
 };
 
 window.addPhotoToCartByIndex = function (index) {
