@@ -127,7 +127,7 @@ app.get("/api/health", (req, res) => {
    PRICING
 ============================= */
 
-app.get("/api/pricing", checkAdmin, async (req, res) => {
+app.get("/api/pricing", async (req, res) => {
   try {
     const [rows] = await db.execute(
       `
