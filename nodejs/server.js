@@ -129,7 +129,7 @@ app.post("/api/contact", async (req, res) => {
         message
       });
 
-      /*await db.execute(
+      await db.execute(
         `
         INSERT INTO contact_submissions (
           name,
@@ -144,23 +144,7 @@ app.post("/api/contact", async (req, res) => {
           subject || null,
           message || null
         ]
-      );*/
-
-      console.log("DB ENV CHECK:", {
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  db: process.env.DB_NAME
-});
-
-console.log("ABOUT TO INSERT CONTACT");
-
-const [result] = await db.execute(
-  `INSERT INTO contact_submissions (name, email, subject, message)
-   VALUES (?, ?, ?, ?)`,
-  [name, email, subject, message]
-);
-
-console.log("CONTACT INSERT COMPLETE:", result);
+      );
 
       console.log("✅ Contact submission saved to database");
     } catch (dbError) {
