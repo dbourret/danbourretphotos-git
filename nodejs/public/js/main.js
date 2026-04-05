@@ -327,6 +327,8 @@ function ensureFormatModal() {
   const checkoutBtn = document.getElementById("modal-checkout");
   const priceEl = document.getElementById("format-price");
   const errorEl = document.getElementById("format-error");
+  closeBtn.onclick = closeFormatModal;
+backBtn.onclick = closeFormatModal;
 
   panel.style.width = "min(620px, 100%)";
   panel.style.maxHeight = "90vh";
@@ -697,6 +699,7 @@ function openFormatModal(image, title = "") {
   const finish = document.getElementById("modal-finish");
   const checkoutBtn = document.getElementById("modal-checkout");
   const priceEl = document.getElementById("format-price");
+  
 
   preview.src = image;
   material.value = "";
