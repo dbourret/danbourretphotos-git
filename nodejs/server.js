@@ -5,6 +5,7 @@ const path = require("path");
 const crypto = require("crypto");
 const nodemailer = require("nodemailer");
 const mysql = require("mysql2/promise");
+const rateLimit = require("express-rate-limit");
 const {
   SquareClient,
   SquareEnvironment,
@@ -40,6 +41,26 @@ console.log("publicDir =", publicDir);
 
 app.disable("x-powered-by");
 
+function checkAdmin(req, res, next) {
+  const authHeader = req.headers.authorization;
+
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+
+  const password = authHeader.slice(7).trim();
+
+  if (!process.env.ADMIN_PASSWORD) {
+    return res.status(500).json({ error: "Admin password not configured" });
+  }
+
+  if (password !== process.env.ADMIN_PASSWORD) {
+    return res.status(403).json({ error: "Forbidden" });
+  }
+
+  next();
+}
+
 /* =============================
    REQUEST LOGGING
 ============================= */
@@ -55,6 +76,7 @@ app.use((req, res, next) => {
 
 app.use(express.json({ limit: "1mb" }));
 app.use(express.urlencoded({ extended: true }));
+
 
 /* =============================
    SECURITY / CSP
@@ -100,6 +122,111 @@ app.get("/api/health", (req, res) => {
     time: new Date().toISOString()
   });
 });
+
+/* =============================
+   PRICING
+============================= */
+
+app.get("/api/pricing", checkAdmin, async (req, res) => {
+  try {
+    const [rows] = await db.execute(
+      `
+      SELECT
+        id,
+        material,
+        size,
+        price,
+        active
+      FROM pricing
+      WHERE active = 1
+      ORDER BY material, size
+      `
+    );
+
+    return res.json(rows);
+  } catch (error) {
+    console.error("Failed to fetch pricing:", error);
+
+    return res.status(500).json({
+      error: "Failed to fetch pricing"
+    });
+  }
+});
+
+app.get("/api/pricing/:material/:size", async (req, res) => {
+  try {
+    const material = String(req.params.material || "").trim();
+    const size = String(req.params.size || "").trim();
+
+    if (!material || !size) {
+      return res.status(400).json({
+        error: "Material and size are required"
+      });
+    }
+
+    const [rows] = await db.execute(
+      `
+      SELECT
+        id,
+        material,
+        size,
+        price,
+        active
+      FROM pricing
+      WHERE material = ? AND size = ? AND active = 1
+      LIMIT 1
+      `,
+      [material, size]
+    );
+
+    if (!rows.length) {
+      return res.status(404).json({
+        error: "Price not found"
+      });
+    }
+
+    return res.json(rows[0]);
+  } catch (error) {
+    console.error("Failed to fetch price:", error);
+
+    return res.status(500).json({
+      error: "Failed to fetch price"
+    });
+  }
+});
+
+// ✅ ✅ ✅ ADD IT HERE (TOP-LEVEL, OUTSIDE ROUTES)
+async function calculateOrderTotal(items) {
+  let total = 0;
+
+  for (const item of items) {
+    const { material, size, finish } = item;
+
+    const [rows] = await db.execute(
+      `
+      SELECT price
+      FROM pricing
+      WHERE material = ? AND size = ? AND active = 1
+      LIMIT 1
+      `,
+      [material, size]
+    );
+
+    if (!rows.length) {
+      throw new Error(`Invalid price for ${material} ${size}`);
+    }
+
+    let price = Number(rows[0].price);
+
+    if (finish === "Glossy") {
+      price += 10;
+    }
+
+    total += price;
+  }
+
+  return total;
+}
 
 app.post("/api/contact", async (req, res) => {
   try {
@@ -170,7 +297,7 @@ app.post("/api/contact", async (req, res) => {
 
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST,
-  port: Number(process.env.SMTP_PORT) || 465,
+  port: Number(process.env.SMTP_PORT) || 587,
   secure: Number(process.env.SMTP_PORT) === 465,
   auth: {
     user: process.env.SMTP_USER,
@@ -724,14 +851,14 @@ app.get("/api/config/square", (req, res) => {
 
 app.post("/api/payments/square", async (req, res) => {
   try {
-    const { sourceId, amount, orderDetails = {} } = req.body;
+    const { sourceId, orderDetails = {} } = req.body;
 
-    if (!sourceId) {
+        if (!sourceId) {
       return res.status(400).json({ error: "Missing sourceId" });
     }
 
-    if (!amount || Number.isNaN(Number(amount)) || Number(amount) <= 0) {
-      return res.status(400).json({ error: "Invalid amount" });
+    if (!orderDetails || !orderDetails.items?.length) {
+      return res.status(400).json({ error: "Invalid order" });
     }
 
     if (!process.env.SQUARE_ACCESS_TOKEN) {
@@ -743,8 +870,8 @@ app.post("/api/payments/square", async (req, res) => {
     console.log("Square payment req.body:", JSON.stringify(req.body, null, 2));
     console.log("orderDetails:", JSON.stringify(orderDetails, null, 2));
 
-    const amountInCents = BigInt(Math.round(Number(amount)));
-
+    const calculatedTotal = await calculateOrderTotal(orderDetails.items);
+    const amountInCents = BigInt(Math.round(calculatedTotal * 100));
     const paymentResponse = await squareClient.payments.create({
       sourceId,
       idempotencyKey: crypto.randomUUID(),
@@ -776,7 +903,7 @@ app.post("/api/payments/square", async (req, res) => {
       const customerState = customer.state || null;
       const customerZip = customer.zip || null;
 
-      const orderTotal = Number(amount || 0) / 100;
+      const orderTotal = calculatedTotal;
       const currency = "USD";
 
       const items =
@@ -798,6 +925,15 @@ app.post("/api/payments/square", async (req, res) => {
         currency,
         items
       });
+
+      if (!orderDetails || !orderDetails.items?.length) {
+  return res.status(400).json({ error: "Invalid order" });
+}
+
+const calculatedTotal = await calculateOrderTotal(orderDetails.items);
+
+// Square expects cents
+const amountInCents = BigInt(Math.round(calculatedTotal * 100));
 
       await db.execute(
         `
@@ -840,7 +976,7 @@ app.post("/api/payments/square", async (req, res) => {
     await sendOrderNotification({
       paymentId: payment?.id || null,
       receiptUrl: payment?.receiptUrl || null,
-      amount: Number(amount),
+      amount: Number(amountInCents),
       customer: orderDetails.customer || {},
       selections: orderDetails.items || orderDetails.selections || [],
       notes: orderDetails.notes || ""
@@ -883,9 +1019,102 @@ app.get("/success.html", (req, res) => {
   res.sendFile(path.join(publicDir, "success.html"));
 });
 
+app.delete("/api/pricing/:id", checkAdmin, async (req, res) => {
+  try {
+    const id = Number(req.params.id);
+
+    if (!id) {
+      return res.status(400).json({
+        error: "Valid ID is required"
+      });
+    }
+
+    await db.execute(
+      `
+      DELETE FROM pricing
+      WHERE id = ?
+      `,
+      [id]
+    );
+
+    return res.json({ success: true });
+  } catch (error) {
+    console.error("Failed to delete pricing row:", error);
+    return res.status(500).json({
+      error: "Failed to delete pricing row"
+    });
+  }
+});
+
 /* =============================
    API 404
 ============================= */
+
+app.post("/api/pricing", checkAdmin, async (req, res) => {
+  try {
+    const material = String(req.body.material || "").trim();
+    const size = String(req.body.size || "").trim();
+    const price = Number(req.body.price);
+
+    if (!material || !size || Number.isNaN(price)) {
+      return res.status(400).json({
+        error: "Material, size, and valid price are required"
+      });
+    }
+
+    await db.execute(
+      `
+      INSERT INTO pricing (
+        material,
+        size,
+        price,
+        active
+      ) VALUES (?, ?, ?, 1)
+      `,
+      [material, size, price]
+    );
+
+    return res.json({ success: true });
+  } catch (error) {
+    console.error("Failed to add pricing:", error);
+    return res.status(500).json({
+      error: "Failed to add pricing"
+    });
+  }
+});
+
+/* =============================
+   UPDATE PRICING
+============================= */
+
+app.put("/api/pricing/:id", checkAdmin, async (req, res) => {
+  try {
+    const id = Number(req.params.id);
+    const { price } = req.body;
+
+    if (!id || price == null) {
+      return res.status(400).json({
+        error: "ID and price are required"
+      });
+    }
+
+    await db.execute(
+      `
+      UPDATE pricing
+      SET price = ?
+      WHERE id = ?
+      `,
+      [price, id]
+    );
+
+    return res.json({ success: true });
+  } catch (error) {
+    console.error("Failed to update pricing:", error);
+    return res.status(500).json({
+      error: "Failed to update pricing"
+    });
+  }
+});
 
 app.use("/api", (req, res) => {
   res.status(404).json({ error: "API route not found" });
@@ -912,6 +1141,7 @@ app.use((err, req, res, next) => {
 
   return res.status(500).json({ error: "Internal server error" });
 });
+
 
 /* =============================
    START SERVER

@@ -1,4 +1,4 @@
-console.log("main.js loaded");
+console.log("MAIN JS LOADED - TEST 12345");
 
 /* =============================
    PAGE NAVIGATION
@@ -52,6 +52,42 @@ function saveCart(cart) {
   localStorage.setItem("cart", JSON.stringify(cart));
 }
 
+let pricingData = [];
+let pricingLoaded = false;
+
+async function loadPricing() {
+  try {
+    const res = await fetch("/api/pricing");
+
+    if (!res.ok) {
+      throw new Error(`Failed to load pricing: ${res.status}`);
+    }
+
+    const rows = await res.json();
+
+    pricingData = Array.isArray(rows) ? rows : [];
+    pricingLoaded = true;
+
+    console.log("Pricing loaded from DB:", pricingData);
+  } catch (err) {
+    console.error("Error loading pricing from DB:", err);
+    pricingData = [];
+    pricingLoaded = false;
+  }
+}
+
+function getBasePriceFromDb(size, material) {
+  const match = pricingData.find((item) => {
+    return (
+      String(item.material).toLowerCase() === String(material).toLowerCase() &&
+      String(item.size).toLowerCase() === String(size).toLowerCase()
+    );
+  });
+
+  if (!match) return 0;
+  return Number(match.price || 0);
+}
+
 const PRICING = {
   Poster: {
     "11x14": 20.79,
@@ -88,11 +124,27 @@ const PRICING = {
 };
 
 function getAvailableSizes(material) {
-  return Object.keys(PRICING[material] || {});
+  let sizes = [];
+
+  if (pricingLoaded && pricingData.length) {
+    sizes = pricingData
+      .filter((item) => String(item.material) === String(material))
+      .map((item) => item.size);
+  } else {
+    sizes = Object.keys(PRICING[material] || {});
+  }
+
+  return sortSizesCustom(sizes.map((size) => [size, null])).map(([size]) => size);
 }
 
 function getPrice(size, material, finish) {
-  const basePrice = Number(PRICING[material]?.[size] || 0);
+  let basePrice = 0;
+
+  if (pricingLoaded && pricingData.length) {
+    basePrice = getBasePriceFromDb(size, material);
+  } else {
+    basePrice = Number(PRICING[material]?.[size] || 0);
+  }
 
   if (!basePrice) return 0;
 
@@ -141,15 +193,18 @@ function renderCart() {
     const div = document.createElement("div");
     div.className = "cart-item";
     div.innerHTML = `
-      <img src="${item.image}" alt="Cart item" />
-      <div class="cart-item-details">
-        <strong>${item.size} - ${item.material} - ${item.finish}</strong>
-        <div>${formatCurrency(itemPrice)}</div>
-      </div>
-      <div class="cart-item-actions">
-        <button class="remove-btn" type="button" data-index="${index}">Remove</button>
-      </div>
-    `;
+      ${item.image
+  ? `<img src="${item.image}" alt="Cart item" />`
+  : `<div class="cart-item-image-placeholder">No preview</div>`
+}
+        <div class="cart-item-details">
+    <strong>${item.size} - ${item.material} - ${item.finish}</strong>
+    <div>${formatCurrency(itemPrice)}</div>
+  </div>
+  <div class="cart-item-actions">
+    <button class="remove-btn" type="button" data-index="${index}">Remove</button>
+  </div>
+`;
 
     container.appendChild(div);
   });
@@ -176,12 +231,21 @@ function renderCart() {
 let pendingImage = null;
 let pendingTitle = null;
 
-const FORMAT_OPTIONS = {
-  Poster: getAvailableSizes("Poster"),
-  Canvas: getAvailableSizes("Canvas"),
-  Metal: getAvailableSizes("Metal"),
-  Wood: getAvailableSizes("Wood")
+let FORMAT_OPTIONS = {
+  Poster: [],
+  Canvas: [],
+  Metal: [],
+  Wood: []
 };
+
+function refreshFormatOptions() {
+  FORMAT_OPTIONS = {
+    Poster: getAvailableSizes("Poster"),
+    Canvas: getAvailableSizes("Canvas"),
+    Metal: getAvailableSizes("Metal"),
+    Wood: getAvailableSizes("Wood")
+  };
+}
 
 function ensureFormatModal() {
   let modal = document.getElementById("format-modal");
@@ -1468,15 +1532,53 @@ console.log("Parsed payment data:", paymentData);
   }
 }
 
+function sortSizesAscending(sizeEntries) {
+  return [...sizeEntries].sort(([sizeA], [sizeB]) => {
+    const [aW, aH] = String(sizeA).split("x").map(Number);
+    const [bW, bH] = String(sizeB).split("x").map(Number);
+
+    const aArea = (aW || 0) * (aH || 0);
+    const bArea = (bW || 0) * (bH || 0);
+
+    return aArea - bArea;
+  });
+}
+
+const SIZE_ORDER = [
+  "5x7",
+  "8x10",
+  "11x14",
+  "12x12",
+  "12x18",
+  "16x20",
+  "20x24",
+  "20x30",
+  "24x36"
+];
+
+function sortSizesCustom(sizeEntries) {
+  return [...sizeEntries].sort(([a], [b]) => {
+    const indexA = SIZE_ORDER.indexOf(a);
+    const indexB = SIZE_ORDER.indexOf(b);
+
+    // If both are in list → use defined order
+    if (indexA !== -1 && indexB !== -1) {
+      return indexA - indexB;
+    }
+
+    // If only one is in list → prioritize known sizes
+    if (indexA !== -1) return -1;
+    if (indexB !== -1) return 1;
+
+    // fallback (rare case)
+    return a.localeCompare(b);
+  });
+}
+
 function renderPricingCards() {
   const pricingContainer = document.getElementById("pricing-cards");
 
   if (!pricingContainer) {
-    return;
-  }
-
-  if (!PRICING) {
-    console.error("PRICING object not found");
     return;
   }
 
@@ -1487,10 +1589,26 @@ function renderPricingCards() {
     Wood: "Wood"
   };
 
-  pricingContainer.innerHTML = Object.entries(PRICING)
+  let groupedPricing = {};
+
+  if (pricingLoaded && pricingData.length) {
+    pricingData.forEach((item) => {
+      if (!groupedPricing[item.material]) {
+        groupedPricing[item.material] = {};
+      }
+
+      groupedPricing[item.material][item.size] = Number(item.price || 0);
+    });
+  } else {
+    groupedPricing = PRICING;
+  }
+
+  pricingContainer.innerHTML = Object.entries(groupedPricing)
     .map(([formatKey, sizes]) => {
-      const rows = Object.entries(sizes)
-        .map(([size, price], index) => `
+      const sortedSizes = sortSizesCustom(Object.entries(sizes));
+
+const rows = sortedSizes
+  .map(([size, price], index) => `
           ${index === 0 ? `
             <div class="pricing-header">Size</div>
             <div class="pricing-header">Price</div>
@@ -1513,7 +1631,7 @@ function renderPricingCards() {
       `;
     })
     .join("");
-}
+} 
 
 function initContactForm() {
   const form = document.getElementById("contact-form");
@@ -1576,8 +1694,11 @@ function initContactForm() {
    INIT
 ============================= */
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
   bindPageNavigation();
+
+  await loadPricing();
+  refreshFormatOptions();
 
   const params = new URLSearchParams(window.location.search);
   const page = params.get("page") || "home";

@@ -860,3 +860,8 @@ textarea {
 .contact-status.success {
   color: #4caf50;
 }
+
+input {
+  padding: 8px;
+  min-width: 120px;
+}
