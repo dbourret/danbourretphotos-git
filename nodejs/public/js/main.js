@@ -1587,7 +1587,6 @@ console.log("Parsed payment data:", paymentData);
     window.location.href = "/success.html";
   } catch (err) {
   console.error("Square payment error:", err);
-  showPaymentStatus("Payment failed. Please check your details and try again.");
 } finally {
     const payBtn = document.getElementById("square-pay-btn");
     if (payBtn) {
