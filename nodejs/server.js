@@ -906,9 +906,10 @@ app.post("/api/payments/square", async (req, res) => {
       const customerZip = customer.zip || null;
 
       const orderTotal = calculatedTotal;
-      const currency = "USD";
+const currency = "USD";
+const status = "paid";
 
-      const items = orderDetails.items || orderDetails.selections || [];
+const items = orderDetails.items || orderDetails.selections || [];
 
       console.log("ORDER DB PAYLOAD:", {
         squarePaymentId,
@@ -926,37 +927,39 @@ app.post("/api/payments/square", async (req, res) => {
       });
 
       await db.execute(
-        `
-        INSERT INTO orders (
-          square_payment_id,
-          square_order_id,
-          customer_name,
-          customer_email,
-          customer_phone,
-          customer_address,
-          customer_city,
-          customer_state,
-          customer_zip,
-          order_total,
-          currency,
-          items_json
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        `,
-        [
-          squarePaymentId,
-          squareOrderId,
-          customerName,
-          customerEmail,
-          customerPhone,
-          customerAddress,
-          customerCity,
-          customerState,
-          customerZip,
-          orderTotal,
-          currency,
-          JSON.stringify(items)
-        ]
-      );
+  `
+  INSERT INTO orders (
+    square_payment_id,
+    square_order_id,
+    customer_name,
+    customer_email,
+    customer_phone,
+    customer_address,
+    customer_city,
+    customer_state,
+    customer_zip,
+    order_total,
+    currency,
+    items_json,
+    status
+  ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+  `,
+  [
+    squarePaymentId,
+    squareOrderId,
+    customerName,
+    customerEmail,
+    customerPhone,
+    customerAddress,
+    customerCity,
+    customerState,
+    customerZip,
+    orderTotal,
+    currency,
+    JSON.stringify(items),
+    status
+  ]
+);
 
       console.log("✅ Order saved to database");
     } catch (dbError) {
@@ -1004,6 +1007,34 @@ app.post("/api/payments/square", async (req, res) => {
 /* =============================
    ROUTES
 ============================= */
+app.get("/api/contact-submissions", async (req, res) => {
+  const authHeader = req.headers.authorization || "";
+  const token = authHeader.replace("Bearer ", "").trim();
+
+  if (!process.env.ADMIN_PASSWORD || token !== process.env.ADMIN_PASSWORD) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+
+  try {
+    const [rows] = await db.query(`
+      SELECT
+        id,
+        name,
+        email,
+        subject,
+        message,
+        created_at
+      FROM contact_submissions
+      ORDER BY created_at DESC
+    `);
+
+    res.json(rows);
+  } catch (err) {
+    console.error("Error loading contact submissions:", err);
+    res.status(500).json({ error: "Failed to load contact submissions" });
+  }
+}); 
+
 app.put("/api/orders/:id/status", async (req, res) => {
     console.log("PUT /api/orders/:id/status hit");
   console.log("params:", req.params);
