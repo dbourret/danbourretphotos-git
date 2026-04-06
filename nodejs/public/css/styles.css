@@ -865,3 +865,7 @@ input {
   padding: 8px;
   min-width: 120px;
 }
+
+.payment-status {
+  white-space: pre-line;
+}
