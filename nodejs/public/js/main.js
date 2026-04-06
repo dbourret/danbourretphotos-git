@@ -159,7 +159,7 @@ function showPaymentStatus(message, type = "error") {
   const el = document.getElementById("payment-status");
   if (!el) return;
 
-  el.innerHTML = message;
+  el.textContent = message;
   el.className = `payment-status ${type}`;
 }
 
