@@ -161,6 +161,10 @@ function showPaymentStatus(message, type = "error") {
 
   el.textContent = message;
   el.className = `payment-status ${type}`;
+
+  // trigger animation
+  el.classList.remove("show");
+  setTimeout(() => el.classList.add("show"), 10);
 }
 
 function renderCart() {

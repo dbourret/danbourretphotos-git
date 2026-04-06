@@ -869,3 +869,45 @@ input {
 .payment-status {
   white-space: pre-line;
 }
+
+.payment-status {
+  margin-top: 16px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  white-space: pre-line;
+  border: 1px solid transparent;
+  transition: all 0.2s ease;
+}
+
+/* Error (red) */
+.payment-status.error {
+  background: rgba(255, 80, 80, 0.08);
+  border-color: rgba(255, 80, 80, 0.25);
+  color: #ff6b6b;
+}
+
+/* Success (green) */
+.payment-status.success {
+  background: rgba(80, 200, 120, 0.08);
+  border-color: rgba(80, 200, 120, 0.25);
+  color: #4ade80;
+}
+
+/* Info (gold / brand tone) */
+.payment-status.info {
+  background: rgba(214, 179, 106, 0.08);
+  border-color: rgba(214, 179, 106, 0.25);
+  color: #e6d6ae;
+}
+
+.payment-status {
+  opacity: 0;
+  transform: translateY(6px);
+}
+
+.payment-status.show {
+  opacity: 1;
+  transform: translateY(0);
+}
