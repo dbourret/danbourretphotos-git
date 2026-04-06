@@ -936,7 +936,9 @@ const calculatedTotal = await calculateOrderTotal(orderDetails.items);
 // Square expects cents
 const amountInCents = BigInt(Math.round(calculatedTotal * 100));
 
-      await db.execute(
+console.log("🚀 INSERT QUERY FIRING");      
+
+await db.execute(
         `
         INSERT INTO orders (
           square_payment_id,
@@ -970,9 +972,13 @@ const amountInCents = BigInt(Math.round(calculatedTotal * 100));
       );
 
       console.log("✅ Order saved to database");
-    } catch (dbError) {
-      console.error("❌ Failed to save order to DB:", dbError);
-    }
+} catch (dbError) {
+  console.error("❌ Failed to save order to DB:", dbError);
+  return res.status(500).json({
+    error: "Failed to save order",
+    details: dbError.message
+  });
+}
 
     await sendOrderNotification({
       paymentId: payment?.id || null,
