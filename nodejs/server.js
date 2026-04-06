@@ -854,7 +854,7 @@ app.post("/api/payments/square", async (req, res) => {
   try {
     const { sourceId, orderDetails = {} } = req.body;
 
-        if (!sourceId) {
+    if (!sourceId) {
       return res.status(400).json({ error: "Missing sourceId" });
     }
 
@@ -873,6 +873,7 @@ app.post("/api/payments/square", async (req, res) => {
 
     const calculatedTotal = await calculateOrderTotal(orderDetails.items);
     const amountInCents = BigInt(Math.round(calculatedTotal * 100));
+
     const paymentResponse = await squareClient.payments.create({
       sourceId,
       idempotencyKey: crypto.randomUUID(),
@@ -907,10 +908,7 @@ app.post("/api/payments/square", async (req, res) => {
       const orderTotal = calculatedTotal;
       const currency = "USD";
 
-      const items =
-        orderDetails.items ||
-        orderDetails.selections ||
-        [];
+      const items = orderDetails.items || orderDetails.selections || [];
 
       console.log("ORDER DB PAYLOAD:", {
         squarePaymentId,
@@ -927,18 +925,7 @@ app.post("/api/payments/square", async (req, res) => {
         items
       });
 
-      if (!orderDetails || !orderDetails.items?.length) {
-  return res.status(400).json({ error: "Invalid order" });
-}
-
-const calculatedTotal = await calculateOrderTotal(orderDetails.items);
-
-// Square expects cents
-const amountInCents = BigInt(Math.round(calculatedTotal * 100));
-
-console.log("🚀 INSERT QUERY FIRING");      
-
-await db.execute(
+      await db.execute(
         `
         INSERT INTO orders (
           square_payment_id,
@@ -972,13 +959,13 @@ await db.execute(
       );
 
       console.log("✅ Order saved to database");
-} catch (dbError) {
-  console.error("❌ Failed to save order to DB:", dbError);
-  return res.status(500).json({
-    error: "Failed to save order",
-    details: dbError.message
-  });
-}
+    } catch (dbError) {
+      console.error("❌ Failed to save order to DB:", dbError);
+      return res.status(500).json({
+        error: "Failed to save order",
+        details: dbError.message
+      });
+    }
 
     await sendOrderNotification({
       paymentId: payment?.id || null,
