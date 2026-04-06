@@ -577,15 +577,7 @@ finish.addEventListener("change", () => {
 function showAddToCartSuccess(item) {
   let successModal = document.getElementById("cart-success-modal");
 
-  function showPaymentStatus(message, type = "error") {
-  const el = document.getElementById("payment-status");
-  if (!el) return;
-
-  el.innerHTML = message;
-  el.className = `payment-status ${type}`;
-
-}
-
+ 
   const getSuccessPanelHtml = () => `
     <h3 style="margin-bottom:12px;">Added to Cart</h3>
     <p style="margin-bottom:18px; color:#ccc;">
