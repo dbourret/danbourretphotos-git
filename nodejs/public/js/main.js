@@ -159,7 +159,7 @@ function showPaymentStatus(message, type = "error") {
   const el = document.getElementById("payment-status");
   if (!el) return;
 
-  el.textContent = message;
+  el.innerHTML = message;
   el.className = `payment-status ${type}`;
 }
 
@@ -581,8 +581,9 @@ function showAddToCartSuccess(item) {
   const el = document.getElementById("payment-status");
   if (!el) return;
 
-  el.textContent = message;
+  el.innerHTML = message;
   el.className = `payment-status ${type}`;
+
 }
 
   const getSuccessPanelHtml = () => `
