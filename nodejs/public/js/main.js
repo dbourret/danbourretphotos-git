@@ -1534,6 +1534,11 @@ async function handleSquarePayment() {
 };
 
 console.log("cart being sent to server =", cart);
+if (result.status !== "OK") {
+  showPaymentStatus("Your card details could not be verified. Please review them and try again.");
+  throw new Error("Card tokenization failed");
+}
+
 const paymentRes = await fetch("/api/payments/square", {
   method: "POST",
   headers: {
@@ -1543,14 +1548,14 @@ const paymentRes = await fetch("/api/payments/square", {
     sourceId: result.token,
     amount: Math.round(total * 100),
     orderDetails: {
-      customer, // 👈 THIS WAS MISSING
+      customer,
       items: cart,
       total: total
     }
   })
 });
 
-    console.log("Raw payment response:", paymentRes);
+console.log("Raw payment response:", paymentRes);
 
 if (!paymentRes.ok) {
   const errorText = await paymentRes.text();
@@ -1558,13 +1563,9 @@ if (!paymentRes.ok) {
 
   const friendlyMessage = getUserFriendlyError(errorText);
 
-  function showPaymentStatus(message, type = "error") {
-  const el = document.getElementById("payment-status");
-  if (!el) return;
-
-  el.textContent = message;
-  el.className = `payment-status ${type}`;
-}
+  showPaymentStatus(
+    `Payment failed.\n${friendlyMessage}\n\nYour card has not been charged.`
+  );
 
   throw new Error("Payment request failed");
 }
@@ -1572,14 +1573,14 @@ if (!paymentRes.ok) {
 const paymentData = await paymentRes.json();
 console.log("Parsed payment data:", paymentData);
 
-    localStorage.setItem("lastOrder", JSON.stringify({
-      paymentId: paymentData.paymentId,
-      total: `$${total.toFixed(2)}`,
-      items: cart
-    }));
+localStorage.setItem("lastOrder", JSON.stringify({
+  paymentId: paymentData.paymentId,
+  total: `$${total.toFixed(2)}`,
+  items: cart
+}));
 
-    localStorage.removeItem("cart");
-    renderCart();
+localStorage.removeItem("cart");
+renderCart();
 
     window.location.href = "/success.html";
   } catch (err) {
