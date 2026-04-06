@@ -218,6 +218,32 @@ function renderCart() {
   }
 }
 
+function getUserFriendlyError(error) {
+  const msg = (error || "").toLowerCase();
+
+  if (msg.includes("pan_failure")) {
+    return "Your card was declined. Please check your details or try another card.";
+  }
+
+  if (msg.includes("cvv")) {
+    return "The security code (CVV) is incorrect. Please check and try again.";
+  }
+
+  if (msg.includes("expired")) {
+    return "Your card has expired. Please use a different card.";
+  }
+
+  if (msg.includes("insufficient")) {
+    return "There are insufficient funds on this card.";
+  }
+
+  if (msg.includes("network")) {
+    return "Network issue detected. Please check your connection and try again.";
+  }
+
+  return "We couldn't process your payment. Please try again or use a different card.";
+}
+
 /* =============================
    SIMPLE FORMAT MODAL
 ============================= */
@@ -1536,7 +1562,13 @@ const paymentRes = await fetch("/api/payments/square", {
 if (!paymentRes.ok) {
   const errorText = await paymentRes.text();
   console.error("Payment failed response:", errorText);
-  showPaymentStatus("We couldn’t complete the payment right now. Please try again.");
+
+  const friendlyMessage = getUserFriendlyError(errorText);
+
+  showPaymentStatus(
+  `Payment failed.<br>${friendlyMessage}<br><br>Your card has not been charged.`
+);
+
   throw new Error("Payment request failed");
 }
 
