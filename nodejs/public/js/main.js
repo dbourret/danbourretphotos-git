@@ -1518,10 +1518,7 @@ async function handleSquarePayment() {
 
     const result = await squareCard.tokenize();
 
-    if (result.status !== "OK") {
-  showPaymentStatus("Your card details could not be verified. Please review them and try again.");
-  throw new Error("Card tokenization failed");
-}
+  
 
     const customer = {
   name: document.getElementById("cust-name")?.value?.trim() || "",
