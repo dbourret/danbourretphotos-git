@@ -852,6 +852,9 @@ app.get("/api/config/square", (req, res) => {
 
 app.post("/api/payments/square", async (req, res) => {
   try {
+        console.log("=== /api/payments/square hit ===");
+        console.log("Request body:", JSON.stringify(req.body, null, 2));  
+
     const { sourceId, orderDetails = {} } = req.body;
 
         if (!sourceId) {
@@ -884,6 +887,8 @@ app.post("/api/payments/square", async (req, res) => {
     });
 
     const payment = paymentResponse.payment;
+
+        console.error("Square payment route failed:", err);
 
     console.log(
       "items received by server =",
@@ -1052,6 +1057,18 @@ app.put("/api/orders/:id/status", async (req, res) => {
   } catch (err) {
     console.error("Error updating order status:", err);
     res.status(500).json({ error: "Failed to update order status" });
+  }
+});
+
+app.get("/api/debug-db", async (req, res) => {
+  try {
+    const [rows] = await db.execute("SELECT DATABASE() AS db");
+    res.json({
+      connectedDatabase: rows[0].db
+    });
+  } catch (err) {
+    console.error("DB debug route failed:", err);
+    res.status(500).json({ error: err.message });
   }
 });
 
