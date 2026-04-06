@@ -1558,9 +1558,13 @@ if (!paymentRes.ok) {
 
   const friendlyMessage = getUserFriendlyError(errorText);
 
-  showPaymentStatus(
-    `Payment failed.\n${friendlyMessage}\n\nYour card has not been charged.`
-);
+  function showPaymentStatus(message, type = "error") {
+  const el = document.getElementById("payment-status");
+  if (!el) return;
+
+  el.textContent = message;
+  el.className = `payment-status ${type}`;
+}
 
   throw new Error("Payment request failed");
 }
