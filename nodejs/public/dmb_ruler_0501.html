@@ -478,7 +478,8 @@ async function loadOrders() {
   tbody.innerHTML = "";
 
   data.forEach((order) => {
-  const tr = document.createElement("tr");
+    console.log("order id/status =", order.id, order.status);
+    const tr = document.createElement("tr");
   const normalizedStatus = String(order.status || "").trim().toLowerCase();
 
   tr.innerHTML = `
