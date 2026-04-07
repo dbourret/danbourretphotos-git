@@ -978,3 +978,46 @@ input {
   opacity: 0.85;
   cursor: wait;
 }
+
+.status-select {
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid #444;
+  color: #fff;
+  font-weight: 600;
+  min-width: 140px;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: none;
+}
+
+.status-paid {
+  background-color: #1d4ed8 !important;
+  color: #fff !important;
+}
+
+.status-processing {
+  background-color: #b45309 !important;
+  color: #fff !important;
+}
+
+.status-shipped {
+  background-color: #7c3aed !important;
+  color: #fff !important;
+}
+
+.status-completed {
+  background-color: #059669 !important;
+  color: #fff !important;
+}
+
+.status-cancelled {
+  background-color: #b91c1c !important;
+  color: #fff !important;
+}
+
+.status-pending {
+  background-color: #4b5563 !important;
+  color: #fff !important;
+}
