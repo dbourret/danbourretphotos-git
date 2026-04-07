@@ -2051,14 +2051,19 @@ window.handleUpsellClick = async function (material) {
   const materials = getPricingMaterials();
 
   container.innerHTML = "";
-  container.style.display = "grid";
-  if (window.innerWidth < 640) {
-  container.style.gridTemplateColumns = "1fr";
+  container.style.setProperty("display", "grid", "important");
+container.style.setProperty("gap", "22px", "important");
+container.style.setProperty("align-items", "stretch", "important");
+
+if (window.innerWidth < 640) {
+  container.style.setProperty("grid-template-columns", "1fr", "important");
 } else {
-  container.style.gridTemplateColumns = "repeat(auto-fit, minmax(260px, 1fr))";
+  container.style.setProperty(
+    "grid-template-columns",
+    "repeat(auto-fit, minmax(260px, 1fr))",
+    "important"
+  );
 }
-  container.style.gap = "22px";
-  container.style.alignItems = "stretch";
 
   materials.forEach((material) => {
     const sizes = getAvailableSizes(material);
@@ -2317,6 +2322,10 @@ function initContactForm() {
 document.addEventListener("DOMContentLoaded", async () => {
   await loadPricing();
   refreshFormatOptions();
+
+  window.addEventListener("resize", () => {
+  renderPricingCards();
+});
 
   const params = new URLSearchParams(window.location.search);
   const page = params.get("page") || "home";
