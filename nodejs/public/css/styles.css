@@ -825,7 +825,7 @@ textarea {
   flex-wrap: wrap;
 }
 
-/* FINAL PRICING OVERRIDE - ALWAYS 4 CARDS IN ONE ROW */
+/* PRICING GRID */
 #page-pricing .services-grid {
   display: grid !important;
   grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
@@ -833,9 +833,21 @@ textarea {
   align-items: stretch !important;
 }
 
-#page-pricing .services-grid > .card {
+#page-pricing .services-grid > * {
   width: 100% !important;
   min-width: 0 !important;
+}
+
+@media (max-width: 900px) {
+  #page-pricing .services-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
+@media (max-width: 640px) {
+  #page-pricing .services-grid {
+    grid-template-columns: 1fr !important;
+  }
 }
 
 .payment-status {
