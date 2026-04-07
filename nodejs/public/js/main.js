@@ -1536,6 +1536,7 @@ function clearCheckoutValidation() {
 }
 
 function validateCheckoutFields() {
+  const checkoutHelper = document.getElementById("checkout-helper");
   const fields = [
     { id: "cust-name", label: "Full Name" },
     { id: "cust-email", label: "Email Address" },
@@ -1567,6 +1568,10 @@ function validateCheckoutFields() {
   if (emailValue && !emailPattern.test(emailValue)) {
     missingFields.push("A valid Email Address");
     emailField?.classList.add("input-error");
+  }
+
+  if (checkoutHelper) {
+    checkoutHelper.style.display = missingFields.length > 0 ? "block" : "none";
   }
 
   if (missingFields.length > 0) {
@@ -1607,13 +1612,35 @@ function isCheckoutFormComplete() {
 }
 
 function updatePayButtonAvailability() {
-  const payBtn = document.getElementById("square-pay-btn");
-  if (!payBtn) return;
+  const checkoutHelper = document.getElementById("checkout-helper");
 
-  const ready = isCheckoutFormComplete();
+  const requiredIds = [
+    "cust-name",
+    "cust-email",
+    "cust-phone",
+    "cust-address",
+    "cust-city",
+    "cust-state",
+    "cust-zip"
+  ];
 
-  payBtn.disabled = !ready;
-  payBtn.textContent = "Pay with Card";
+  const allFieldsValid = requiredIds.every(id => {
+    const field = document.getElementById(id);
+    return field && field.value.trim() !== "";
+  });
+
+  const emailField = document.getElementById("cust-email");
+  const emailValue = emailField?.value.trim() || "";
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const emailValid = emailPattern.test(emailValue);
+
+  const customerInfoValid = allFieldsValid && emailValid;
+
+  if (checkoutHelper) {
+    checkoutHelper.style.display = customerInfoValid ? "none" : "block";
+  }
+
+  // keep your existing Square/card/button logic below this
 }
 
 
