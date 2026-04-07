@@ -1223,6 +1223,30 @@ app.put("/api/pricing/:id", checkAdmin, async (req, res) => {
   }
 });
 
+app.delete("/api/pricing/:id", checkAdmin, async (req, res) => {
+  try {
+    const id = Number(req.params.id);
+
+    if (!id) {
+      return res.status(400).json({ error: "Valid pricing ID is required" });
+    }
+
+    const [result] = await db.execute(
+      "DELETE FROM pricing WHERE id = ?",
+      [id]
+    );
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: "Pricing row not found" });
+    }
+
+    return res.json({ success: true });
+  } catch (error) {
+    console.error("Failed to delete pricing row:", error);
+    return res.status(500).json({ error: "Failed to delete pricing row" });
+  }
+});
+
 app.use("/api", (req, res) => {
   res.status(404).json({ error: "API route not found" });
 });

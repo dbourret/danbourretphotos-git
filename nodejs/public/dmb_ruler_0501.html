@@ -970,6 +970,9 @@ async function addPrice() {
 }
 
 async function deletePrice(id) {
+    console.log("LOCAL DELETE CLICKED");
+  console.log("origin =", window.location.origin);
+  console.log("delete url =", `/api/pricing/${id}`);
   const confirmed = confirm("Are you sure you want to delete this pricing row?");
 
   if (!confirmed) {
