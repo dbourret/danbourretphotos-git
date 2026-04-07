@@ -123,6 +123,98 @@ const PRICING = {
   }
 };
 
+const MOST_POPULAR_MATERIAL = "Canvas";
+
+const UPSELL_CONFIG = {
+  Poster: {
+    label: "Upgrade available",
+    items: [
+      {
+        material: "Canvas",
+        title: "Upgrade to Canvas",
+        description: "Richer texture and a more premium wall-art look."
+      },
+      {
+        material: "Metal",
+        title: "Try Metal",
+        description: "Vivid color, sharp detail, and a sleek modern finish."
+      }
+    ]
+  },
+  Canvas: {
+    label: "Collector upgrade",
+    items: [
+      {
+        material: "Metal",
+        title: "Go Ultra-Vibrant",
+        description: "Metal gives landscapes and wildlife extra pop and depth."
+      }
+    ]
+  },
+  Metal: {
+    label: "Alternate finish",
+    items: [
+      {
+        material: "Canvas",
+        title: "Prefer a softer gallery look?",
+        description: "Canvas gives a more classic fine-art presentation."
+      }
+    ]
+  },
+  Wood: {
+    label: "Popular alternative",
+    items: [
+      {
+        material: "Canvas",
+        title: "Upgrade to Canvas",
+        description: "Canvas is our most popular premium option."
+      }
+    ]
+  }
+};
+
+function getPricingMaterials() {
+  if (pricingLoaded && Array.isArray(pricingData) && pricingData.length) {
+    return [...new Set(pricingData.map((row) => String(row.material || "").trim()))]
+      .filter(Boolean);
+  }
+
+  return Object.keys(PRICING || {});
+}
+
+function getSizesForMaterial(material) {
+  if (pricingLoaded && Array.isArray(pricingData) && pricingData.length) {
+    return pricingData
+      .filter((row) => String(row.material || "").toLowerCase() === String(material).toLowerCase())
+      .map((row) => String(row.size || "").trim())
+      .filter(Boolean);
+  }
+
+  return Object.keys(PRICING[material] || {});
+}
+
+function getDisplayBasePrice(material, size) {
+  if (pricingLoaded && Array.isArray(pricingData) && pricingData.length) {
+    return getBasePriceFromDb(size, material);
+  }
+
+  return Number(PRICING[material]?.[size] || 0);
+}
+
+function getStartingPrice(material) {
+  const sizes = getSizesForMaterial(material);
+  const prices = sizes
+    .map((size) => getDisplayBasePrice(material, size))
+    .filter((price) => Number(price) > 0);
+
+  if (!prices.length) return 0;
+  return Math.min(...prices);
+}
+
+function getUpsellsForMaterial(material) {
+  return UPSELL_CONFIG[material]?.items || [];
+}
+
 function getAvailableSizes(material) {
   let sizes = [];
 
@@ -374,6 +466,7 @@ function ensureFormatModal() {
       </div>
 
       <div id="format-price"></div>
+      <div id="format-upsell"></div>
       <div id="format-error" style="
   color:#ff6b6b;
   font-size:0.9rem;
@@ -465,6 +558,15 @@ backBtn.onclick = closeFormatModal;
   priceEl.style.color = "#e6d6ae";
   priceEl.textContent = "";
 
+  const upsellEl = document.getElementById("format-upsell");
+  upsellEl.style.display = "none";
+  upsellEl.style.margin = "0 0 18px";
+  upsellEl.style.padding = "14px";
+  upsellEl.style.borderRadius = "16px";
+  upsellEl.style.background = "rgba(255,255,255,0.05)";
+  upsellEl.style.border = "1px solid rgba(255,255,255,0.10)";
+  upsellEl.style.color = "#f3f3f3";
+
   const styleButton = (btn, primary = false) => {
     btn.style.padding = "12px 18px";
     btn.style.borderRadius = "12px";
@@ -527,52 +629,169 @@ showAddToCartSuccess(newItem);
   checkoutBtn.style.opacity = "0.55";
 }; // ✅ THIS LINE FIXES EVERYTHING
 
-function populateSizes(selectedMaterial) {
-  size.innerHTML = `<option value="">Select size</option>`;
-
-  if (!selectedMaterial) return;
-
-  const sizes = getAvailableSizes(selectedMaterial);
-
-  sizes.forEach((sizeValue) => {
-    const option = document.createElement("option");
-    option.value = sizeValue;
-    option.textContent = sizeValue;
-    size.appendChild(option);
-  });
-}
-
- function updateCheckoutState() {
-  if (material.value) {
-    size.disabled = false;
-  } else {
-    size.disabled = true;
+  function populateSizes(selectedMaterial) {
     size.innerHTML = `<option value="">Select size</option>`;
-    size.value = "";
-    finish.disabled = true;
-    finish.value = "";
+
+    if (!selectedMaterial) return;
+
+    const sizes = getAvailableSizes(selectedMaterial);
+
+    sizes.forEach((sizeValue) => {
+      const option = document.createElement("option");
+      option.value = sizeValue;
+      option.textContent = sizeValue;
+      size.appendChild(option);
+    });
   }
 
-  if (material.value && size.value) {
+    function updateFormatUpsell() {
+    const selectedMaterial = material.value;
+    const upsells = getUpsellsForMaterial(selectedMaterial);
+
+    if (!selectedMaterial || !upsells.length) {
+      upsellEl.style.display = "none";
+      upsellEl.innerHTML = "";
+      return;
+    }
+
+    if (selectedMaterial === MOST_POPULAR_MATERIAL) {
+      upsellEl.style.display = "block";
+      upsellEl.innerHTML = `
+        <div style="
+          font-size:0.75rem;
+          text-transform:uppercase;
+          letter-spacing:0.08em;
+          color:#d6b36a;
+          margin-bottom:6px;
+          font-weight:700;
+        ">
+          Most popular choice
+        </div>
+        <div style="
+          font-size:0.96rem;
+          line-height:1.45;
+          color:#f3f3f3;
+        ">
+          Canvas is currently our most popular format for a premium gallery-style presentation.
+        </div>
+      `;
+      return;
+    }
+
+    const topUpsell = upsells[0];
+    const topUpsellPrice = getStartingPrice(topUpsell.material);
+
+    upsellEl.style.display = "block";
+    upsellEl.innerHTML = `
+      <div style="
+        font-size:0.75rem;
+        text-transform:uppercase;
+        letter-spacing:0.08em;
+        color:#d6b36a;
+        margin-bottom:6px;
+        font-weight:700;
+      ">
+        Premium upgrade
+      </div>
+      <div style="
+        font-size:0.98rem;
+        font-weight:700;
+        color:#fff;
+        margin-bottom:4px;
+      ">
+        ${topUpsell.title}
+      </div>
+      <div style="
+        font-size:0.9rem;
+        line-height:1.45;
+        color:#d8d8d8;
+        margin-bottom:10px;
+      ">
+        ${topUpsell.description}
+      </div>
+      <div style="
+        font-size:0.88rem;
+        color:#f4dfac;
+        font-weight:700;
+        margin-bottom:12px;
+      ">
+        Starting at ${formatCurrency(topUpsellPrice)}
+      </div>
+      <button
+        type="button"
+        id="format-upsell-btn"
+        style="
+          padding:10px 14px;
+          border:none;
+          border-radius:12px;
+          background:linear-gradient(180deg,#f4dfac,#d6b36a);
+          color:#171717;
+          font-weight:700;
+          cursor:pointer;
+          width:100%;
+        "
+      >
+        ${topUpsell.title}
+      </button>
+    `;
+
+    const upsellBtn = document.getElementById("format-upsell-btn");
+    if (upsellBtn) {
+      upsellBtn.onclick = () => {
+  const previousSize = size.value;
+
+  material.value = topUpsell.material;
+  populateSizes(topUpsell.material);
+
+  // Try to preserve size if it exists in new material
+  const availableSizes = getAvailableSizes(topUpsell.material);
+
+  if (availableSizes.includes(previousSize)) {
+    size.value = previousSize;
     finish.disabled = false;
   } else {
-    finish.disabled = true;
+    size.value = "";
     finish.value = "";
+    finish.disabled = true;
   }
 
-  const ready = Boolean(material.value && size.value && finish.value);
-
-  checkoutBtn.disabled = !ready;
-  checkoutBtn.style.opacity = ready ? "1" : "0.55";
-
-  if (ready) {
-    const price = getPrice(size.value, material.value, finish.value);
-    priceEl.textContent = `Price: ${formatCurrency(price)}`;
-    errorEl.style.display = "none";
-  } else {
-    priceEl.textContent = "";
+  updateCheckoutState();
+};
+    }
   }
-}
+   function updateCheckoutState() {
+    if (material.value) {
+      size.disabled = false;
+    } else {
+      size.disabled = true;
+      size.innerHTML = `<option value="">Select size</option>`;
+      size.value = "";
+      finish.disabled = true;
+      finish.value = "";
+    }
+
+    if (material.value && size.value) {
+      finish.disabled = false;
+    } else {
+      finish.disabled = true;
+      finish.value = "";
+    }
+
+    const ready = Boolean(material.value && size.value && finish.value);
+
+    checkoutBtn.disabled = !ready;
+    checkoutBtn.style.opacity = ready ? "1" : "0.55";
+
+    updateFormatUpsell();
+
+    if (ready) {
+      const price = getPrice(size.value, material.value, finish.value);
+      priceEl.textContent = `Price: ${formatCurrency(price)}`;
+      errorEl.style.display = "none";
+    } else {
+      priceEl.textContent = "";
+    }
+  }
 
 function closeFormatModal() {
   modal.style.display = "none";
@@ -757,6 +976,10 @@ function showAddToCartSuccess(item) {
 }
 
 async function openFormatModal(image, title = "") {
+    window.lastSelectedPhoto = {
+    src: image,
+    title: title
+  };
   const modal = ensureFormatModal();
 
   pendingImage = image;
@@ -1788,63 +2011,239 @@ function sortSizesCustom(sizeEntries) {
   });
 }
 
-function renderPricingCards() {
-  const pricingContainer = document.getElementById("pricing-cards");
+window.handleUpsellClick = async function (material) {
+  console.log("Upsell clicked:", material);
 
-  if (!pricingContainer) {
+  // ✅ If we already have a selected photo → open modal
+  if (window.lastSelectedPhoto) {
+    await openFormatModal(
+      window.lastSelectedPhoto.src,
+      window.lastSelectedPhoto.title
+    );
+
+    setTimeout(() => {
+      const materialSelect = document.getElementById("modal-material");
+      if (!materialSelect) return;
+
+      materialSelect.value = material;
+      materialSelect.dispatchEvent(new Event("change"));
+    }, 50);
+
     return;
   }
 
-  const titleMap = {
-    Poster: "Prints",
-    Canvas: "Canvas",
-    Metal: "Metal",
-    Wood: "Wood"
-  };
+  // ❗ If NO photo yet → send to gallery
+  showPage("gallery");
 
-  let groupedPricing = {};
+  setTimeout(() => {
+    alert("Select a photo first to choose print options.");
+  }, 200);
+};
 
-  if (pricingLoaded && pricingData.length) {
-    pricingData.forEach((item) => {
-      if (!groupedPricing[item.material]) {
-        groupedPricing[item.material] = {};
-      }
+ function renderPricingCards() {
+  const container =
+    document.getElementById("pricing-cards") ||
+    document.getElementById("pricing-grid") ||
+    document.getElementById("pricing-container");
 
-      groupedPricing[item.material][item.size] = Number(item.price || 0);
-    });
-  } else {
-    groupedPricing = PRICING;
-  }
+  if (!container) return;
 
-  pricingContainer.innerHTML = Object.entries(groupedPricing)
-    .map(([formatKey, sizes]) => {
-      const sortedSizes = sortSizesCustom(Object.entries(sizes));
+  const materials = getPricingMaterials();
 
-const rows = sortedSizes
-  .map(([size, price], index) => `
-          ${index === 0 ? `
-            <div class="pricing-header">Size</div>
-            <div class="pricing-header">Price</div>
-          ` : ""}
-          <div>${size}</div>
-          <div>$${Number(price).toFixed(2)}</div>
-        `)
-        .join("");
+  container.innerHTML = "";
+  container.style.display = "grid";
+  container.style.gridTemplateColumns = "repeat(auto-fit, minmax(260px, 1fr))";
+  container.style.gap = "22px";
+  container.style.alignItems = "stretch";
 
-      return `
-        <div class="card">
-          <h3 class="service-title">${titleMap[formatKey] || formatKey}</h3>
-          <div class="pricing-block">
-            <div class="pricing-title">Price</div>
-            <div class="pricing-grid">
-              ${rows}
-            </div>
+  materials.forEach((material) => {
+    const sizes = getAvailableSizes(material);
+    const startingPrice = getStartingPrice(material);
+    const isMostPopular = material === MOST_POPULAR_MATERIAL;
+    const upsells = getUpsellsForMaterial(material);
+
+    const card = document.createElement("div");
+    card.className = "pricing-card";
+    card.style.display = "flex";
+    card.style.flexDirection = "column";
+    card.style.height = "100%";
+    card.style.background = isMostPopular
+      ? "linear-gradient(180deg, rgba(244,223,172,0.12) 0%, rgba(17,17,17,1) 18%)"
+      : "linear-gradient(180deg, rgba(255,255,255,0.04) 0%, rgba(17,17,17,1) 18%)";
+    card.style.border = isMostPopular
+      ? "1px solid rgba(244,223,172,0.38)"
+      : "1px solid rgba(255,255,255,0.10)";
+    card.style.borderRadius = "24px";
+    card.style.padding = "22px";
+    card.style.color = "#fff";
+    card.style.boxShadow = isMostPopular
+      ? "0 16px 40px rgba(0,0,0,0.28), 0 0 0 1px rgba(244,223,172,0.08) inset"
+      : "0 16px 40px rgba(0,0,0,0.20)";
+    card.style.overflow = "hidden";
+
+    const visibleSizes = sizes.slice(0, 6);
+
+const sizeRows = visibleSizes
+  .map((size) => {
+    const price = getDisplayBasePrice(material, size);
+
+    return `
+      <div style="
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        padding:11px 0;
+        border-bottom:1px solid rgba(255,255,255,0.08);
+        font-size:0.96rem;
+      ">
+        <span style="color:#e8e8e8;">${size}</span>
+        <strong style="color:#fff;">${formatCurrency(price)}</strong>
+      </div>
+    `;
+  })
+  .join("");
+
+    const upsellHtml = upsells.length
+      ? `
+        <div style="
+          margin-top:18px;
+          padding:16px;
+          border-radius:18px;
+          background:rgba(255,255,255,0.035);
+          border:1px solid rgba(255,255,255,0.08);
+        ">
+          <div style="
+            font-size:0.78rem;
+            letter-spacing:0.08em;
+            text-transform:uppercase;
+            color:#d6b36a;
+            margin-bottom:12px;
+            font-weight:700;
+          ">
+            ${UPSELL_CONFIG[material]?.label || "You may also like"}
           </div>
+
+          ${upsells
+            .map((upsell, index) => {
+              const upsellStartingPrice = getStartingPrice(upsell.material);
+
+              return `
+                <div style="
+                  padding:${index === 0 ? "0 0 12px" : "12px 0 0"};
+                  ${index < upsells.length - 1 ? "border-bottom:1px solid rgba(255,255,255,0.08);" : ""}
+                ">
+                  <div style="
+                    display:flex;
+                    justify-content:space-between;
+                    align-items:flex-start;
+                    gap:12px;
+                    margin-bottom:6px;
+                  ">
+                    <strong
+  onclick="handleUpsellClick('${upsell.material}')"
+  style="
+    color:#fff;
+    font-size:0.98rem;
+    line-height:1.35;
+    cursor:pointer;
+  "
+>
+  ${upsell.title}
+</strong>
+
+                    <span style="
+                      font-size:0.88rem;
+                      color:#f4dfac;
+                      white-space:nowrap;
+                      font-weight:700;
+                    ">
+                      From ${formatCurrency(upsellStartingPrice)}
+                    </span>
+                  </div>
+
+                  <div style="
+                    font-size:0.92rem;
+                    color:#cfcfcf;
+                    line-height:1.5;
+                  ">
+                    ${upsell.description}
+                  </div>
+                </div>
+              `;
+            })
+            .join("")}
         </div>
-      `;
-    })
-    .join("");
-} 
+      `
+      : "";
+
+    card.innerHTML = `
+      <div style="
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        gap:12px;
+        margin-bottom:10px;
+      ">
+        <div style="
+          font-size:1.35rem;
+          font-weight:800;
+          line-height:1.2;
+        ">
+          ${material}
+        </div>
+
+        ${isMostPopular
+          ? `
+          <div style="
+            background:linear-gradient(180deg,#f4dfac,#d6b36a);
+            color:#171717;
+            border-radius:999px;
+            padding:8px 14px;
+            font-size:0.74rem;
+            font-weight:800;
+            letter-spacing:0.08em;
+            text-transform:uppercase;
+            box-shadow:0 8px 20px rgba(0,0,0,0.18);
+            flex-shrink:0;
+          ">
+            Most Popular
+          </div>
+        `
+          : ""}
+      </div>
+
+      <div style="
+        color:#c9c9c9;
+        font-size:0.95rem;
+        margin-bottom:14px;
+      ">
+        Starting at
+        <span style="
+          color:#f4dfac;
+          font-size:1.1rem;
+          font-weight:800;
+          margin-left:4px;
+        ">
+          ${formatCurrency(startingPrice)}
+        </span>
+      </div>
+
+      <div style="
+        border-top:1px solid rgba(255,255,255,0.08);
+        padding-top:4px;
+        flex-grow:1;
+      ">
+        ${sizeRows}
+      </div>
+
+      <div style="margin-top:auto;">
+        ${upsellHtml || ""}
+      </div>
+    `;
+
+    container.appendChild(card);
+  });
+}
 
 function initContactForm() {
   const form = document.getElementById("contact-form");
@@ -1907,9 +2306,11 @@ function initContactForm() {
    INIT
 ============================= */
 
-document.addEventListener("DOMContentLoaded", async () => {
-  bindPageNavigation();
+/* =============================
+   INIT
+============================= */
 
+document.addEventListener("DOMContentLoaded", async () => {
   await loadPricing();
   refreshFormatOptions();
 
@@ -1919,6 +2320,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   renderCart();
   renderPricingCards();
+  bindPageNavigation();
   initContactForm();
 
   const squarePayBtn = document.getElementById("square-pay-btn");
@@ -1949,14 +2351,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     "cust-city",
     "cust-state",
     "cust-zip"
-  ].forEach(id => {
-  const field = document.getElementById(id);
-  if (field) {
-    field.addEventListener("input", () => {
-      field.classList.remove("input-error");
-      updatePayButtonAvailability(); // 👈 ADD THIS
-    });
-  }
-});
-
+  ].forEach((id) => {
+    const field = document.getElementById(id);
+    if (field) {
+      field.addEventListener("input", () => {
+        field.classList.remove("input-error");
+        updatePayButtonAvailability();
+      });
+    }
+  });
 });
