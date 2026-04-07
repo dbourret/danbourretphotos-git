@@ -2052,7 +2052,11 @@ window.handleUpsellClick = async function (material) {
 
   container.innerHTML = "";
   container.style.display = "grid";
+  if (window.innerWidth < 640) {
+  container.style.gridTemplateColumns = "1fr";
+} else {
   container.style.gridTemplateColumns = "repeat(auto-fit, minmax(260px, 1fr))";
+}
   container.style.gap = "22px";
   container.style.alignItems = "stretch";
 
