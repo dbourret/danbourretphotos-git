@@ -527,14 +527,22 @@ textarea {
   margin-top: 14px;
   padding-top: 18px;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
+  position: relative;
+  z-index: 1;
+  isolation: isolate;
+  background: #050505;
 }
 
 #card-container {
   margin: 14px 0 16px;
-  padding: 16px;
+  padding: 0;
   border-radius: 16px;
-  background: rgba(255, 255, 255, 0.04);
-  min-height: 60px;
+  background: #111111;
+  min-height: 0;
+  overflow: hidden;
+  position: relative;
+  z-index: 2;
+  display: block;
 }
 
 
@@ -831,12 +839,20 @@ textarea {
 }
 
 .payment-status {
-  margin-top: 12px;
+  display: none;
+  margin-top: 16px;
+  margin-bottom: 16px;
+  padding: 14px 16px;
+  border-radius: 12px;
   font-size: 0.95rem;
-  color: #ff6b6b;
-  min-height: 18px;
-  transition: opacity 0.2s ease;
+  line-height: 1.5;
+  white-space: pre-line;
+  border: 1px solid transparent;
+  transition: all 0.2s ease;
+  opacity: 0;
+  transform: translateY(6px);
 }
+
 
 .payment-status.info {
   color: #b8b2a8;
@@ -873,6 +889,8 @@ input {
 .payment-status {
   margin-top: 16px;
   padding: 14px 16px;
+    margin-bottom: 16px; /* 👈 add this */
+
   border-radius: 12px;
   font-size: 0.95rem;
   line-height: 1.5;
@@ -908,6 +926,55 @@ input {
 }
 
 .payment-status.show {
+  display: block;
   opacity: 1;
   transform: translateY(0);
+}
+
+.input-error {
+  border: 2px solid #dc2626 !important;
+  background-color: #fff5f5;
+}
+
+.input-error:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.15);
+}
+
+.payment-status .payment-spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  margin-right: 10px;
+  vertical-align: middle;
+  border: 2px solid rgba(0, 0, 0, 0.15);
+  border-top: 2px solid rgba(0, 0, 0, 0.7);
+  border-radius: 50%;
+  animation: payment-spin 0.8s linear infinite;
+}
+
+@keyframes payment-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+#card-container iframe {
+  display: block;
+}
+
+#square-pay-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+  pointer-events: none;
+}
+
+#square-pay-btn.is-loading {
+  opacity: 0.85;
+  cursor: wait;
 }

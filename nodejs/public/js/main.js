@@ -155,16 +155,40 @@ function formatCurrency(amount) {
   return `$${Number(amount || 0).toFixed(2)}`;
 }
 
-function showPaymentStatus(message, type = "error") {
-  const el = document.getElementById("payment-status");
-  if (!el) return;
 
-  el.textContent = message;
-  el.className = `payment-status ${type}`;
+function showPaymentLoading(message = "Processing payment...") {
+    console.log("🚀 showPaymentLoading called");
 
-  // trigger animation
-  el.classList.remove("show");
-  setTimeout(() => el.classList.add("show"), 10);
+  showPaymentStatus(
+    `<span class="payment-spinner"></span><span>${message}</span>`,
+    false
+  );
+}
+
+
+function showPaymentStatus(message, isError = false) {
+  const statusEl = document.getElementById("payment-status");
+  if (!statusEl) return;
+
+  if (!message || !message.trim()) {
+    statusEl.innerHTML = "";
+    statusEl.className = "payment-status";
+    statusEl.style.display = "none";
+    return;
+  }
+
+  statusEl.innerHTML = message.replace(/\n/g, "<br>");
+  statusEl.className = `payment-status show ${isError ? "error" : "success"}`;
+  statusEl.style.display = "block";
+}
+
+function setPayButtonState(isDisabled, label = "Pay with Card") {
+  const payBtn = document.getElementById("square-pay-btn");
+  if (!payBtn) return;
+
+  payBtn.disabled = isDisabled;
+  payBtn.textContent = label;
+  payBtn.classList.toggle("is-loading", isDisabled && label.includes("Processing"));
 }
 
 function renderCart() {
@@ -220,6 +244,7 @@ function renderCart() {
   if (totalEl) {
     totalEl.textContent = formatCurrency(total);
   }
+  updatePayButtonAvailability();
 }
 
 function getUserFriendlyError(error) {
@@ -1478,6 +1503,7 @@ async function initSquare() {
       await squareCard.attach("#card-container");
 
       console.log("Square initialized successfully");
+      updatePayButtonAvailability();
     } catch (err) {
       console.error("Square init error:", err);
       squareCard = null;
@@ -1490,11 +1516,118 @@ async function initSquare() {
   return squareInitPromise;
 }
 
+function clearCheckoutValidation() {
+  const fieldIds = [
+    "cust-name",
+    "cust-email",
+    "cust-phone",
+    "cust-address",
+    "cust-city",
+    "cust-state",
+    "cust-zip"
+  ];
+
+  fieldIds.forEach(id => {
+    const field = document.getElementById(id);
+    if (field) {
+      field.classList.remove("input-error");
+    }
+  });
+}
+
+function validateCheckoutFields() {
+  const fields = [
+    { id: "cust-name", label: "Full Name" },
+    { id: "cust-email", label: "Email Address" },
+    { id: "cust-phone", label: "Phone Number" },
+    { id: "cust-address", label: "Street Address" },
+    { id: "cust-city", label: "City" },
+    { id: "cust-state", label: "State" },
+    { id: "cust-zip", label: "ZIP Code" }
+  ];
+
+  clearCheckoutValidation();
+
+  const missingFields = [];
+
+  fields.forEach(({ id, label }) => {
+    const field = document.getElementById(id);
+    const value = field?.value.trim() || "";
+
+    if (!value) {
+      missingFields.push(label);
+      field?.classList.add("input-error");
+    }
+  });
+
+  const emailField = document.getElementById("cust-email");
+  const emailValue = emailField?.value.trim() || "";
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  if (emailValue && !emailPattern.test(emailValue)) {
+    missingFields.push("A valid Email Address");
+    emailField?.classList.add("input-error");
+  }
+
+  if (missingFields.length > 0) {
+    showPaymentStatus(
+      `Please complete the following before checkout:\n• ${missingFields.join("\n• ")}`,
+      true
+    );
+    return false;
+  }
+
+  return true;
+}
+
+function isCheckoutFormComplete() {
+  const requiredIds = [
+    "cust-name",
+    "cust-email",
+    "cust-phone",
+    "cust-address",
+    "cust-city",
+    "cust-state",
+    "cust-zip"
+  ];
+
+  const allFilled = requiredIds.every(id => {
+    const field = document.getElementById(id);
+    return field && field.value.trim() !== "";
+  });
+
+  const emailValue = document.getElementById("cust-email")?.value.trim() || "";
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const emailValid = emailPattern.test(emailValue);
+
+  const cart = getCart();
+  const cartHasItems = cart.length > 0;
+
+  return allFilled && emailValid && cartHasItems && !!squareCard;
+}
+
+function updatePayButtonAvailability() {
+  const payBtn = document.getElementById("square-pay-btn");
+  if (!payBtn) return;
+
+  const ready = isCheckoutFormComplete();
+
+  payBtn.disabled = !ready;
+  payBtn.textContent = "Pay with Card";
+}
+
+
 async function handleSquarePayment() {
   try {
+    clearCheckoutValidation();
 
-    //showPaymentStatus(""); // ✅ clears previous messages
-    showPaymentStatus("", "error");
+    const isValid = validateCheckoutFields();
+if (!isValid) {
+  return;
+}
+
+setPayButtonState(true, "Processing...");
+showPaymentLoading("Processing payment...");
 
     const payBtn = document.getElementById("square-pay-btn");
 
@@ -1509,12 +1642,6 @@ async function handleSquarePayment() {
   return;
 }
 
-    if (payBtn) {
-      payBtn.disabled = true;
-      payBtn.textContent = "Processing Payment...";
-    }
-
-    showPaymentStatus("Processing payment...", "info");
 
     const total = cart.reduce((sum, item) => {
       return sum + (item.price ?? getPrice(item.size, item.material, item.finish));
@@ -1587,11 +1714,7 @@ renderCart();
   } catch (err) {
   console.error("Square payment error:", err);
 } finally {
-    const payBtn = document.getElementById("square-pay-btn");
-    if (payBtn) {
-      payBtn.disabled = false;
-      payBtn.textContent = "Pay with Card";
-    }
+    setPayButtonState(false, "Pay with Card");
   }
 }
 
@@ -1776,6 +1899,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     squarePayBtn.addEventListener("click", handleSquarePayment);
   }
 
+  updatePayButtonAvailability();
+
   const clearCartBtn = document.getElementById("clear-cart-btn");
   if (clearCartBtn) {
     clearCartBtn.addEventListener("click", () => {
@@ -1788,4 +1913,23 @@ document.addEventListener("DOMContentLoaded", async () => {
   if (copyrightYear) {
     copyrightYear.textContent = new Date().getFullYear();
   }
+
+  [
+    "cust-name",
+    "cust-email",
+    "cust-phone",
+    "cust-address",
+    "cust-city",
+    "cust-state",
+    "cust-zip"
+  ].forEach(id => {
+  const field = document.getElementById(id);
+  if (field) {
+    field.addEventListener("input", () => {
+      field.classList.remove("input-error");
+      updatePayButtonAvailability(); // 👈 ADD THIS
+    });
+  }
+});
+
 });
