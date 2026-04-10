@@ -1,5 +1,20 @@
 [
   {
+    "src": "images/misc/monarch_butterfly_1.jpg",
+    "title": "Monarch Butterfly 1",
+    "category": "misc"
+  },
+  {
+    "src": "images/misc/monarch_butterfly_2.jpg",
+    "title": "Monarch Butterfly 2",
+    "category": "misc"
+  },
+  {
+    "src": "images/misc/monarch_butterfly_3.jpg",
+    "title": "Monarch Butterfly 3",
+    "category": "misc"
+  },
+  {
     "src": "images/flowers/magenta_speckled_orchid.jpg",
     "title": "Magenta Speckled Orchid",
     "category": "flowers"
