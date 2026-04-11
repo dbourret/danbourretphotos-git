@@ -1033,3 +1033,335 @@ input {
   background-color: #4b5563 !important;
   color: #fff !important;
 }
+
+/* =============================
+   CONTACT POLISH
+============================= */
+
+.contact-subtext {
+  margin-top: 12px;
+  color: var(--muted);
+  font-size: 1rem;
+  line-height: 1.7;
+  max-width: 480px;
+}
+
+/* Better card feel */
+.contact-card {
+  padding: 32px;
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid rgba(255,255,255,0.08);
+  box-shadow: 0 30px 80px rgba(0,0,0,0.45);
+}
+
+/* Form layout */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* Labels (huge upgrade) */
+.form-group label {
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #e6d6ae;
+  font-weight: 700;
+}
+
+/* Inputs feel premium */
+.form-group input,
+.form-group textarea {
+  padding: 14px 16px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.04);
+  transition: all 0.2s ease;
+}
+
+/* Focus state = huge UX upgrade */
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--gold);
+  box-shadow: 0 0 0 2px rgba(214,179,106,0.2);
+}
+
+/* Button refinement */
+.contact-btn {
+  margin-top: 10px;
+  font-size: 1.05rem;
+  letter-spacing: 0.03em;
+}
+
+/* Optional subtle hover glow */
+.contact-btn:hover {
+  box-shadow: 0 16px 40px rgba(214,179,106,0.35);
+}
+
+/* =============================
+   PREMIUM CONTACT SECTION
+============================= */
+
+.premium-contact-wrap {
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+  gap: 42px;
+  align-items: start;
+}
+
+.contact-heading-premium {
+  margin-bottom: 24px;
+}
+
+.contact-heading-premium h3 {
+  max-width: 12ch;
+  font-size: clamp(2.2rem, 4vw, 4rem);
+  line-height: 0.98;
+  letter-spacing: -0.03em;
+}
+
+.contact-subtext {
+  margin-top: 14px;
+  max-width: 520px;
+  color: #d0c7ba;
+  font-size: 1.02rem;
+  line-height: 1.85;
+}
+
+.contact-intro {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.contact-trust-panel {
+  display: grid;
+  gap: 14px;
+  max-width: 540px;
+}
+
+.trust-item {
+  padding: 18px 20px;
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: linear-gradient(
+    180deg,
+    rgba(255,255,255,0.04),
+    rgba(255,255,255,0.02)
+  );
+  box-shadow: 0 18px 50px rgba(0,0,0,0.22);
+}
+
+.trust-item strong {
+  display: block;
+  margin-bottom: 6px;
+  color: #f0dfb0;
+  font-size: 0.9rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.trust-item span {
+  display: block;
+  color: var(--muted);
+  line-height: 1.7;
+  font-size: 0.97rem;
+}
+
+.premium-contact-card {
+  position: relative;
+  padding: 34px;
+  border-radius: 28px;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.02)),
+    rgba(10,10,10,0.95);
+  border: 1px solid rgba(255,255,255,0.09);
+  box-shadow:
+    0 30px 90px rgba(0,0,0,0.48),
+    inset 0 1px 0 rgba(255,255,255,0.04);
+  overflow: hidden;
+}
+
+.premium-contact-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto auto 0;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(214,179,106,0.45),
+    transparent
+  );
+  pointer-events: none;
+}
+
+.contact-card-top {
+  margin-bottom: 22px;
+}
+
+.contact-kicker {
+  margin: 0 0 8px;
+  color: #ecd49d;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.contact-card-top h3 {
+  margin: 0 0 10px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 2rem;
+  line-height: 1.05;
+}
+
+.contact-form-intro {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.premium-contact-form {
+  display: grid;
+  gap: 18px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group label {
+  color: #ecd49d;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 16px 18px;
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: linear-gradient(
+    180deg,
+    rgba(255,255,255,0.05),
+    rgba(255,255,255,0.03)
+  );
+  color: var(--text);
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: #938c82;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: rgba(214,179,106,0.7);
+  box-shadow:
+    0 0 0 3px rgba(214,179,106,0.14),
+    0 10px 30px rgba(0,0,0,0.18);
+  background: rgba(255,255,255,0.06);
+}
+
+.form-group textarea {
+  min-height: 180px;
+  resize: vertical;
+}
+
+.contact-actions {
+  display: grid;
+  gap: 12px;
+  margin-top: 6px;
+}
+
+.contact-btn-premium {
+  min-height: 58px;
+  font-size: 1rem;
+  letter-spacing: 0.04em;
+  box-shadow: 0 14px 34px rgba(214,179,106,0.18);
+}
+
+.contact-btn-premium:hover {
+  box-shadow: 0 18px 42px rgba(214,179,106,0.28);
+}
+
+.contact-note {
+  margin: 0;
+  color: #9f988d;
+  font-size: 0.92rem;
+  line-height: 1.6;
+}
+
+.contact-status {
+  min-height: 22px;
+  font-size: 0.95rem;
+}
+
+.contact-status.success {
+  color: #4ade80;
+}
+
+@media (max-width: 900px) {
+  .premium-contact-wrap {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+
+  .contact-heading-premium h3 {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 640px) {
+  .premium-contact-card {
+    padding: 24px;
+    border-radius: 22px;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .contact-card-top h3 {
+    font-size: 1.7rem;
+  }
+}
+
+.social-links {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.social-icon {
+  width: 20px;
+  height: 20px;
+  color: #e4ddd2;
+  transition: all 0.2s ease;
+}
+
+.social-links a:hover .social-icon {
+  color: var(--gold);
+  transform: translateY(-1px);
+}

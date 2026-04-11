@@ -1,5 +1,15 @@
 require("dotenv").config();
 
+console.log("DB_HOST =", process.env.DB_HOST);
+console.log("DB_USER =", process.env.DB_USER);
+console.log("DB_PASS exists =", !!process.env.DB_PASS);
+console.log("DB_NAME =", process.env.DB_NAME);
+
+console.log("SMTP_HOST =", process.env.SMTP_HOST);
+console.log("SMTP_PORT =", process.env.SMTP_PORT);
+console.log("SMTP_USER =", process.env.SMTP_USER);
+console.log("SMTP_PASS exists =", !!process.env.SMTP_PASS);
+
 const express = require("express");
 const path = require("path");
 const crypto = require("crypto");
