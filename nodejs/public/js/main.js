@@ -158,7 +158,7 @@ const PRICING = {
 
 const UPSELL_CONFIG = {
   Poster: {
-    label: "Alternate finish",
+    label: "Alternate format",
     items: [
       {
         material: "Metal",
@@ -169,7 +169,7 @@ const UPSELL_CONFIG = {
     ],
   },
   Metal: {
-    label: "Alternate finish",
+    label: "Alternate format",
     items: [
       {
         material: "Wood",
@@ -2561,7 +2561,7 @@ function renderPricingCards() {
           margin-bottom:12px;
           font-weight:700;
         ">
-          Recommended finish
+          Recommended size
         </div>
 
         <div style="
