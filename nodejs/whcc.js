@@ -262,66 +262,107 @@ const WHCC_PRODUCT_MAP = {
   // =========================
   // CANVAS
   // =========================
-  // Verified canvas media:
-  // matte -> 2111
-  // semi-gloss -> 2112
-  //
-  // Temporary substitutes:
-  // 12x12 -> 11x14 (UID 56)
-  // 16x20 -> 20x24 (UID 62)
 
-  "canvas|8x10|matte": {
-    productUID: 52,
-    options: { PrintMedia: 2111 },
-  },
   "canvas|8x10|semi-gloss": {
-    productUID: 52,
-    options: { PrintMedia: 2112 },
+    productUID: 112,
+    options: {
+      GalleryWrapType: 126,
+      GalleryWrapProtection: 134,
+      GalleryWrapHangingHardware: 139,
+    },
+  },
+  "canvas|8x10|matte": {
+    productUID: 112,
+    options: {
+      GalleryWrapType: 126,
+      GalleryWrapProtection: 131,
+      GalleryWrapHangingHardware: 139,
+    },
   },
 
-  "canvas|11x14|matte": {
-    productUID: 56,
-    options: { PrintMedia: 2111 },
-  },
   "canvas|11x14|semi-gloss": {
-    productUID: 56,
-    options: { PrintMedia: 2112 },
+    productUID: 71,
+    options: {
+      GalleryWrapType: 126,
+      GalleryWrapProtection: 134,
+      GalleryWrapHangingHardware: 140,
+    },
+  },
+  "canvas|11x14|matte": {
+    productUID: 71,
+    options: {
+      GalleryWrapType: 126,
+      GalleryWrapProtection: 131,
+      GalleryWrapHangingHardware: 140,
+    },
   },
 
-  "canvas|12x12|matte": {
-    productUID: 56,
-    options: { PrintMedia: 2111 },
-  },
   "canvas|12x12|semi-gloss": {
-    productUID: 56,
-    options: { PrintMedia: 2112 },
+    productUID: 72,
+    options: {
+      GalleryWrapType: 126,
+      GalleryWrapProtection: 134,
+      GalleryWrapHangingHardware: 140,
+    },
+  },
+  "canvas|12x12|matte": {
+    productUID: 72,
+    options: {
+      GalleryWrapType: 126,
+      GalleryWrapProtection: 131,
+      GalleryWrapHangingHardware: 140,
+    },
   },
 
-  "canvas|16x20|matte": {
-    productUID: 62,
-    options: { PrintMedia: 2111 },
-  },
   "canvas|16x20|semi-gloss": {
-    productUID: 62,
-    options: { PrintMedia: 2112 },
+    productUID: 79,
+    options: {
+      GalleryWrapType: 126,
+      GalleryWrapProtection: 134,
+      GalleryWrapHangingHardware: 140,
+    },
+  },
+  "canvas|16x20|matte": {
+    productUID: 79,
+    options: {
+      GalleryWrapType: 126,
+      GalleryWrapProtection: 131,
+      GalleryWrapHangingHardware: 140,
+    },
   },
 
-  "canvas|20x24|matte": {
-    productUID: 62,
-    options: { PrintMedia: 2111 },
-  },
-  "canvas|20x24|semi-gloss": {
-    productUID: 62,
-    options: { PrintMedia: 2112 },
-  },
-
-  "canvas|20x30|matte": {
-    productUID: 63,
-    options: { PrintMedia: 2111 },
-  },
   "canvas|20x30|semi-gloss": {
-    productUID: 63,
-    options: { PrintMedia: 2112 },
+    productUID: 89,
+    options: {
+      GalleryWrapType: 126,
+      GalleryWrapProtection: 134,
+      GalleryWrapHangingHardware: 140,
+    },
+  },
+  "canvas|20x30|matte": {
+    productUID: 89,
+    options: {
+      GalleryWrapType: 126,
+      GalleryWrapProtection: 131,
+      GalleryWrapHangingHardware: 140,
+    },
+  },
+
+  "canvas|24x36|semi-gloss": {
+    productUID: 97,
+    options: {
+      GalleryWrapType: 126,
+      GalleryWrapProtection: 134,
+      GalleryWrapHangingHardware: 141,
+    },
+  },
+  "canvas|24x36|matte": {
+    productUID: 97,
+    options: {
+      GalleryWrapType: 126,
+      GalleryWrapProtection: 131,
+      GalleryWrapHangingHardware: 141,
+    },
   },
 };
 

@@ -130,12 +130,12 @@ const PRICING = {
     "24x36": 51.19,
   },
   Canvas: {
-    "8x10": 63.99,
-    "11x14": 79.99,
-    "12x12": 79.99,
-    "16x20": 143.99,
-    "20x24": 239.99,
-    "20x30": 271.99,
+    "8x10": 0,
+    "11x14": 0,
+    "12x12": 0,
+    "16x20": 0,
+    "20x30": 0,
+    "24x36": 0,
   },
   Metal: {
     "5x7": 47.99,
@@ -166,16 +166,22 @@ const UPSELL_CONFIG = {
         description:
           "Adds bold color, crisp detail, and a sleek modern presentation.",
       },
+      {
+        material: "Canvas",
+        title: "Prefer a gallery look?",
+        description:
+          "Canvas offers a textured, ready-to-hang wall-art presentation.",
+      },
     ],
   },
   Metal: {
     label: "Alternate format",
     items: [
       {
-        material: "Wood",
-        title: "Prefer a natural display?",
+        material: "Canvas",
+        title: "Prefer a softer fine-art look?",
         description:
-          "Wood offers a warmer, handcrafted presentation with rustic character.",
+          "Canvas gives a classic gallery-wrap presentation with rich texture.",
       },
     ],
   },
@@ -183,10 +189,21 @@ const UPSELL_CONFIG = {
     label: "Popular alternative",
     items: [
       {
-        material: "Metal",
-        title: "Try Metal",
+        material: "Canvas",
+        title: "Try Canvas",
         description:
-          "Metal gives wildlife and landscapes extra vibrancy, contrast, and detail.",
+          "Canvas offers a more traditional wall-art presentation with a refined finish.",
+      },
+    ],
+  },
+  Canvas: {
+    label: "Alternate format",
+    items: [
+      {
+        material: "Metal",
+        title: "Want more vibrancy?",
+        description:
+          "Metal delivers the sharpest detail and highest color punch.",
       },
     ],
   },
@@ -344,6 +361,10 @@ function getRecommendedFinishMessage(material, sizeGroup) {
 
     if (material === "Poster") {
       return "Clean, classic print presentation for everyday display.";
+    }
+
+    if (material === "Canvas") {
+      return "Textured gallery-wrap presentation with a refined fine-art feel.";
     }
 
     return "Premium presentation options available.";
@@ -562,11 +583,15 @@ const FINISH_OPTIONS = {
     { value: "semi-gloss", label: "Semi-Gloss" },
   ],
   wood: [],
-  canvas: [],
+  canvas: [
+    { value: "semi-gloss", label: "Semi-Gloss" },
+    { value: "matte", label: "Matte" },
+  ],
 };
 
 const STOREFRONT_ALLOWED = {
   Metal: ["5x7", "8x10", "11x14", "12x12", "16x20", "20x24"],
+  Canvas: ["8x10", "11x14", "12x12", "16x20", "20x30", "24x36"],
   Poster: ["12x18", "16x20", "20x30", "24x36"],
   Wood: ["5x7", "8x10", "11x14", "12x12", "16x20", "20x30"],
 };
@@ -575,18 +600,21 @@ const MATERIAL_DISPLAY_NAMES = {
   Poster: "Photo Print",
   Metal: "Metal",
   Wood: "Wood",
+  Canvas: "Canvas",
+};
+
+const MOST_POPULAR_MATERIAL = "Metal";
+
+const MOST_POPULAR_SIZE_BY_MATERIAL = {
+  Poster: "16x20",
+  Metal: "8x10",
+  Wood: "11x14",
+  Canvas: "16x20",
 };
 
 function getDisplayMaterialName(material) {
   return MATERIAL_DISPLAY_NAMES[material] || material || "";
 }
-
-const MOST_POPULAR_MATERIAL = "Metal";
-const MOST_POPULAR_SIZE_BY_MATERIAL = {
-  Poster: "16x20",
-  Metal: "8x10",
-  Wood: "11x14",
-};
 
 function getAvailableMaterials() {
   const allowedMaterials = Object.keys(STOREFRONT_ALLOWED);
