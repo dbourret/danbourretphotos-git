@@ -566,8 +566,8 @@ const FINISH_OPTIONS = {
 };
 
 const STOREFRONT_ALLOWED = {
-  Poster: ["12x18", "16x20", "20x30", "24x36"],
   Metal: ["5x7", "8x10", "11x14", "12x12", "16x20", "20x24"],
+  Poster: ["12x18", "16x20", "20x30", "24x36"],
   Wood: ["5x7", "8x10", "11x14", "12x12", "16x20", "20x30"],
 };
 
