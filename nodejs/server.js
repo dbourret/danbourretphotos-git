@@ -153,17 +153,15 @@ app.get("/api/pricing", async (req, res) => {
   try {
     const [rows] = await db.execute(
       `
-      SELECT
-        id,
-        material,
-        size,
-        finish,
-        price,
-        active
-      FROM pricing
-      WHERE active = 1
-      ORDER BY material, size, finish
-      `,
+  SELECT
+    material,
+    size,
+    MIN(price) AS price
+  FROM pricing
+  WHERE active = 1
+  GROUP BY material, size
+  ORDER BY material, size
+  `,
     );
 
     return res.json(rows);
