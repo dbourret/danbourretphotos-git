@@ -901,7 +901,11 @@ app.get("/api/config/square", (req, res) => {
 
 app.post("/api/payments/square", async (req, res) => {
   try {
-    const { sourceId, orderDetails = {} } = req.body;
+    const { sourceId, orderDetails = {}, checkoutAttemptId } = req.body;
+
+    if (!checkoutAttemptId) {
+      return res.status(400).json({ error: "Missing checkoutAttemptId" });
+    }
 
     if (!sourceId) {
       return res.status(400).json({ error: "Missing sourceId" });
@@ -925,7 +929,7 @@ app.post("/api/payments/square", async (req, res) => {
 
     const paymentResponse = await squareClient.payments.create({
       sourceId,
-      idempotencyKey: crypto.randomUUID(),
+      idempotencyKey: checkoutAttemptId,
       amountMoney: {
         amount: amountInCents,
         currency: "USD",
@@ -1085,14 +1089,18 @@ app.post("/api/payments/square", async (req, res) => {
       });
     }
 
-    await sendOrderNotification({
-      paymentId: payment?.id || null,
-      receiptUrl: payment?.receiptUrl || null,
-      amount: Number(amountInCents),
-      customer: orderDetails.customer || {},
-      selections: orderDetails.items || orderDetails.selections || [],
-      notes: orderDetails.notes || "",
-    });
+    try {
+      await sendOrderNotification({
+        paymentId: payment?.id || null,
+        receiptUrl: payment?.receiptUrl || null,
+        amount: Number(amountInCents),
+        customer: orderDetails.customer || {},
+        selections: orderDetails.items || orderDetails.selections || [],
+        notes: orderDetails.notes || "",
+      });
+    } catch (emailError) {
+      console.error("Order email failed:", emailError.message);
+    }
 
     return res.status(200).json({
       success: true,

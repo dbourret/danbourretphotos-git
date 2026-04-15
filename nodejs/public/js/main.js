@@ -2298,6 +2298,13 @@ async function handleSquarePayment() {
       throw new Error("Card tokenization failed");
     }
 
+    let checkoutAttemptId = sessionStorage.getItem("checkoutAttemptId");
+
+    if (!checkoutAttemptId) {
+      checkoutAttemptId = crypto.randomUUID();
+      sessionStorage.setItem("checkoutAttemptId", checkoutAttemptId);
+    }
+
     const paymentRes = await fetch("/api/payments/square", {
       method: "POST",
       headers: {
@@ -2305,11 +2312,10 @@ async function handleSquarePayment() {
       },
       body: JSON.stringify({
         sourceId: result.token,
-        amount: Math.round(total * 100),
+        checkoutAttemptId,
         orderDetails: {
-          customer,
           items: cart,
-          total: total,
+          customer,
         },
       }),
     });
@@ -2331,6 +2337,9 @@ async function handleSquarePayment() {
 
     const paymentData = await paymentRes.json();
     console.log("Parsed payment data:", paymentData);
+
+    // ✅ CLEAR IDEMPOTENCY KEY HERE
+    sessionStorage.removeItem("checkoutAttemptId");
 
     localStorage.setItem(
       "lastOrder",
