@@ -1,5 +1,7 @@
 require("dotenv").config();
 
+const { fulfillOrderWithWhcc, getWhccAccessToken } = require("./whcc");
+
 console.log("DB_HOST =", process.env.DB_HOST);
 console.log("DB_USER =", process.env.DB_USER);
 console.log("DB_PASS exists =", !!process.env.DB_PASS);
@@ -10,17 +12,27 @@ console.log("SMTP_PORT =", process.env.SMTP_PORT);
 console.log("SMTP_USER =", process.env.SMTP_USER);
 console.log("SMTP_PASS exists =", !!process.env.SMTP_PASS);
 
+const MATERIAL_DB_MAP = {
+  poster: "Poster",
+  metal: "Metal",
+  wood: "Wood",
+  canvas: "Canvas",
+};
+
+function normalizeMaterialForDb(material = "") {
+  return MATERIAL_DB_MAP[String(material).trim().toLowerCase()] || material;
+}
+
+function normalizeFinishForDb(finish = "") {
+  return String(finish).trim().toLowerCase();
+}
 const express = require("express");
 const path = require("path");
 const crypto = require("crypto");
 const nodemailer = require("nodemailer");
 const mysql = require("mysql2/promise");
 const rateLimit = require("express-rate-limit");
-const {
-  SquareClient,
-  SquareEnvironment,
-  SquareError
-} = require("square");
+const { SquareClient, SquareEnvironment, SquareError } = require("square");
 
 const app = express();
 app.use(express.json());
@@ -88,7 +100,6 @@ app.use((req, res, next) => {
 app.use(express.json({ limit: "1mb" }));
 app.use(express.urlencoded({ extended: true }));
 
-
 /* =============================
    SECURITY / CSP
 ============================= */
@@ -109,8 +120,8 @@ app.use((req, res, next) => {
       "img-src 'self' data: https:",
       "connect-src 'self' https://sandbox.web.squarecdn.com https://web.squarecdn.com https://connect.squareupsandbox.com https://connect.squareup.com https://pci-connect.squareupsandbox.com https://pci-connect.squareup.com https://o160250.ingest.sentry.io",
       "frame-src 'self' https://sandbox.web.squarecdn.com https://web.squarecdn.com",
-      "font-src 'self' data: https://sandbox.web.squarecdn.com https://web.squarecdn.com"
-    ].join("; ")
+      "font-src 'self' data: https://sandbox.web.squarecdn.com https://web.squarecdn.com",
+    ].join("; "),
   );
 
   next();
@@ -130,7 +141,7 @@ app.get("/api/health", (req, res) => {
   res.json({
     ok: true,
     squareEnvironment: process.env.SQUARE_ENVIRONMENT || "sandbox",
-    time: new Date().toISOString()
+    time: new Date().toISOString(),
   });
 });
 
@@ -146,12 +157,13 @@ app.get("/api/pricing", async (req, res) => {
         id,
         material,
         size,
+        finish,
         price,
         active
       FROM pricing
       WHERE active = 1
-      ORDER BY material, size
-      `
+      ORDER BY material, size, finish
+      `,
     );
 
     return res.json(rows);
@@ -159,7 +171,7 @@ app.get("/api/pricing", async (req, res) => {
     console.error("Failed to fetch pricing:", error);
 
     return res.status(500).json({
-      error: "Failed to fetch pricing"
+      error: "Failed to fetch pricing",
     });
   }
 });
@@ -168,31 +180,56 @@ app.get("/api/pricing/:material/:size", async (req, res) => {
   try {
     const material = String(req.params.material || "").trim();
     const size = String(req.params.size || "").trim();
+    const finish = String(req.query.finish || "")
+      .trim()
+      .toLowerCase();
 
     if (!material || !size) {
       return res.status(400).json({
-        error: "Material and size are required"
+        error: "Material and size are required",
       });
     }
 
-    const [rows] = await db.execute(
-      `
-      SELECT
-        id,
-        material,
-        size,
-        price,
-        active
-      FROM pricing
-      WHERE material = ? AND size = ? AND active = 1
-      LIMIT 1
-      `,
-      [material, size]
-    );
+    let rows;
+
+    if (finish) {
+      [rows] = await db.execute(
+        `
+        SELECT
+          id,
+          material,
+          size,
+          finish,
+          price,
+          active
+        FROM pricing
+        WHERE material = ? AND size = ? AND finish = ? AND active = 1
+        LIMIT 1
+        `,
+        [material, size, finish],
+      );
+    } else {
+      [rows] = await db.execute(
+        `
+        SELECT
+          id,
+          material,
+          size,
+          finish,
+          price,
+          active
+        FROM pricing
+        WHERE material = ? AND size = ? AND active = 1
+        ORDER BY price ASC
+        LIMIT 1
+        `,
+        [material, size],
+      );
+    }
 
     if (!rows.length) {
       return res.status(404).json({
-        error: "Price not found"
+        error: "Price not found",
       });
     }
 
@@ -201,7 +238,7 @@ app.get("/api/pricing/:material/:size", async (req, res) => {
     console.error("Failed to fetch price:", error);
 
     return res.status(500).json({
-      error: "Failed to fetch price"
+      error: "Failed to fetch price",
     });
   }
 });
@@ -211,27 +248,29 @@ async function calculateOrderTotal(items) {
   let total = 0;
 
   for (const item of items) {
-    const { material, size, finish } = item;
+    const rawMaterial = item.material || "";
+    const rawSize = item.size || "";
+    const rawFinish = item.finish || "";
+
+    const material = normalizeMaterialForDb(rawMaterial);
+    const size = String(rawSize).trim();
+    const finish = normalizeFinishForDb(rawFinish);
 
     const [rows] = await db.execute(
       `
       SELECT price
       FROM pricing
-      WHERE material = ? AND size = ? AND active = 1
+      WHERE material = ? AND size = ? AND finish = ? AND active = 1
       LIMIT 1
       `,
-      [material, size]
+      [material, size, finish],
     );
 
     if (!rows.length) {
-      throw new Error(`Invalid price for ${material} ${size}`);
+      throw new Error(`Invalid price for ${material} ${size} ${finish}`);
     }
 
     let price = Number(rows[0].price);
-
-    if (finish === "Glossy") {
-      price += 10;
-    }
 
     total += price;
   }
@@ -248,7 +287,7 @@ app.post("/api/contact", async (req, res) => {
 
     if (!name || !email || !message) {
       return res.status(400).json({
-        error: "Name, email, and message are required."
+        error: "Name, email, and message are required.",
       });
     }
 
@@ -256,7 +295,7 @@ app.post("/api/contact", async (req, res) => {
       name,
       email,
       subject,
-      message
+      message,
     });
 
     try {
@@ -264,7 +303,7 @@ app.post("/api/contact", async (req, res) => {
         name,
         email,
         subject,
-        message
+        message,
       });
 
       await db.execute(
@@ -276,12 +315,7 @@ app.post("/api/contact", async (req, res) => {
           message
         ) VALUES (?, ?, ?, ?)
         `,
-        [
-          name || null,
-          email || null,
-          subject || null,
-          message || null
-        ]
+        [name || null, email || null, subject || null, message || null],
       );
 
       console.log("✅ Contact submission saved to database");
@@ -291,13 +325,13 @@ app.post("/api/contact", async (req, res) => {
 
     return res.status(200).json({
       success: true,
-      message: "Inquiry sent successfully."
+      message: "Inquiry sent successfully.",
     });
   } catch (error) {
     console.error("Contact inquiry error:", error);
 
     return res.status(500).json({
-      error: "Failed to send inquiry."
+      error: "Failed to send inquiry.",
     });
   }
 });
@@ -312,11 +346,11 @@ const transporter = nodemailer.createTransport({
   secure: Number(process.env.SMTP_PORT) === 465,
   auth: {
     user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS
+    pass: process.env.SMTP_PASS,
   },
-  pool: true,          // ✅ reuse connections
-  maxConnections: 1,   // ✅ prevent spam connections
-  maxMessages: 50      // optional
+  pool: true, // ✅ reuse connections
+  maxConnections: 1, // ✅ prevent spam connections
+  maxMessages: 50, // optional
 });
 
 // run once when server starts
@@ -349,9 +383,9 @@ function formatSelectionsForText(selections) {
   return selections
     .map((item, index) => {
       const title =
-  item.title ||
-  [item.size, item.material].filter(Boolean).join(" ") ||
-  "Untitled Photo";
+        item.title ||
+        [item.size, item.material].filter(Boolean).join(" ") ||
+        "Untitled Photo";
       const size = item.size || "Not selected";
       const material = item.material || "Not selected";
       const finish = item.finish || "Not selected";
@@ -369,7 +403,7 @@ function formatSelectionsForText(selections) {
         `   Material: ${material}`,
         `   Finish: ${finish}`,
         `   Price: ${price}`,
-        `   Image: ${image}`
+        `   Image: ${image}`,
       ].join("\n");
     })
     .join("\n\n");
@@ -384,8 +418,8 @@ function formatSelectionsForHtml(selections) {
     .map((item, index) => {
       const title = escapeHtml(
         item.title ||
-        [item.size, item.material].filter(Boolean).join(" ") ||
-        "Untitled Photo"
+          [item.size, item.material].filter(Boolean).join(" ") ||
+          "Untitled Photo",
       );
 
       const size = escapeHtml(item.size || "Not specified");
@@ -423,7 +457,7 @@ async function sendContactInquiry({ name, email, subject, message }) {
 
   const receivedAt = new Date().toLocaleString("en-US", {
     dateStyle: "medium",
-    timeStyle: "short"
+    timeStyle: "short",
   });
 
   const adminSubject = `Contact Inquiry • ${safeSubject}`;
@@ -488,7 +522,7 @@ ${safeMessage}
     replyTo: safeEmail,
     subject: adminSubject,
     text: adminTextBody,
-    html: adminHtmlBody
+    html: adminHtmlBody,
   });
 
   const customerSubject = `We received your message • ${safeSubject}`;
@@ -562,19 +596,21 @@ Received: ${receivedAt}
     from: `"Dan Bourret Photography" <${process.env.ORDER_FROM_EMAIL}>`,
     to: safeEmail,
     subject: customerSubject,
-    html: customerHtmlBody
+    html: customerHtmlBody,
   });
 }
-  async function sendOrderNotification({
+async function sendOrderNotification({
   paymentId,
   receiptUrl,
   amount,
   customer,
   selections,
-  notes
+  notes,
 }) {
   if (!process.env.ORDER_NOTIFY_EMAIL || !process.env.ORDER_FROM_EMAIL) {
-    console.warn("Order email skipped: missing ORDER_NOTIFY_EMAIL or ORDER_FROM_EMAIL");
+    console.warn(
+      "Order email skipped: missing ORDER_NOTIFY_EMAIL or ORDER_FROM_EMAIL",
+    );
     return;
   }
 
@@ -707,31 +743,31 @@ ${notes || "None"}
     </div>
   `;
 
-console.log("About to send email...");
-console.log("SMTP host:", process.env.SMTP_HOST);
-console.log("SMTP port:", process.env.SMTP_PORT);
-console.log("SMTP user:", process.env.SMTP_USER);
-console.log("ORDER_FROM_EMAIL:", process.env.ORDER_FROM_EMAIL);
-console.log("ORDER_NOTIFY_EMAIL:", process.env.ORDER_NOTIFY_EMAIL);
-console.log("Subject:", subject);
+  console.log("About to send email...");
+  console.log("SMTP host:", process.env.SMTP_HOST);
+  console.log("SMTP port:", process.env.SMTP_PORT);
+  console.log("SMTP user:", process.env.SMTP_USER);
+  console.log("ORDER_FROM_EMAIL:", process.env.ORDER_FROM_EMAIL);
+  console.log("ORDER_NOTIFY_EMAIL:", process.env.ORDER_NOTIFY_EMAIL);
+  console.log("Subject:", subject);
 
-const info = await transporter.sendMail({
-  from: `"Dan Bourret Photos" <${process.env.ORDER_FROM_EMAIL}>`,
-  to: process.env.ORDER_NOTIFY_EMAIL,
-  replyTo:
-    customer?.email && customer.email.includes("@")
-      ? customer.email
-      : process.env.ORDER_FROM_EMAIL,
-  subject,
-  text: textBody,
-  html: htmlBody
-});
+  const info = await transporter.sendMail({
+    from: `"Dan Bourret Photos" <${process.env.ORDER_FROM_EMAIL}>`,
+    to: process.env.ORDER_NOTIFY_EMAIL,
+    replyTo:
+      customer?.email && customer.email.includes("@")
+        ? customer.email
+        : process.env.ORDER_FROM_EMAIL,
+    subject,
+    text: textBody,
+    html: htmlBody,
+  });
 
-// Send confirmation email to customer
-if (customer?.email && customer.email.includes("@")) {
-  const customerSubject = "Your Order Confirmation - Dan Bourret Photos";
+  // Send confirmation email to customer
+  if (customer?.email && customer.email.includes("@")) {
+    const customerSubject = "Your Order Confirmation - Dan Bourret Photos";
 
-  const customerText = `
+    const customerText = `
 Thank you for your order!
 
 ORDER SUMMARY
@@ -746,7 +782,7 @@ Thank you,
 Dan Bourret Photos
   `.trim();
 
-  const customerHtml = `
+    const customerHtml = `
   <div style="margin:0;padding:24px;background:#f5f5f5;font-family:Arial,Helvetica,sans-serif;color:#111827;">
     <div style="max-width:720px;margin:0 auto;background:#0f0f10;border-radius:24px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.18);">
 
@@ -800,20 +836,20 @@ Dan Bourret Photos
   </div>
 `;
 
-await transporter.sendMail({
-  from: `"Dan Bourret Photos" <${process.env.ORDER_FROM_EMAIL}>`,
-  to: customer.email,
-  subject: customerSubject,
-  text: customerText,
-  html: customerHtml
-});
+    await transporter.sendMail({
+      from: `"Dan Bourret Photos" <${process.env.ORDER_FROM_EMAIL}>`,
+      to: customer.email,
+      subject: customerSubject,
+      text: customerText,
+      html: customerHtml,
+    });
 
-  console.log("Customer confirmation email sent to:", customer.email);
-}
+    console.log("Customer confirmation email sent to:", customer.email);
+  }
 
-console.log("Email send result:", info);
-console.log("Sent to:", process.env.ORDER_NOTIFY_EMAIL);
-console.log("Sent from:", process.env.ORDER_FROM_EMAIL);
+  console.log("Email send result:", info);
+  console.log("Sent to:", process.env.ORDER_NOTIFY_EMAIL);
+  console.log("Sent from:", process.env.ORDER_FROM_EMAIL);
 }
 
 /* =============================
@@ -827,7 +863,7 @@ const squareEnvironment =
 
 const squareClient = new SquareClient({
   token: process.env.SQUARE_ACCESS_TOKEN,
-  environment: squareEnvironment
+  environment: squareEnvironment,
 });
 
 /* =============================
@@ -837,11 +873,14 @@ const squareClient = new SquareClient({
 app.get("/api/config/square", (req, res) => {
   const appId = process.env.SQUARE_APP_ID;
   const locationId = process.env.SQUARE_LOCATION_ID;
-  const environment = String(process.env.SQUARE_ENVIRONMENT || "sandbox").toLowerCase();
+  const environment = String(
+    process.env.SQUARE_ENVIRONMENT || "sandbox",
+  ).toLowerCase();
 
   if (!appId || !locationId) {
     return res.status(500).json({
-      error: "Missing Square configuration. Check SQUARE_APP_ID and SQUARE_LOCATION_ID."
+      error:
+        "Missing Square configuration. Check SQUARE_APP_ID and SQUARE_LOCATION_ID.",
     });
   }
 
@@ -852,7 +891,7 @@ app.get("/api/config/square", (req, res) => {
     scriptUrl:
       environment === "production"
         ? "https://web.squarecdn.com/v1/square.js"
-        : "https://sandbox.web.squarecdn.com/v1/square.js"
+        : "https://sandbox.web.squarecdn.com/v1/square.js",
   });
 });
 
@@ -874,7 +913,7 @@ app.post("/api/payments/square", async (req, res) => {
 
     if (!process.env.SQUARE_ACCESS_TOKEN) {
       return res.status(500).json({
-        error: "Missing SQUARE_ACCESS_TOKEN in environment"
+        error: "Missing SQUARE_ACCESS_TOKEN in environment",
       });
     }
 
@@ -889,16 +928,16 @@ app.post("/api/payments/square", async (req, res) => {
       idempotencyKey: crypto.randomUUID(),
       amountMoney: {
         amount: amountInCents,
-        currency: "USD"
+        currency: "USD",
       },
-      locationId: process.env.SQUARE_LOCATION_ID
+      locationId: process.env.SQUARE_LOCATION_ID,
     });
 
     const payment = paymentResponse.payment;
 
     console.log(
       "items received by server =",
-      JSON.stringify(orderDetails.items || [], null, 2)
+      JSON.stringify(orderDetails.items || [], null, 2),
     );
 
     try {
@@ -916,10 +955,10 @@ app.post("/api/payments/square", async (req, res) => {
       const customerZip = customer.zip || null;
 
       const orderTotal = calculatedTotal;
-const currency = "USD";
-const status = "paid";
+      const currency = "USD";
+      const status = "paid";
 
-const items = orderDetails.items || orderDetails.selections || [];
+      const items = orderDetails.items || orderDetails.selections || [];
 
       console.log("ORDER DB PAYLOAD:", {
         squarePaymentId,
@@ -933,11 +972,11 @@ const items = orderDetails.items || orderDetails.selections || [];
         customerZip,
         orderTotal,
         currency,
-        items
+        items,
       });
 
       await db.execute(
-  `
+        `
   INSERT INTO orders (
     square_payment_id,
     square_order_id,
@@ -954,29 +993,95 @@ const items = orderDetails.items || orderDetails.selections || [];
     status
   ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `,
-  [
-    squarePaymentId,
-    squareOrderId,
-    customerName,
-    customerEmail,
-    customerPhone,
-    customerAddress,
-    customerCity,
-    customerState,
-    customerZip,
-    orderTotal,
-    currency,
-    JSON.stringify(items),
-    status
-  ]
-);
+        [
+          squarePaymentId,
+          squareOrderId,
+          customerName,
+          customerEmail,
+          customerPhone,
+          customerAddress,
+          customerCity,
+          customerState,
+          customerZip,
+          orderTotal,
+          currency,
+          JSON.stringify(items),
+          status,
+        ],
+      );
 
       console.log("✅ Order saved to database");
+
+      let whccResult = null;
+      let whccErrorMessage = null;
+
+      try {
+        console.log("🚀 Sending paid order to WHCC...");
+
+        whccResult = await fulfillOrderWithWhcc({
+          orderId: squarePaymentId,
+          customer: {
+            name: customerName,
+            address: customerAddress,
+            city: customerCity,
+            state: customerState,
+            zip: customerZip,
+            country: "US",
+            phone: customerPhone,
+          },
+          items: items.map((item) => ({
+            material: String(item.material || "")
+              .trim()
+              .toLowerCase(),
+            size: String(item.size || "").trim(),
+            finish: String(item.finish || "")
+              .trim()
+              .toLowerCase(),
+            imageKey: item.imageKey,
+            title: item.title,
+            quantity: item.quantity || 1,
+          })),
+        });
+
+        console.log("✅ WHCC fulfillment success:", whccResult);
+        // ✅ ADD THIS RIGHT HERE
+        await db.execute(
+          `
+  UPDATE orders
+  SET 
+    whcc_status = ?,
+    whcc_confirmation_id = ?,
+    whcc_error = ?
+  WHERE square_payment_id = ?
+  `,
+          [
+            JSON.stringify(whccResult),
+            whccResult?.confirmationId || null,
+            null,
+            squarePaymentId,
+          ],
+        );
+      } catch (whccError) {
+        whccErrorMessage = whccError.message || "Unknown WHCC error";
+        console.error("❌ WHCC fulfillment failed:", whccErrorMessage);
+        // ✅ ADD THIS RIGHT HERE
+        await db.execute(
+          `
+    UPDATE orders
+    SET 
+      whcc_status = ?,
+      whcc_confirmation_id = ?,
+      whcc_error = ?
+    WHERE square_payment_id = ?
+    `,
+          [null, null, whccErrorMessage, squarePaymentId],
+        );
+      }
     } catch (dbError) {
       console.error("❌ Failed to save order to DB:", dbError);
       return res.status(500).json({
         error: "Failed to save order",
-        details: dbError.message
+        details: dbError.message,
       });
     }
 
@@ -986,7 +1091,7 @@ const items = orderDetails.items || orderDetails.selections || [];
       amount: Number(amountInCents),
       customer: orderDetails.customer || {},
       selections: orderDetails.items || orderDetails.selections || [],
-      notes: orderDetails.notes || ""
+      notes: orderDetails.notes || "",
     });
 
     return res.status(200).json({
@@ -994,7 +1099,7 @@ const items = orderDetails.items || orderDetails.selections || [];
       paymentId: payment?.id || null,
       status: payment?.status || null,
       receiptUrl: payment?.receiptUrl || null,
-      redirectUrl: `/success.html?paymentId=${encodeURIComponent(payment?.id || "")}`
+      redirectUrl: `/success.html?paymentId=${encodeURIComponent(payment?.id || "")}`,
     });
   } catch (error) {
     console.error("Square payment error:", error);
@@ -1009,7 +1114,7 @@ const items = orderDetails.items || orderDetails.selections || [];
     }
 
     return res.status(500).json({
-      error: error.message || "Payment failed"
+      error: error.message || "Payment failed",
     });
   }
 });
@@ -1017,6 +1122,56 @@ const items = orderDetails.items || orderDetails.selections || [];
 /* =============================
    ROUTES
 ============================= */
+app.get("/api/whcc/test-auth", async (req, res) => {
+  try {
+    const tokenData = await getWhccAccessToken();
+
+    res.json({
+      success: true,
+      clientId: tokenData.ClientId || null,
+      expiresAt: tokenData.ExpirationDate || null,
+      hasToken: Boolean(tokenData.Token),
+    });
+  } catch (err) {
+    console.error("WHCC auth test failed:", err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.get("/api/whcc/catalog", async (req, res) => {
+  try {
+    const tokenData = await getWhccAccessToken();
+
+    const response = await fetch(`${process.env.WHCC_BASE_URL}/api/catalog`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${tokenData.Token}`,
+      },
+    });
+
+    const text = await response.text();
+    let data = null;
+
+    try {
+      data = text ? JSON.parse(text) : null;
+    } catch {
+      data = { raw: text };
+    }
+
+    if (!response.ok) {
+      return res.status(response.status).json({
+        error: "WHCC catalog request failed",
+        details: data,
+      });
+    }
+
+    res.json(data);
+  } catch (err) {
+    console.error("WHCC catalog test failed:", err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
 app.get("/api/contact-submissions", async (req, res) => {
   const authHeader = req.headers.authorization || "";
   const token = authHeader.replace("Bearer ", "").trim();
@@ -1043,10 +1198,10 @@ app.get("/api/contact-submissions", async (req, res) => {
     console.error("Error loading contact submissions:", err);
     res.status(500).json({ error: "Failed to load contact submissions" });
   }
-}); 
+});
 
 app.put("/api/orders/:id/status", async (req, res) => {
-    console.log("PUT /api/orders/:id/status hit");
+  console.log("PUT /api/orders/:id/status hit");
   console.log("params:", req.params);
   console.log("body:", req.body);
   const authHeader = req.headers.authorization || "";
@@ -1060,13 +1215,13 @@ app.put("/api/orders/:id/status", async (req, res) => {
   const { status } = req.body;
 
   const allowedStatuses = [
-  "pending",
-  "paid",
-  "processing",
-  "shipped",
-  "completed",
-  "cancelled"
-];
+    "pending",
+    "paid",
+    "processing",
+    "shipped",
+    "completed",
+    "cancelled",
+  ];
 
   if (!allowedStatuses.includes(status)) {
     return res.status(400).json({ error: "Invalid status" });
@@ -1075,7 +1230,7 @@ app.put("/api/orders/:id/status", async (req, res) => {
   try {
     const [result] = await db.query(
       "UPDATE orders SET status = ? WHERE id = ?",
-      [status, id]
+      [status, id],
     );
 
     if (!result.affectedRows) {
@@ -1123,46 +1278,6 @@ FROM orders
   }
 });
 
-app.put("/api/pricing/:id", async (req, res) => {
-  const { id } = req.params;
-  const { material, size, price } = req.body;
-
-  try {
-    const [rows] = await db.query("SELECT * FROM pricing WHERE id = ?", [id]);
-
-    if (!rows.length) {
-      return res.status(404).json({ error: "Pricing row not found" });
-    }
-
-    const existing = rows[0];
-
-    const nextMaterial = material ?? existing.material;
-    const nextSize = size ?? existing.size;
-    const nextPrice = price ?? existing.price;
-
-    const [duplicateRows] = await db.query(
-      "SELECT id FROM pricing WHERE material = ? AND size = ? AND id <> ?",
-      [nextMaterial, nextSize, id]
-    );
-
-    if (duplicateRows.length) {
-      return res.status(400).json({
-        error: "Another pricing row already uses that material and size"
-      });
-    }
-
-    await db.query(
-      "UPDATE pricing SET material = ?, size = ?, price = ? WHERE id = ?",
-      [nextMaterial, nextSize, nextPrice, id]
-    );
-
-    res.json({ success: true });
-  } catch (err) {
-    console.error("Error updating pricing:", err);
-    res.status(500).json({ error: "Failed to update pricing" });
-  }
-});
-
 /* =============================
    API 404
 ============================= */
@@ -1175,7 +1290,7 @@ app.post("/api/pricing", checkAdmin, async (req, res) => {
 
     if (!material || !size || Number.isNaN(price)) {
       return res.status(400).json({
-        error: "Material, size, and valid price are required"
+        error: "Material, size, and valid price are required",
       });
     }
 
@@ -1188,15 +1303,46 @@ app.post("/api/pricing", checkAdmin, async (req, res) => {
         active
       ) VALUES (?, ?, ?, 1)
       `,
-      [material, size, price]
+      [material, size, price],
     );
 
     return res.json({ success: true });
   } catch (error) {
     console.error("Failed to add pricing:", error);
     return res.status(500).json({
-      error: "Failed to add pricing"
+      error: "Failed to add pricing",
     });
+  }
+});
+
+app.get("/api/whcc/test", async (req, res) => {
+  try {
+    const result = await fulfillOrderWithWhcc({
+      orderId: "TEST-123",
+      customer: {
+        name: "Test User",
+        address: "123 Test St",
+        city: "Fort Myers",
+        state: "FL",
+        zip: "33901",
+        country: "US",
+        phone: "5555555555",
+      },
+      items: [
+        {
+          material: "metal",
+          size: "5x7",
+          finish: "matte",
+          imageKey: "7parakeets.jpg",
+          title: "Test Photo",
+        },
+      ],
+    });
+
+    res.json(result);
+  } catch (err) {
+    console.error("WHCC test failed:", err);
+    res.status(500).json({ error: err.message });
   }
 });
 
@@ -1211,7 +1357,7 @@ app.put("/api/pricing/:id", checkAdmin, async (req, res) => {
 
     if (!id || price == null) {
       return res.status(400).json({
-        error: "ID and price are required"
+        error: "ID and price are required",
       });
     }
 
@@ -1221,14 +1367,14 @@ app.put("/api/pricing/:id", checkAdmin, async (req, res) => {
       SET price = ?
       WHERE id = ?
       `,
-      [price, id]
+      [price, id],
     );
 
     return res.json({ success: true });
   } catch (error) {
     console.error("Failed to update pricing:", error);
     return res.status(500).json({
-      error: "Failed to update pricing"
+      error: "Failed to update pricing",
     });
   }
 });
@@ -1241,10 +1387,7 @@ app.delete("/api/pricing/:id", checkAdmin, async (req, res) => {
       return res.status(400).json({ error: "Valid pricing ID is required" });
     }
 
-    const [result] = await db.execute(
-      "DELETE FROM pricing WHERE id = ?",
-      [id]
-    );
+    const [result] = await db.execute("DELETE FROM pricing WHERE id = ?", [id]);
 
     if (result.affectedRows === 0) {
       return res.status(404).json({ error: "Pricing row not found" });
@@ -1282,7 +1425,6 @@ app.use((err, req, res, next) => {
 
   return res.status(500).json({ error: "Internal server error" });
 });
-
 
 /* =============================
    START SERVER

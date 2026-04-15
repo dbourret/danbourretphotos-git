@@ -14,7 +14,9 @@ async function loadGallery() {
     const grid = document.getElementById("gallery-grid");
     if (!grid) return;
 
-    grid.innerHTML = photos.map((photo, index) => `
+    grid.innerHTML = photos
+      .map(
+        (photo, index) => `
       <article class="image-card gallery-card">
         <img
           src="${photo.src}"
@@ -40,7 +42,9 @@ async function loadGallery() {
           </div>
         </div>
       </article>
-    `).join("");
+    `,
+      )
+      .join("");
 
     const images = Array.from(grid.querySelectorAll("img"));
 
@@ -51,7 +55,10 @@ async function loadGallery() {
     images.forEach((img) => {
       img.addEventListener("click", () => {
         const index = Number(img.dataset.index);
-        if (window.App && typeof window.App.openLightboxByIndex === "function") {
+        if (
+          window.App &&
+          typeof window.App.openLightboxByIndex === "function"
+        ) {
           window.App.openLightboxByIndex(index);
         }
       });

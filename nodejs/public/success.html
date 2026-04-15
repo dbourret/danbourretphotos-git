@@ -1,429 +1,503 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Order Confirmed | Dan Bourret Photos</title>
-  <style>
-    :root {
-      --bg: #090909;
-      --panel: rgba(255,255,255,0.05);
-      --border: rgba(255,255,255,0.10);
-      --text: #f5f5f5;
-      --muted: #b8b8b8;
-      --gold: #d6b36a;
-      --max: 1180px;
-      --radius: 24px;
-      --shadow: 0 24px 70px rgba(0,0,0,0.35);
-    }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Order Confirmed | Dan Bourret Photos</title>
+    <style>
+      :root {
+        --bg: #090909;
+        --panel: rgba(255, 255, 255, 0.05);
+        --border: rgba(255, 255, 255, 0.1);
+        --text: #f5f5f5;
+        --muted: #b8b8b8;
+        --gold: #d6b36a;
+        --max: 1180px;
+        --radius: 24px;
+        --shadow: 0 24px 70px rgba(0, 0, 0, 0.35);
+      }
 
-    * {
-      box-sizing: border-box;
-    }
+      * {
+        box-sizing: border-box;
+      }
 
-    html,
-    body {
-      min-height: 100%;
-      margin: 0;
-    }
+      html,
+      body {
+        min-height: 100%;
+        margin: 0;
+      }
 
-    body {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      font-family: Georgia, "Times New Roman", serif;
-      background:
-        radial-gradient(circle at top, rgba(214,179,106,0.10), transparent 28%),
-        var(--bg);
-      color: var(--text);
-      line-height: 1.5;
-    }
-
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    .container {
-      width: min(var(--max), calc(100% - 32px));
-      margin: 0 auto;
-    }
-
-    .site-header {
-      position: sticky;
-      top: 0;
-      z-index: 30;
-      backdrop-filter: blur(10px);
-      background: rgba(9,9,9,0.9);
-      border-bottom: 1px solid rgba(255,255,255,0.06);
-    }
-
-    .header-inner {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      padding: 18px 0;
-    }
-
-    .brand h1 {
-      margin: 0;
-      font-size: 1.2rem;
-      letter-spacing: 0.08em;
-      font-weight: 600;
-    }
-
-    .brand p {
-      margin: 6px 0 0;
-      color: var(--muted);
-      font-size: 0.9rem;
-      font-family: Arial, sans-serif;
-    }
-
-    nav {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 22px;
-      font-family: Arial, sans-serif;
-      font-size: 0.95rem;
-      color: #dfdfdf;
-    }
-
-    nav a:hover {
-      color: var(--gold);
-    }
-
-    main {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 48px 0 56px;
-    }
-
-    .card {
-      position: relative;
-      border: 1px solid var(--border);
-      background: var(--panel);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      overflow: hidden;
-      padding: 42px 34px;
-      width: min(820px, 100%);
-      text-align: center;
-    }
-
-    .card::before {
-      content: "";
-      position: absolute;
-      inset: 0 0 auto 0;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, var(--gold), transparent);
-      opacity: 0.85;
-    }
-
-    .eyebrow {
-      display: inline-block;
-      padding: 8px 14px;
-      border: 1px solid var(--border);
-      border-radius: 999px;
-      background: rgba(255,255,255,0.04);
-      color: #e6d6ae;
-      font-family: Arial, sans-serif;
-      font-size: 0.74rem;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-    }
-
-    .success-title {
-      margin: 18px 0 0;
-      font-size: clamp(2.4rem, 4vw, 3.8rem);
-      line-height: 1.02;
-      font-weight: 600;
-    }
-
-    .lead,
-    .muted,
-    .btn,
-    .footer,
-    .detail-label,
-    .detail-value,
-    .section-title,
-    .success-summary-item__title,
-    .success-summary-item__meta,
-    .success-summary-empty {
-      font-family: Arial, sans-serif;
-    }
-
-    .lead {
-      margin: 22px auto 0;
-      max-width: 640px;
-      color: var(--muted);
-      font-size: 1.05rem;
-      line-height: 1.9;
-    }
-
-    .summary-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 16px;
-      margin: 30px 0 0;
-      text-align: left;
-    }
-
-    .summary-card,
-    .items-card,
-    .next-step-card {
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      background: rgba(255,255,255,0.03);
-      padding: 18px;
-    }
-
-    .detail-label {
-      color: var(--muted);
-      font-size: 0.82rem;
-      text-transform: uppercase;
-      letter-spacing: 0.16em;
-      margin-bottom: 10px;
-    }
-
-    .detail-value {
-      font-size: 1.08rem;
-      color: var(--text);
-      word-break: break-word;
-    }
-
-    .items-card,
-    .next-step-card {
-      margin-top: 18px;
-      text-align: left;
-    }
-
-    .section-title {
-      margin: 0 0 12px;
-      font-size: 1rem;
-      color: #f0e0b0;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .success-items {
-      display: grid;
-      gap: 12px;
-    }
-
-    .success-summary-item {
+      body {
+        min-height: 100vh;
         display: flex;
-  gap: 14px;
-  align-items: center;
-    }
+        flex-direction: column;
+        font-family: Georgia, "Times New Roman", serif;
+        background:
+          radial-gradient(
+            circle at top,
+            rgba(214, 179, 106, 0.1),
+            transparent 28%
+          ),
+          var(--bg);
+        color: var(--text);
+        line-height: 1.5;
+      }
 
-    .success-summary-item__title {
-      font-weight: 700;
-      font-size: 0.98rem;
-      color: var(--text);
-      margin-bottom: 4px;
-    }
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
 
-    .success-summary-item__thumb {
-  width: 88px;
-  height: 88px;
-  object-fit: cover;
-  border-radius: 12px;
-  flex-shrink: 0;
-  display: block;
-}
-
-.success-summary-item__content {
-  min-width: 0;
-  flex: 1;
-}
-
-    .success-summary-item__meta,
-    .success-summary-empty,
-    .muted {
-      color: var(--muted);
-      font-size: 0.95rem;
-      line-height: 1.7;
-    }
-
-    .button-row {
-      display: flex;
-      justify-content: center;
-      gap: 14px;
-      margin-top: 28px;
-      flex-wrap: wrap;
-    }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 14px 22px;
-      border-radius: 14px;
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,0.04);
-      color: white;
-      font-size: 0.96rem;
-      cursor: pointer;
-      transition: 0.22s ease;
-    }
-
-    .btn:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 14px 28px rgba(0,0,0,0.2);
-    }
-
-    .btn-primary {
-      background: linear-gradient(180deg, #f4dfac, #d6b36a);
-      color: #171717;
-      border: none;
-      font-weight: 700;
-      letter-spacing: 0.04em;
-    }
-
-    .btn-primary:hover {
-      box-shadow: 0 10px 25px rgba(214,179,106,0.35);
-    }
-
-    .footer {
-      padding: 14px 0 20px;
-      color: var(--muted);
-      font-size: 0.92rem;
-      text-align: center;
-    }
-
-    @media (max-width: 720px) {
       .container {
-        width: min(var(--max), calc(100% - 22px));
+        width: min(var(--max), calc(100% - 32px));
+        margin: 0 auto;
+      }
+
+      .site-header {
+        position: sticky;
+        top: 0;
+        z-index: 30;
+        backdrop-filter: blur(10px);
+        background: rgba(9, 9, 9, 0.9);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
       }
 
       .header-inner {
-        flex-direction: column;
-        align-items: flex-start;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 18px 0;
+      }
+
+      .brand h1 {
+        margin: 0;
+        font-size: 1.2rem;
+        letter-spacing: 0.08em;
+        font-weight: 600;
+      }
+
+      .brand p {
+        margin: 6px 0 0;
+        color: var(--muted);
+        font-size: 0.9rem;
+        font-family: Arial, sans-serif;
       }
 
       nav {
-        gap: 14px;
-        font-size: 0.88rem;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 22px;
+        font-family: Arial, sans-serif;
+        font-size: 0.95rem;
+        color: #dfdfdf;
+      }
+
+      nav a:hover {
+        color: var(--gold);
+      }
+
+      main {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 48px 0 56px;
       }
 
       .card {
-        padding: 28px 22px;
+        position: relative;
+        border: 1px solid var(--border);
+        background: var(--panel);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+        padding: 42px 34px;
+        width: min(820px, 100%);
+        text-align: center;
+      }
+
+      .card::before {
+        content: "";
+        position: absolute;
+        inset: 0 0 auto 0;
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--gold),
+          transparent
+        );
+        opacity: 0.85;
+      }
+
+      .eyebrow {
+        display: inline-block;
+        padding: 8px 14px;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.04);
+        color: #e6d6ae;
+        font-family: Arial, sans-serif;
+        font-size: 0.74rem;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+      }
+
+      .success-title {
+        margin: 18px 0 0;
+        font-size: clamp(2.4rem, 4vw, 3.8rem);
+        line-height: 1.02;
+        font-weight: 600;
+      }
+
+      .lead,
+      .muted,
+      .btn,
+      .footer,
+      .detail-label,
+      .detail-value,
+      .section-title,
+      .success-summary-item__title,
+      .success-summary-item__meta,
+      .success-summary-empty {
+        font-family: Arial, sans-serif;
+      }
+
+      .lead {
+        margin: 22px auto 0;
+        max-width: 640px;
+        color: var(--muted);
+        font-size: 1.05rem;
+        line-height: 1.9;
       }
 
       .summary-grid {
-        grid-template-columns: 1fr;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+        margin: 30px 0 0;
+        text-align: left;
       }
-    }
-  </style>
-</head>
-<body>
-  <header class="site-header">
-    <div class="container header-inner">
-      <div class="brand">
-        <h1>Dan Bourret Photos</h1>
-        <p>Wildlife &amp; Nature Photography</p>
-      </div>
-      <nav>
-  <a href="/">Home</a>
-  <a href="/?page=gallery">Gallery</a>
-  <a href="/?page=pricing">Pricing</a>
-  <a href="/?page=contact">Contact</a>
-</nav>
-    </div>
-  </header>
 
-  <main>
-    <div class="container">
-      <div class="card" data-success-page>
-        <span class="eyebrow">Order Confirmed</span>
-        <h1 class="success-title">Thank you for your order</h1>
-        <p class="lead">
-          Your payment has been successfully processed and your print request has
-          been received. I’ll review the details and begin fulfillment shortly.
-        </p>
+      .summary-card,
+      .items-card,
+      .next-step-card {
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.03);
+        padding: 18px;
+      }
 
-        <div class="summary-grid">
-          <div class="summary-card">
-            <div class="detail-label">Confirmation</div>
-            <div class="detail-value" id="success-payment-id">Confirmed</div>
-          </div>
-          <div class="summary-card">
-            <div class="detail-label">Order Total</div>
-            <div class="detail-value" id="success-total">Paid</div>
-          </div>
+      .detail-label {
+        color: var(--muted);
+        font-size: 0.82rem;
+        text-transform: uppercase;
+        letter-spacing: 0.16em;
+        margin-bottom: 10px;
+      }
+
+      .detail-value {
+        font-size: 1.08rem;
+        color: var(--text);
+        word-break: break-word;
+      }
+
+      .items-card,
+      .next-step-card {
+        margin-top: 18px;
+        text-align: left;
+      }
+
+      .section-title {
+        margin: 0 0 12px;
+        font-size: 1rem;
+        color: #f0e0b0;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .success-items {
+        display: grid;
+        gap: 12px;
+      }
+
+      .success-summary-item {
+        display: flex;
+        gap: 14px;
+        align-items: center;
+      }
+
+      .success-summary-item__title {
+        font-weight: 700;
+        font-size: 0.98rem;
+        color: var(--text);
+        margin-bottom: 4px;
+      }
+
+      .success-summary-item__thumb {
+        width: 88px;
+        height: 88px;
+        object-fit: cover;
+        border-radius: 12px;
+        flex-shrink: 0;
+        display: block;
+      }
+
+      .success-summary-item__content {
+        min-width: 0;
+        flex: 1;
+      }
+
+      .success-summary-item__meta,
+      .success-summary-empty,
+      .muted {
+        color: var(--muted);
+        font-size: 0.95rem;
+        line-height: 1.7;
+      }
+
+      .button-row {
+        display: flex;
+        justify-content: center;
+        gap: 14px;
+        margin-top: 28px;
+        flex-wrap: wrap;
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 14px 22px;
+        border-radius: 14px;
+        border: 1px solid var(--border);
+        background: rgba(255, 255, 255, 0.04);
+        color: white;
+        font-size: 0.96rem;
+        cursor: pointer;
+        transition: 0.22s ease;
+      }
+
+      .btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 14px 28px rgba(0, 0, 0, 0.2);
+      }
+
+      .btn-primary {
+        background: linear-gradient(180deg, #f4dfac, #d6b36a);
+        color: #171717;
+        border: none;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+      }
+
+      .btn-primary:hover {
+        box-shadow: 0 10px 25px rgba(214, 179, 106, 0.35);
+      }
+
+      .footer {
+        padding: 14px 0 20px;
+        color: var(--muted);
+        font-size: 0.92rem;
+        text-align: center;
+      }
+
+      @media (max-width: 720px) {
+        .container {
+          width: min(var(--max), calc(100% - 22px));
+        }
+
+        .header-inner {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        nav {
+          gap: 14px;
+          font-size: 0.88rem;
+        }
+
+        .card {
+          padding: 28px 22px;
+        }
+
+        .summary-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <div class="brand">
+          <h1>Dan Bourret Photos</h1>
+          <p>Wildlife &amp; Nature Photography</p>
         </div>
+        <nav>
+          <a href="/">Home</a>
+          <a href="/?page=gallery">Gallery</a>
+          <a href="/?page=pricing">Pricing</a>
+          <a href="/?page=contact">Contact</a>
+        </nav>
+      </div>
+    </header>
 
-        <div class="items-card">
-          <h2 class="section-title">Your Selection</h2>
-          <div id="success-items" class="success-items">
-            <p class="success-summary-empty">
-              Your order is confirmed and has been sent for fulfillment.
+    <main>
+      <div class="container">
+        <div class="card" data-success-page>
+          <span class="eyebrow">Order Confirmed</span>
+          <h1 class="success-title">Thank you for your order</h1>
+          <p class="lead">
+            Your payment has been successfully processed and your print request
+            has been received. I’ll review the details and begin fulfillment
+            shortly.
+          </p>
+
+          <div class="summary-grid">
+            <div class="summary-card">
+              <div class="detail-label">Confirmation</div>
+              <div class="detail-value" id="success-payment-id">Confirmed</div>
+            </div>
+            <div class="summary-card">
+              <div class="detail-label">Order Total</div>
+              <div class="detail-value" id="success-total">Paid</div>
+            </div>
+          </div>
+
+          <div class="items-card">
+            <h2 class="section-title">Your Selection</h2>
+            <div id="success-items" class="success-items">
+              <p class="success-summary-empty">
+                Your order is confirmed and has been sent for fulfillment.
+              </p>
+            </div>
+          </div>
+
+          <div class="next-step-card">
+            <h2 class="section-title">What Happens Next</h2>
+            <p class="muted">
+              Your order details have been submitted for processing. You can
+              continue browsing the gallery or return to the homepage whenever
+              you're ready.
             </p>
           </div>
-        </div>
 
-        <div class="next-step-card">
-          <h2 class="section-title">What Happens Next</h2>
-          <p class="muted">
-            Your order details have been submitted for processing. You can continue
-            browsing the gallery or return to the homepage whenever you're ready.
-          </p>
+          <div class="button-row">
+            <a class="btn btn-primary" href="/?page=gallery"
+              >Continue Browsing</a
+            >
+            <a class="btn" href="/">Return Home</a>
+          </div>
         </div>
-
-        <div class="button-row">
-  <a class="btn btn-primary" href="/?page=gallery">Continue Browsing</a>
-  <a class="btn" href="/">Return Home</a>
-</div>
       </div>
-    </div>
-  </main>
+    </main>
 
-  <footer class="footer">
-    <div class="container">
-      &copy; <span id="copyright-year"></span> Dan Bourret Photos. All rights reserved.
-    </div>
-  </footer>
+    <footer class="footer">
+      <div class="container">
+        &copy; <span id="copyright-year"></span> Dan Bourret Photos. All rights
+        reserved.
+      </div>
+    </footer>
 
-  <script src="js/main.js"></script>
+    <script src="js/main.js"></script>
 
-  <script>
+    <script>
   const order = JSON.parse(localStorage.getItem("lastOrder") || "{}");
 
   document.getElementById("success-payment-id").textContent =
     order.paymentId || "Confirmed";
 
   document.getElementById("success-total").textContent =
-    order.total || "";
+    order.total || "Paid";
 
   const itemsEl = document.getElementById("success-items");
 
   if (itemsEl && order.items && order.items.length) {
-  itemsEl.innerHTML = order.items.map((item, index) => `
-    <div class="success-summary-item">
-      <img
-        class="success-summary-item__thumb"
-        src="${item.image || ""}"
-        alt="${item.title || "Ordered print"}"
-      />
+    itemsEl.innerHTML = order.items.map((item, index) => `
+      <div class="success-summary-item">
+        <img
+          class="success-summary-item__thumb"
+          src="${item.image || ""}"
+          alt="${item.title || "Ordered print"}"
+        />
 
-      <div class="success-summary-item__content">
-        <div class="success-summary-item__title">
-          ${index + 1}. ${item.title || "Untitled Photo"}
-        </div>
-        <div class="success-summary-item__meta">
-          Size: ${item.size}<br/>
-          Material: ${item.material}<br/>
-          Finish: ${item.finish}<br/>
-          Price: $${Number(item.price || 0).toFixed(2)}
+        <div class="success-summary-item__content">
+          <div class="success-summary-item__title">
+            ${index + 1}. ${item.title || "Untitled Photo"}
+          </div>
+          <div class="success-summary-item__meta">
+            Size: ${item.size || ""}<br/>
+            Material: ${getDisplayMaterialName(item.material)}<br/>
+            Finish: ${item.finish || ""}<br/>
+            Price: $${Number(item.price || 0).toFixed(2)}
+          </div>
         </div>
       </div>
-    </div>
-  `).join("");
-}
-  
+    `).join("");
+  } else if (itemsEl) {
+    itemsEl.innerHTML = `
+      <p class="success-summary-empty">
+        Your order is confirmed and has been sent for fulfillment.
+      </p>
+    `;
+  }
+
+  const yearEl = document.getElementById("copyright-year");
+  if (yearEl) {
+    yearEl.textContent = new Date().getFullYear();
+  }
 </script>
-</body>
+
+      const order = JSON.parse(localStorage.getItem("lastOrder") || "{}");
+
+      document.getElementById("success-payment-id").textContent =
+        order.paymentId || "Confirmed";
+
+      document.getElementById("success-total").textContent =
+        order.total || "Paid";
+
+      const itemsEl = document.getElementById("success-items");
+
+      if (itemsEl && order.items && order.items.length) {
+        itemsEl.innerHTML = order.items
+          .map(
+            (item, index) => `
+      <div class="success-summary-item">
+        <img
+          class="success-summary-item__thumb"
+          src="${item.image || ""}"
+          alt="${item.title || "Ordered print"}"
+        />
+
+        <div class="success-summary-item__content">
+          <div class="success-summary-item__title">
+            ${index + 1}. ${item.title || "Untitled Photo"}
+          </div>
+          <div class="success-summary-item__meta">
+            Size: ${item.size || ""}<br/>
+            Material: ${getDisplayMaterialName(item.material)}<br/>
+            Finish: ${item.finish || ""}<br/>
+            Price: $${Number(item.price || 0).toFixed(2)}
+          </div>
+        </div>
+      </div>
+    `,
+          )
+          .join("");
+      } else if (itemsEl) {
+        itemsEl.innerHTML = `
+      <p class="success-summary-empty">
+        Your order is confirmed and has been sent for fulfillment.
+      </p>
+    `;
+      }
+
+      const yearEl = document.getElementById("copyright-year");
+      if (yearEl) {
+        yearEl.textContent = new Date().getFullYear();
+      }
+    </script>
+  </body>
 </html>

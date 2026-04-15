@@ -10,6 +10,7 @@ function showPage(pageName) {
   });
 
   const page = document.getElementById(`page-${pageName}`);
+
   if (page) {
     page.classList.add("active");
   }
@@ -76,16 +77,48 @@ async function loadPricing() {
   }
 }
 
-function getBasePriceFromDb(size, material) {
-  const match = pricingData.find((item) => {
+function getBasePriceFromDb(size, material, finish = "") {
+  const normalizedMaterial = String(material || "")
+    .trim()
+    .toLowerCase();
+  const normalizedSize = String(size || "")
+    .trim()
+    .toLowerCase();
+  const normalizedFinish = String(finish || "")
+    .trim()
+    .toLowerCase();
+
+  const exactMatch = pricingData.find((item) => {
     return (
-      String(item.material).toLowerCase() === String(material).toLowerCase() &&
-      String(item.size).toLowerCase() === String(size).toLowerCase()
+      String(item.material || "")
+        .trim()
+        .toLowerCase() === normalizedMaterial &&
+      String(item.size || "")
+        .trim()
+        .toLowerCase() === normalizedSize &&
+      String(item.finish || "")
+        .trim()
+        .toLowerCase() === normalizedFinish
     );
   });
 
-  if (!match) return 0;
-  return Number(match.price || 0);
+  if (exactMatch) return Number(exactMatch.price || 0);
+
+  const blankFinishMatch = pricingData.find((item) => {
+    return (
+      String(item.material || "")
+        .trim()
+        .toLowerCase() === normalizedMaterial &&
+      String(item.size || "")
+        .trim()
+        .toLowerCase() === normalizedSize &&
+      String(item.finish || "").trim() === ""
+    );
+  });
+
+  if (blankFinishMatch) return Number(blankFinishMatch.price || 0);
+
+  return 0;
 }
 
 const PRICING = {
@@ -94,7 +127,7 @@ const PRICING = {
     "12x18": 23.99,
     "16x20": 31.99,
     "20x30": 41.59,
-    "24x36": 51.19
+    "24x36": 51.19,
   },
   Canvas: {
     "8x10": 63.99,
@@ -102,7 +135,7 @@ const PRICING = {
     "12x12": 79.99,
     "16x20": 143.99,
     "20x24": 239.99,
-    "20x30": 271.99
+    "20x30": 271.99,
   },
   Metal: {
     "5x7": 47.99,
@@ -111,7 +144,7 @@ const PRICING = {
     "12x12": 95.99,
     "16x20": 111.99,
     "20x24": 159.99,
-    "20x30": 207.99
+    "20x30": 207.99,
   },
   Wood: {
     "5x7": 39.99,
@@ -119,83 +152,87 @@ const PRICING = {
     "11x14": 95.99,
     "12x12": 95.99,
     "16x20": 111.99,
-    "20x30": 159.99
-  }
+    "20x30": 159.99,
+  },
 };
-
-const MOST_POPULAR_MATERIAL = "Canvas";
 
 const UPSELL_CONFIG = {
   Poster: {
-    label: "Upgrade available",
+    label: "Alternate finish",
     items: [
-      {
-        material: "Canvas",
-        title: "Upgrade to Canvas",
-        description: "Richer texture and a more premium wall-art look."
-      },
       {
         material: "Metal",
         title: "Try Metal",
-        description: "Vivid color, sharp detail, and a sleek modern finish."
-      }
-    ]
-  },
-  Canvas: {
-    label: "Collector upgrade",
-    items: [
-      {
-        material: "Metal",
-        title: "Go Ultra-Vibrant",
-        description: "Metal gives landscapes and wildlife extra pop and depth."
-      }
-    ]
+        description:
+          "Adds bold color, crisp detail, and a sleek modern presentation.",
+      },
+    ],
   },
   Metal: {
     label: "Alternate finish",
     items: [
       {
-        material: "Canvas",
-        title: "Prefer a softer gallery look?",
-        description: "Canvas gives a more classic fine-art presentation."
-      }
-    ]
+        material: "Wood",
+        title: "Prefer a natural display?",
+        description:
+          "Wood offers a warmer, handcrafted presentation with rustic character.",
+      },
+    ],
   },
   Wood: {
     label: "Popular alternative",
     items: [
       {
-        material: "Canvas",
-        title: "Upgrade to Canvas",
-        description: "Canvas is our most popular premium option."
-      }
-    ]
-  }
+        material: "Metal",
+        title: "Try Metal",
+        description:
+          "Metal gives wildlife and landscapes extra vibrancy, contrast, and detail.",
+      },
+    ],
+  },
 };
 
 function getPricingMaterials() {
+  const allowedMaterials = Object.keys(STOREFRONT_ALLOWED);
+
   if (pricingLoaded && Array.isArray(pricingData) && pricingData.length) {
-    return [...new Set(pricingData.map((row) => String(row.material || "").trim()))]
+    return [
+      ...new Set(pricingData.map((row) => String(row.material || "").trim())),
+    ]
+      .filter((material) => allowedMaterials.includes(material))
       .filter(Boolean);
   }
 
-  return Object.keys(PRICING || {});
+  return allowedMaterials;
 }
 
 function getSizesForMaterial(material) {
   if (pricingLoaded && Array.isArray(pricingData) && pricingData.length) {
-    return pricingData
-      .filter((row) => String(row.material || "").toLowerCase() === String(material).toLowerCase())
-      .map((row) => String(row.size || "").trim())
-      .filter(Boolean);
+    const normalizedMaterial = String(material || "")
+      .trim()
+      .toLowerCase();
+
+    return [
+      ...new Set(
+        pricingData
+          .filter(
+            (row) =>
+              String(row.material || "")
+                .trim()
+                .toLowerCase() === normalizedMaterial,
+          )
+          .map((row) => String(row.size || "").trim())
+          .filter(Boolean),
+      ),
+    ];
   }
 
   return Object.keys(PRICING[material] || {});
 }
 
-function getDisplayBasePrice(material, size) {
+function getDisplayBasePrice(material, size, finish = "") {
   if (pricingLoaded && Array.isArray(pricingData) && pricingData.length) {
-    return getBasePriceFromDb(size, material);
+    return getBasePriceFromDb(size, material, finish);
   }
 
   return Number(PRICING[material]?.[size] || 0);
@@ -211,11 +248,138 @@ function getStartingPrice(material) {
   return Math.min(...prices);
 }
 
+function getValidPricingRowsForMaterial(material) {
+  if (!pricingLoaded || !Array.isArray(pricingData) || !pricingData.length) {
+    return [];
+  }
+
+  const normalizedMaterial = String(material || "")
+    .trim()
+    .toLowerCase();
+  const allowedSizes = STOREFRONT_ALLOWED[material] || [];
+
+  return pricingData.filter((row) => {
+    const rowMaterial = String(row.material || "")
+      .trim()
+      .toLowerCase();
+    const rowSize = String(row.size || "").trim();
+    const rowPrice = Number(row.price || 0);
+
+    return (
+      rowMaterial === normalizedMaterial &&
+      allowedSizes.includes(rowSize) &&
+      rowPrice > 0
+    );
+  });
+}
+
+function getGroupedSizesForPricingCard(material) {
+  const rows = getValidPricingRowsForMaterial(material);
+
+  if (!rows.length) {
+    return getAvailableSizes(material).map((size) => ({
+      size,
+      basePrice: Number(PRICING[material]?.[size] || 0),
+      finishes: [],
+    }));
+  }
+
+  const grouped = {};
+
+  rows.forEach((row) => {
+    const size = String(row.size || "").trim();
+    const finish = String(row.finish || "").trim();
+    const price = Number(row.price || 0);
+
+    if (!size || price <= 0) return;
+
+    if (!grouped[size]) {
+      grouped[size] = {
+        size,
+        basePrice: price,
+        finishes: [],
+      };
+    }
+
+    if (price < grouped[size].basePrice) {
+      grouped[size].basePrice = price;
+    }
+
+    grouped[size].finishes.push({
+      finish,
+      price,
+    });
+  });
+
+  return sortSizesCustom(Object.keys(grouped).map((size) => [size, null])).map(
+    ([size]) => grouped[size],
+  );
+}
+
+function getStartingPriceForMaterial(material) {
+  const groupedSizes = getGroupedSizesForPricingCard(material);
+  const prices = groupedSizes
+    .map((item) => Number(item.basePrice || 0))
+    .filter((price) => price > 0);
+
+  if (!prices.length) return 0;
+  return Math.min(...prices);
+}
+
+function getRecommendedFinishMessage(material, sizeGroup) {
+  if (
+    !sizeGroup ||
+    !Array.isArray(sizeGroup.finishes) ||
+    !sizeGroup.finishes.length
+  ) {
+    if (material === "Metal") {
+      return "Vivid color, sharp detail, and a sleek modern finish.";
+    }
+
+    if (material === "Wood") {
+      return "Warm, natural presentation with a rustic feel.";
+    }
+
+    if (material === "Poster") {
+      return "Clean, classic print presentation for everyday display.";
+    }
+
+    return "Premium presentation options available.";
+  }
+
+  const finishes = sizeGroup.finishes
+    .map((item) =>
+      String(item.finish || "")
+        .trim()
+        .toLowerCase(),
+    )
+    .filter(Boolean);
+
+  if (finishes.includes("glossy")) {
+    return "Glossy adds extra vibrancy and punch.";
+  }
+
+  if (finishes.includes("lustre")) {
+    return "Lustre keeps rich color with less glare.";
+  }
+
+  if (finishes.includes("semi-gloss")) {
+    return "Semi-gloss balances pop with a softer reflection.";
+  }
+
+  if (finishes.includes("matte")) {
+    return "Matte gives a softer, refined fine-art look.";
+  }
+
+  return "Premium presentation options available.";
+}
+
 function getUpsellsForMaterial(material) {
   return UPSELL_CONFIG[material]?.items || [];
 }
 
 function getAvailableSizes(material) {
+  const allowedSizes = STOREFRONT_ALLOWED[material] || [];
   let sizes = [];
 
   if (pricingLoaded && pricingData.length) {
@@ -226,37 +390,37 @@ function getAvailableSizes(material) {
     sizes = Object.keys(PRICING[material] || {});
   }
 
-  return sortSizesCustom(sizes.map((size) => [size, null])).map(([size]) => size);
+  sizes = sizes.filter((size) => allowedSizes.includes(String(size)));
+
+  return sortSizesCustom(sizes.map((size) => [size, null])).map(
+    ([size]) => size,
+  );
 }
 
-function getPrice(size, material, finish) {
+function getPrice(size, material, finish = "") {
   let basePrice = 0;
 
   if (pricingLoaded && pricingData.length) {
-    basePrice = getBasePriceFromDb(size, material);
+    basePrice = getBasePriceFromDb(size, material, finish);
   } else {
     basePrice = Number(PRICING[material]?.[size] || 0);
   }
 
-  if (!basePrice) return 0;
-
-  return basePrice;
+  return Number(basePrice || 0);
 }
 
 function formatCurrency(amount) {
   return `$${Number(amount || 0).toFixed(2)}`;
 }
 
-
 function showPaymentLoading(message = "Processing payment...") {
-    console.log("🚀 showPaymentLoading called");
+  console.log("🚀 showPaymentLoading called");
 
   showPaymentStatus(
     `<span class="payment-spinner"></span><span>${message}</span>`,
-    false
+    false,
   );
 }
-
 
 function showPaymentStatus(message, isError = false) {
   const statusEl = document.getElementById("payment-status");
@@ -280,7 +444,10 @@ function setPayButtonState(isDisabled, label = "Pay with Card") {
 
   payBtn.disabled = isDisabled;
   payBtn.textContent = label;
-  payBtn.classList.toggle("is-loading", isDisabled && label.includes("Processing"));
+  payBtn.classList.toggle(
+    "is-loading",
+    isDisabled && label.includes("Processing"),
+  );
 }
 
 function renderCart() {
@@ -301,18 +468,21 @@ function renderCart() {
   }
 
   cart.forEach((item, index) => {
-    const itemPrice = item.price ?? getPrice(item.size, item.material, item.finish);
+    const itemPrice =
+      item.price ?? getPrice(item.size, item.material, item.finish);
+    const displayMaterial = getDisplayMaterialName(item.material);
     total += itemPrice;
 
     const div = document.createElement("div");
     div.className = "cart-item";
     div.innerHTML = `
-      ${item.image
-  ? `<img src="${item.image}" alt="Cart item" />`
-  : `<div class="cart-item-image-placeholder">No preview</div>`
-}
+    ${
+      item.image
+        ? `<img src="${item.image}" alt="Cart item" />`
+        : `<div class="cart-item-image-placeholder">No preview</div>`
+    }
         <div class="cart-item-details">
-    <strong>${item.size} - ${item.material} - ${item.finish}</strong>
+        <strong>${item.size} - ${displayMaterial}${item.finish ? ` - ${item.finish}` : ""}</strong>
     <div>${formatCurrency(itemPrice)}</div>
   </div>
   <div class="cart-item-actions">
@@ -376,20 +546,58 @@ let FORMAT_OPTIONS = {
   Poster: [],
   Canvas: [],
   Metal: [],
-  Wood: []
+  Wood: [],
 };
 
+const FINISH_OPTIONS = {
+  poster: [
+    { value: "matte", label: "Matte" },
+    { value: "lustre", label: "Lustre" },
+  ],
+  metal: [
+    { value: "matte", label: "Matte" },
+    { value: "glossy", label: "Glossy" },
+    { value: "semi-gloss", label: "Semi-Gloss" },
+  ],
+  wood: [],
+  canvas: [],
+};
+
+const STOREFRONT_ALLOWED = {
+  Poster: ["12x18", "16x20", "20x30", "24x36"],
+  Metal: ["5x7", "8x10", "11x14", "12x12", "16x20", "20x24"],
+  Wood: ["5x7", "8x10", "11x14", "12x12", "16x20", "20x30"],
+};
+
+const MATERIAL_DISPLAY_NAMES = {
+  Poster: "Photo Print",
+  Metal: "Metal",
+  Wood: "Wood",
+};
+
+function getDisplayMaterialName(material) {
+  return MATERIAL_DISPLAY_NAMES[material] || material || "";
+}
+
+const MOST_POPULAR_MATERIAL = "Metal";
+const MOST_POPULAR_SIZE_BY_MATERIAL = {
+  Poster: "16x20",
+  Metal: "8x10",
+  Wood: "11x14",
+};
 
 function getAvailableMaterials() {
+  const allowedMaterials = Object.keys(STOREFRONT_ALLOWED);
+
   if (pricingLoaded && pricingData.length) {
-    return [...new Set(
-      pricingData
-        .map((item) => item.material)
-        .filter(Boolean)
-    )].sort((a, b) => String(a).localeCompare(String(b)));
+    return [
+      ...new Set(pricingData.map((item) => item.material).filter(Boolean)),
+    ]
+      .filter((material) => allowedMaterials.includes(String(material)))
+      .sort((a, b) => String(a).localeCompare(String(b)));
   }
 
-  return Object.keys(PRICING);
+  return allowedMaterials;
 }
 
 function refreshFormatOptions() {
@@ -412,10 +620,11 @@ function populateMaterials(selectEl) {
   materials.forEach((material) => {
     const option = document.createElement("option");
     option.value = material;
-    option.textContent = material;
+    option.textContent = MATERIAL_DISPLAY_NAMES[material] || material;
     selectEl.appendChild(option);
   });
 }
+
 function ensureFormatModal() {
   let modal = document.getElementById("format-modal");
   if (modal) return modal;
@@ -456,12 +665,10 @@ function ensureFormatModal() {
         </select>
       </div>
 
-      <div class="format-field">
+            <div class="format-field" id="modal-finish-field">
         <label for="modal-finish">Finish</label>
         <select id="modal-finish" disabled>
           <option value="">Select finish</option>
-          <option value="Matte">Matte</option>
-          <option value="Glossy">Glossy</option>
         </select>
       </div>
 
@@ -494,7 +701,7 @@ function ensureFormatModal() {
   const priceEl = document.getElementById("format-price");
   const errorEl = document.getElementById("format-error");
   closeBtn.onclick = closeFormatModal;
-backBtn.onclick = closeFormatModal;
+  backBtn.onclick = closeFormatModal;
 
   panel.style.width = "min(620px, 100%)";
   panel.style.maxHeight = "90vh";
@@ -594,57 +801,174 @@ backBtn.onclick = closeFormatModal;
   styleButton(checkoutBtn, true);
 
   checkoutBtn.onclick = () => {
-    if (!material.value || !size.value || !finish.value) {
-  errorEl.style.display = "block";
+    const normalizedMaterial = String(material.value || "")
+      .trim()
+      .toLowerCase();
+    const normalizedSize = String(size.value || "").trim();
 
-  if (!material.value) {
-    errorEl.textContent = "Please select a format.";
-  } else if (!size.value) {
-    errorEl.textContent = "Please select a size.";
-  } else if (!finish.value) {
-    errorEl.textContent = "Please select a finish.";
-  }
+    const matchingRows = pricingData.filter((row) => {
+      const rowMaterial = String(row.material || "")
+        .trim()
+        .toLowerCase();
+      const rowSize = String(row.size || "").trim();
 
-  return;
-}
+      return rowMaterial === normalizedMaterial && rowSize === normalizedSize;
+    });
+
+    const finishRequired = matchingRows.some(
+      (row) => String(row.finish || "").trim() !== "",
+    );
+
+    const selectedFinish = finishRequired
+      ? String(finish.value || "")
+          .trim()
+          .toLowerCase()
+      : "";
+
+    if (!material.value || !size.value || (finishRequired && !finish.value)) {
+      errorEl.style.display = "block";
+
+      if (!material.value) {
+        errorEl.textContent = "Please select a format.";
+      } else if (!size.value) {
+        errorEl.textContent = "Please select a size.";
+      } else if (finishRequired && !finish.value) {
+        errorEl.textContent = "Please select a finish.";
+      }
+
+      return;
+    }
+
     const cart = getCart();
 
     const newItem = {
-  title: pendingTitle || "",
-  image: pendingImage,
-  size: size.value,
-  material: material.value,
-  finish: finish.value,
-  price: getPrice(size.value, material.value, finish.value)
-};
+      title: pendingTitle || "",
+      image: pendingImage,
+      imageKey: pendingImage ? pendingImage.split("/").pop() : "",
+      size: normalizedSize,
+      material: material.value,
+      finish: selectedFinish,
+      price: getPrice(normalizedSize, material.value, selectedFinish),
+    };
 
-cart.push(newItem);
+    console.log("🔥 New cart item:", newItem);
 
-saveCart(cart);
-renderCart();
-closeFormatModal();
-showAddToCartSuccess(newItem);
+    cart.push(newItem);
 
-  checkoutBtn.disabled = true;
-  checkoutBtn.style.opacity = "0.55";
-}; // ✅ THIS LINE FIXES EVERYTHING
+    saveCart(cart);
+    renderCart();
+    closeFormatModal();
+    showAddToCartSuccess(newItem);
+
+    checkoutBtn.disabled = true;
+    checkoutBtn.style.opacity = "0.55";
+  };
 
   function populateSizes(selectedMaterial) {
     size.innerHTML = `<option value="">Select size</option>`;
+    size.value = "";
+    finish.innerHTML = `<option value="">Select finish</option>`;
+    finish.value = "";
+    finish.disabled = true;
 
-    if (!selectedMaterial) return;
+    if (!selectedMaterial) {
+      size.disabled = true;
+      return;
+    }
 
-    const sizes = getAvailableSizes(selectedMaterial);
+    const normalizedMaterial = String(selectedMaterial).trim().toLowerCase();
 
-    sizes.forEach((sizeValue) => {
+    const matchingRows = pricingData.filter(
+      (row) =>
+        String(row.material || "")
+          .trim()
+          .toLowerCase() === normalizedMaterial,
+    );
+
+    let uniqueSizes = [
+      ...new Set(matchingRows.map((row) => String(row.size || "").trim())),
+    ].filter(Boolean);
+
+    // ✅ ADD THIS LINE
+    uniqueSizes = sortSizesCustom(uniqueSizes.map((s) => [s, null])).map(
+      ([s]) => s,
+    );
+
+    uniqueSizes.forEach((sizeValue) => {
       const option = document.createElement("option");
       option.value = sizeValue;
       option.textContent = sizeValue;
       size.appendChild(option);
     });
+
+    size.disabled = uniqueSizes.length === 0;
   }
 
-    function updateFormatUpsell() {
+  function populateFinishes(selectedMaterial, selectedSize) {
+    const finishField = document.getElementById("modal-finish-field");
+
+    finish.innerHTML = `<option value="">Select finish</option>`;
+    finish.value = "";
+
+    if (!selectedMaterial || !selectedSize) {
+      finish.disabled = true;
+      if (finishField) finishField.style.display = "block";
+      return;
+    }
+
+    const normalizedMaterial = String(selectedMaterial).trim().toLowerCase();
+    const normalizedSize = String(selectedSize).trim();
+
+    const matchingRows = pricingData.filter((row) => {
+      const rowMaterial = String(row.material || "")
+        .trim()
+        .toLowerCase();
+      const rowSize = String(row.size || "").trim();
+
+      return rowMaterial === normalizedMaterial && rowSize === normalizedSize;
+    });
+
+    const uniqueFinishes = [
+      ...new Set(
+        matchingRows.map((row) =>
+          String(row.finish || "")
+            .trim()
+            .toLowerCase(),
+        ),
+      ),
+    ];
+
+    const usableFinishes = uniqueFinishes.filter(Boolean);
+
+    if (!usableFinishes.length) {
+      finish.disabled = true;
+      if (finishField) finishField.style.display = "none";
+      return;
+    }
+
+    if (finishField) {
+      finishField.style.display = "block";
+    }
+
+    usableFinishes.forEach((finishValue) => {
+      const option = document.createElement("option");
+      option.value = finishValue;
+      option.textContent =
+        finishValue === "semi-gloss"
+          ? "Semi-Gloss"
+          : finishValue.charAt(0).toUpperCase() + finishValue.slice(1);
+
+      finish.appendChild(option);
+    });
+
+    finish.disabled = false;
+
+    if (usableFinishes.length === 1) {
+      finish.value = usableFinishes[0];
+    }
+  }
+
+  function updateFormatUpsell() {
     const selectedMaterial = material.value;
     const upsells = getUpsellsForMaterial(selectedMaterial);
 
@@ -657,29 +981,29 @@ showAddToCartSuccess(newItem);
     if (selectedMaterial === MOST_POPULAR_MATERIAL) {
       upsellEl.style.display = "block";
       upsellEl.innerHTML = `
-        <div style="
-          font-size:0.75rem;
-          text-transform:uppercase;
-          letter-spacing:0.08em;
-          color:#d6b36a;
-          margin-bottom:6px;
-          font-weight:700;
-        ">
-          Most popular choice
-        </div>
-        <div style="
-          font-size:0.96rem;
-          line-height:1.45;
-          color:#f3f3f3;
-        ">
-          Canvas is currently our most popular format for a premium gallery-style presentation.
-        </div>
-      `;
+    <div style="
+      font-size:0.75rem;
+      text-transform:uppercase;
+      letter-spacing:0.08em;
+      color:#d6b36a;
+      margin-bottom:6px;
+      font-weight:700;
+    ">
+      Most popular choice
+    </div>
+    <div style="
+      font-size:0.96rem;
+      line-height:1.45;
+      color:#f3f3f3;
+    ">
+      Metal prints offer the most vibrant color and sharpest detail.
+    </div>
+  `;
       return;
     }
 
     const topUpsell = upsells[0];
-    const topUpsellPrice = getStartingPrice(topUpsell.material);
+    const topUpsellPrice = getStartingPriceForMaterial(topUpsell.material);
 
     upsellEl.style.display = "block";
     upsellEl.innerHTML = `
@@ -738,29 +1062,49 @@ showAddToCartSuccess(newItem);
     const upsellBtn = document.getElementById("format-upsell-btn");
     if (upsellBtn) {
       upsellBtn.onclick = () => {
-  const previousSize = size.value;
+        const previousSize = size.value;
 
-  material.value = topUpsell.material;
-  populateSizes(topUpsell.material);
+        material.value = topUpsell.material;
+        populateSizes(topUpsell.material);
 
-  // Try to preserve size if it exists in new material
-  const availableSizes = getAvailableSizes(topUpsell.material);
+        // Try to preserve size if it exists in new material
+        const availableSizes = getAvailableSizes(topUpsell.material);
 
-  if (availableSizes.includes(previousSize)) {
-    size.value = previousSize;
-    finish.disabled = false;
-  } else {
-    size.value = "";
-    finish.value = "";
-    finish.disabled = true;
-  }
+        if (availableSizes.includes(previousSize)) {
+          size.value = previousSize;
+          finish.disabled = false;
+        } else {
+          size.value = "";
+          finish.value = "";
+          finish.disabled = true;
+        }
 
-  updateCheckoutState();
-};
+        updateCheckoutState();
+      };
     }
   }
-   function updateCheckoutState() {
-    if (material.value) {
+
+  function updateCheckoutState() {
+    const selectedMaterial = String(material.value || "").trim();
+    const selectedSize = String(size.value || "").trim();
+    const selectedFinish = String(finish.value || "").trim();
+
+    const normalizedMaterial = selectedMaterial.toLowerCase();
+
+    const matchingRows = pricingData.filter((row) => {
+      const rowMaterial = String(row.material || "")
+        .trim()
+        .toLowerCase();
+      const rowSize = String(row.size || "").trim();
+
+      return rowMaterial === normalizedMaterial && rowSize === selectedSize;
+    });
+
+    const finishRequired = matchingRows.some(
+      (row) => String(row.finish || "").trim() !== "",
+    );
+
+    if (selectedMaterial) {
       size.disabled = false;
     } else {
       size.disabled = true;
@@ -770,14 +1114,19 @@ showAddToCartSuccess(newItem);
       finish.value = "";
     }
 
-    if (material.value && size.value) {
+    if (selectedMaterial && selectedSize && finishRequired) {
       finish.disabled = false;
+    } else if (!finishRequired) {
+      finish.disabled = true;
+      finish.value = "";
     } else {
       finish.disabled = true;
       finish.value = "";
     }
 
-    const ready = Boolean(material.value && size.value && finish.value);
+    const ready = finishRequired
+      ? Boolean(selectedMaterial && selectedSize && selectedFinish)
+      : Boolean(selectedMaterial && selectedSize);
 
     checkoutBtn.disabled = !ready;
     checkoutBtn.style.opacity = ready ? "1" : "0.55";
@@ -785,7 +1134,8 @@ showAddToCartSuccess(newItem);
     updateFormatUpsell();
 
     if (ready) {
-      const price = getPrice(size.value, material.value, finish.value);
+      const effectiveFinish = finishRequired ? selectedFinish : "";
+      const price = getPrice(selectedSize, selectedMaterial, effectiveFinish);
       priceEl.textContent = `Price: ${formatCurrency(price)}`;
       errorEl.style.display = "none";
     } else {
@@ -793,154 +1143,161 @@ showAddToCartSuccess(newItem);
     }
   }
 
-function closeFormatModal() {
-  modal.style.display = "none";
-  pendingImage = null;
-  pendingTitle = null;
-}
+  function closeFormatModal() {
+    modal.style.display = "none";
+    pendingImage = null;
+    pendingTitle = null;
+  }
 
   material.addEventListener("change", () => {
-  errorEl.style.display = "none";
-  populateSizes(material.value);
-  size.value = "";
-  size.disabled = !material.value;
+    errorEl.style.display = "none";
 
-  finish.value = "";
-  finish.disabled = true;
+    size.value = "";
+    finish.value = "";
 
-  updateCheckoutState();
-});
+    populateSizes(material.value);
+    populateFinishes(material.value, size.value);
 
-size.addEventListener("change", () => {
-  errorEl.style.display = "none";
-  finish.value = "";
-  updateCheckoutState();
-});
+    size.disabled = !material.value;
 
-finish.addEventListener("change", () => {
-  errorEl.style.display = "none";
-  updateCheckoutState();
-});
+    updateCheckoutState();
+  });
 
-function showAddToCartSuccess(item) {
-  let successModal = document.getElementById("cart-success-modal");
+  size.addEventListener("change", () => {
+    errorEl.style.display = "none";
+    finish.value = "";
 
- 
-  const getSuccessPanelHtml = () => `
-    <h3 style="margin-bottom:12px;">Added to Cart</h3>
-    <p style="margin-bottom:18px; color:#ccc;">
-      Your print has been added to your cart.
-    </p>
+    populateFinishes(material.value, size.value);
+    updateCheckoutState();
+  });
 
-    <div style="
-      display:flex;
-      gap:14px;
-      align-items:center;
-      text-align:left;
-      background:rgba(255,255,255,0.04);
-      border:1px solid rgba(255,255,255,0.08);
-      border-radius:16px;
-      padding:14px;
-      margin-bottom:22px;
-    ">
-      <img
-        src="${item?.image || ""}"
-        alt="${item?.title || "Selected print"}"
-        style="
-          width:88px;
-          height:88px;
-          object-fit:cover;
-          border-radius:12px;
-          display:block;
-          flex-shrink:0;
-        "
-      />
+  finish.addEventListener("change", () => {
+    errorEl.style.display = "none";
+    updateCheckoutState();
+  });
 
-      <div style="min-width:0; flex:1;">
-        <div style="
-          font-size:1rem;
-          font-weight:600;
-          color:#fff;
-          margin-bottom:8px;
-        ">
-          ${item?.title || "Photo Print"}
-        </div>
+  function showAddToCartSuccess(item) {
+    let successModal = document.getElementById("cart-success-modal");
 
-        <div style="font-size:0.92rem; color:#d7d7d7; margin-bottom:4px;">
-          <strong style="color:#fff;">Format:</strong> ${item?.material || ""}
-        </div>
+    const getSuccessPanelHtml = () => {
+      const displayMaterial = getDisplayMaterialName(item?.material);
 
-        <div style="font-size:0.92rem; color:#d7d7d7; margin-bottom:4px;">
-          <strong style="color:#fff;">Size:</strong> ${item?.size || ""}
-        </div>
+      return `
+      <h3 style="margin-bottom:12px;">Added to Cart</h3>
+      <p style="margin-bottom:18px; color:#ccc;">
+        Your print has been added to your cart.
+      </p>
 
-        <div style="font-size:0.92rem; color:#d7d7d7; margin-bottom:6px;">
-          <strong style="color:#fff;">Finish:</strong> ${item?.finish || ""}
-        </div>
+      <div style="
+        display:flex;
+        gap:14px;
+        align-items:center;
+        text-align:left;
+        background:rgba(255,255,255,0.04);
+        border:1px solid rgba(255,255,255,0.08);
+        border-radius:16px;
+        padding:14px;
+        margin-bottom:22px;
+      ">
+        <img
+          src="${item?.image || ""}"
+          alt="${item?.title || "Selected print"}"
+          style="
+            width:88px;
+            height:88px;
+            object-fit:cover;
+            border-radius:12px;
+            display:block;
+            flex-shrink:0;
+          "
+        />
 
-        <div style="
-          font-size:1rem;
-          font-weight:700;
-          color:#f4dfac;
-        ">
-          ${formatCurrency(item?.price || 0)}
+        <div style="min-width:0; flex:1;">
+          <div style="
+            font-size:1rem;
+            font-weight:600;
+            color:#fff;
+            margin-bottom:8px;
+          ">
+            ${item?.title || "Photo Print"}
+          </div>
+
+          <div style="font-size:0.92rem; color:#d7d7d7; margin-bottom:4px;">
+            <strong style="color:#fff;">Format:</strong> ${displayMaterial}
+          </div>
+
+          <div style="font-size:0.92rem; color:#d7d7d7; margin-bottom:4px;">
+            <strong style="color:#fff;">Size:</strong> ${item?.size || ""}
+          </div>
+
+          <div style="font-size:0.92rem; color:#d7d7d7; margin-bottom:6px;">
+            <strong style="color:#fff;">Finish:</strong> ${item?.finish || ""}
+          </div>
+
+          <div style="
+            font-size:1rem;
+            font-weight:700;
+            color:#f4dfac;
+          ">
+            ${formatCurrency(item?.price || 0)}
+          </div>
         </div>
       </div>
-    </div>
 
-    <div style="display:flex; gap:12px; justify-content:center;">
-      <button id="continue-shopping">Back to Gallery</button>
-      <button id="go-to-cart">View Cart</button>
-    </div>
-  `;
+      <div style="display:flex; gap:12px; justify-content:center;">
+        <button id="continue-shopping">Back to Gallery</button>
+        <button id="go-to-cart">View Cart</button>
+      </div>
+    `;
+    };
 
-  const wireSuccessModal = () => {
-    const successPanel = successModal.querySelector("#cart-success-panel");
-    const continueBtn = successModal.querySelector("#continue-shopping");
-    const cartBtn = successModal.querySelector("#go-to-cart");
+    const wireSuccessModal = () => {
+      const successPanel = successModal.querySelector("#cart-success-panel");
+      const continueBtn = successModal.querySelector("#continue-shopping");
+      const cartBtn = successModal.querySelector("#go-to-cart");
 
-    if (!successPanel || !continueBtn || !cartBtn) return;
+      if (!successPanel || !continueBtn || !cartBtn) return;
 
-    styleButton(continueBtn, false);
-    styleButton(cartBtn, true);
+      styleButton(continueBtn, false);
+      styleButton(cartBtn, true);
 
-    continueBtn.onclick = () => {
-      successModal.style.opacity = "0";
-      successPanel.style.opacity = "0";
-      successPanel.style.transform = "translateY(10px) scale(0.98)";
-      setTimeout(() => {
+      continueBtn.onclick = () => {
+        successModal.style.opacity = "0";
+        successPanel.style.opacity = "0";
+        successPanel.style.transform = "translateY(10px) scale(0.98)";
+        setTimeout(() => {
+          successModal.style.display = "none";
+        }, 200);
+      };
+
+      cartBtn.onclick = () => {
         successModal.style.display = "none";
-      }, 200);
+        showPage("order");
+      };
+
+      requestAnimationFrame(() => {
+        successModal.style.opacity = "1";
+        successPanel.style.opacity = "1";
+        successPanel.style.transform = "translateY(0) scale(1)";
+      });
     };
 
-    cartBtn.onclick = () => {
-      successModal.style.display = "none";
-      showPage("order");
-    };
+    if (!successModal) {
+      successModal = document.createElement("div");
+      successModal.id = "cart-success-modal";
 
-    requestAnimationFrame(() => {
-      successModal.style.opacity = "1";
-      successPanel.style.opacity = "1";
-      successPanel.style.transform = "translateY(0) scale(1)";
-    });
-  };
+      successModal.style.position = "fixed";
+      successModal.style.inset = "0";
+      successModal.style.zIndex = "99999";
+      successModal.style.display = "flex";
+      successModal.style.alignItems = "center";
+      successModal.style.justifyContent = "center";
+      successModal.style.background = "rgba(0,0,0,0.6)";
+      successModal.style.backdropFilter = "blur(8px)";
+      successModal.style.opacity = "0";
+      successModal.style.transition = "opacity 0.2s ease";
 
-  if (!successModal) {
-    successModal = document.createElement("div");
-    successModal.id = "cart-success-modal";
-
-    successModal.style.position = "fixed";
-    successModal.style.inset = "0";
-    successModal.style.zIndex = "99999";
-    successModal.style.display = "flex";
-    successModal.style.alignItems = "center";
-    successModal.style.justifyContent = "center";
-    successModal.style.background = "rgba(0,0,0,0.6)";
-    successModal.style.backdropFilter = "blur(8px)";
-    successModal.style.opacity = "0";
-    successModal.style.transition = "opacity 0.2s ease";
-
-    successModal.innerHTML = `
+      successModal.innerHTML = `
       <div id="cart-success-panel" style="
         background:#111;
         border-radius:20px;
@@ -956,29 +1313,27 @@ function showAddToCartSuccess(item) {
       </div>
     `;
 
-    document.body.appendChild(successModal);
-    wireSuccessModal();
-  } else {
-    successModal.style.display = "flex";
+      document.body.appendChild(successModal);
+      wireSuccessModal();
+    } else {
+      successModal.style.display = "flex";
 
-    const successPanel = successModal.querySelector("#cart-success-panel");
-    if (successPanel) {
-      successPanel.innerHTML = getSuccessPanelHtml();
+      const successPanel = successModal.querySelector("#cart-success-panel");
+      if (successPanel) {
+        successPanel.innerHTML = getSuccessPanelHtml();
+      }
+
+      wireSuccessModal();
     }
-
-    wireSuccessModal();
   }
-}
-
-  
 
   return modal;
 }
 
 async function openFormatModal(image, title = "") {
-    window.lastSelectedPhoto = {
+  window.lastSelectedPhoto = {
     src: image,
-    title: title
+    title: title,
   };
   const modal = ensureFormatModal();
 
@@ -986,7 +1341,7 @@ async function openFormatModal(image, title = "") {
   pendingTitle = title;
 
   await loadPricing();
-refreshFormatOptions();
+  refreshFormatOptions();
 
   const preview = document.getElementById("modal-preview");
   const material = document.getElementById("modal-material");
@@ -1001,8 +1356,14 @@ refreshFormatOptions();
   size.innerHTML = `<option value="">Select size</option>`;
   size.value = "";
   size.disabled = true;
+  finish.innerHTML = `<option value="">Select finish</option>`;
   finish.value = "";
   finish.disabled = true;
+
+  const finishField = document.getElementById("modal-finish-field");
+  if (finishField) {
+    finishField.style.display = "block";
+  }
   checkoutBtn.disabled = true;
   checkoutBtn.style.opacity = "0.55";
   priceEl.textContent = "";
@@ -1057,18 +1418,22 @@ function hideSiteChromeForLightbox() {
   document.body.classList.add("lightbox-open");
   document.body.style.overflow = "hidden";
 
-  document.querySelectorAll("header, .site-header, .navbar, nav").forEach((el) => {
-    el.style.visibility = "hidden";
-  });
+  document
+    .querySelectorAll("header, .site-header, .navbar, nav")
+    .forEach((el) => {
+      el.style.visibility = "hidden";
+    });
 }
 
 function restoreSiteChromeFromLightbox() {
   document.body.classList.remove("lightbox-open");
   document.body.style.overflow = "";
 
-  document.querySelectorAll("header, .site-header, .navbar, nav").forEach((el) => {
-    el.style.visibility = "";
-  });
+  document
+    .querySelectorAll("header, .site-header, .navbar, nav")
+    .forEach((el) => {
+      el.style.visibility = "";
+    });
 }
 
 function applyLightboxTransform() {
@@ -1189,7 +1554,7 @@ function showLightbox(index) {
   lightboxImg.alt = sourceImg.alt || "Expanded gallery image";
   const baseCaption = sourceImg.dataset.caption || "";
 
-caption.innerHTML = `
+  caption.innerHTML = `
   ${baseCaption}
   <div style="font-size:0.8rem; color:#aaa; font-style:italic; margin-top:6px;">
     Preview optimized for web — prints use full-resolution originals
@@ -1480,7 +1845,7 @@ function ensureLightbox() {
       const delta = e.deltaY < 0 ? 0.25 : -0.25;
       zoomLightboxTo(lightboxZoom + delta, e.clientX, e.clientY);
     },
-    { passive: false }
+    { passive: false },
   );
 
   content.addEventListener(
@@ -1491,7 +1856,10 @@ function ensureLightbox() {
       if (e.touches.length === 2) {
         const t1 = e.touches[0];
         const t2 = e.touches[1];
-        pinchStartDistance = Math.hypot(t1.clientX - t2.clientX, t1.clientY - t2.clientY);
+        pinchStartDistance = Math.hypot(
+          t1.clientX - t2.clientX,
+          t1.clientY - t2.clientY,
+        );
         pinchStartZoom = lightboxZoom;
         return;
       }
@@ -1506,7 +1874,7 @@ function ensureLightbox() {
         lightboxDraggingImage = false;
       }
     },
-    { passive: true }
+    { passive: true },
   );
 
   content.addEventListener(
@@ -1519,7 +1887,10 @@ function ensureLightbox() {
 
         const t1 = e.touches[0];
         const t2 = e.touches[1];
-        const distance = Math.hypot(t1.clientX - t2.clientX, t1.clientY - t2.clientY);
+        const distance = Math.hypot(
+          t1.clientX - t2.clientX,
+          t1.clientY - t2.clientY,
+        );
 
         if (pinchStartDistance > 0) {
           const scaleFactor = distance / pinchStartDistance;
@@ -1543,7 +1914,7 @@ function ensureLightbox() {
         applyLightboxTransform();
       }
     },
-    { passive: false }
+    { passive: false },
   );
 
   content.addEventListener("touchend", (e) => {
@@ -1593,7 +1964,7 @@ window.App = {
     showLightbox(index);
   },
 
-    async buyNowFromGallery(photo) {
+  async buyNowFromGallery(photo) {
     if (!photo || !photo.src) {
       console.error("Invalid photo passed to buyNowFromGallery:", photo);
       return;
@@ -1607,7 +1978,7 @@ window.App = {
       console.error("Failed to open format modal:", err);
       alert("Unable to load print options right now. Please try again.");
     }
-  }
+  },
 };
 
 window.addPhotoToCartByIndex = function (index) {
@@ -1636,7 +2007,6 @@ let squarePayments = null;
 let squareCard = null;
 let squareInitPromise = null;
 
-
 async function loadSquareSdk(scriptUrl) {
   if (window.Square) return;
 
@@ -1645,7 +2015,11 @@ async function loadSquareSdk(scriptUrl) {
 
     if (existing) {
       existing.addEventListener("load", resolve, { once: true });
-      existing.addEventListener("error", () => reject(new Error("Failed to load Square SDK")), { once: true });
+      existing.addEventListener(
+        "error",
+        () => reject(new Error("Failed to load Square SDK")),
+        { once: true },
+      );
       return;
     }
 
@@ -1654,7 +2028,8 @@ async function loadSquareSdk(scriptUrl) {
     script.async = true;
     script.dataset.squareSdk = "true";
     script.onload = resolve;
-    script.onerror = () => reject(new Error(`Failed to load Square SDK from ${scriptUrl}`));
+    script.onerror = () =>
+      reject(new Error(`Failed to load Square SDK from ${scriptUrl}`));
     document.head.appendChild(script);
   });
 }
@@ -1672,7 +2047,11 @@ async function loadSquareSdk(scriptUrl) {
       }
 
       existing.addEventListener("load", () => resolve(), { once: true });
-      existing.addEventListener("error", () => reject(new Error("Failed to load Square SDK")), { once: true });
+      existing.addEventListener(
+        "error",
+        () => reject(new Error("Failed to load Square SDK")),
+        { once: true },
+      );
       return;
     }
 
@@ -1747,10 +2126,10 @@ function clearCheckoutValidation() {
     "cust-address",
     "cust-city",
     "cust-state",
-    "cust-zip"
+    "cust-zip",
   ];
 
-  fieldIds.forEach(id => {
+  fieldIds.forEach((id) => {
     const field = document.getElementById(id);
     if (field) {
       field.classList.remove("input-error");
@@ -1767,7 +2146,7 @@ function validateCheckoutFields() {
     { id: "cust-address", label: "Street Address" },
     { id: "cust-city", label: "City" },
     { id: "cust-state", label: "State" },
-    { id: "cust-zip", label: "ZIP Code" }
+    { id: "cust-zip", label: "ZIP Code" },
   ];
 
   clearCheckoutValidation();
@@ -1800,7 +2179,7 @@ function validateCheckoutFields() {
   if (missingFields.length > 0) {
     showPaymentStatus(
       `Please complete the following before checkout:\n• ${missingFields.join("\n• ")}`,
-      true
+      true,
     );
     return false;
   }
@@ -1816,10 +2195,10 @@ function isCheckoutFormComplete() {
     "cust-address",
     "cust-city",
     "cust-state",
-    "cust-zip"
+    "cust-zip",
   ];
 
-  const allFilled = requiredIds.every(id => {
+  const allFilled = requiredIds.every((id) => {
     const field = document.getElementById(id);
     return field && field.value.trim() !== "";
   });
@@ -1844,10 +2223,10 @@ function updatePayButtonAvailability() {
     "cust-address",
     "cust-city",
     "cust-state",
-    "cust-zip"
+    "cust-zip",
   ];
 
-  const allFieldsValid = requiredIds.every(id => {
+  const allFieldsValid = requiredIds.every((id) => {
     const field = document.getElementById(id);
     return field && field.value.trim() !== "";
   });
@@ -1866,104 +2245,109 @@ function updatePayButtonAvailability() {
   // keep your existing Square/card/button logic below this
 }
 
-
 async function handleSquarePayment() {
   try {
     clearCheckoutValidation();
 
     const isValid = validateCheckoutFields();
-if (!isValid) {
-  return;
-}
+    if (!isValid) {
+      return;
+    }
 
-setPayButtonState(true, "Processing...");
-showPaymentLoading("Processing payment...");
+    setPayButtonState(true, "Processing...");
+    showPaymentLoading("Processing payment...");
 
     const payBtn = document.getElementById("square-pay-btn");
 
     if (!squareCard) {
-  showPaymentStatus("Payment form is still loading. Please wait a moment and try again.");
-  return;
-}
+      showPaymentStatus(
+        "Payment form is still loading. Please wait a moment and try again.",
+      );
+      return;
+    }
 
     const cart = getCart();
     if (!cart.length) {
-  showPaymentStatus("Your cart is empty.");
-  return;
-}
-
+      showPaymentStatus("Your cart is empty.");
+      return;
+    }
 
     const total = cart.reduce((sum, item) => {
-      return sum + (item.price ?? getPrice(item.size, item.material, item.finish));
+      return (
+        sum + (item.price ?? getPrice(item.size, item.material, item.finish))
+      );
     }, 0);
 
     const result = await squareCard.tokenize();
 
-  
-
     const customer = {
-  name: document.getElementById("cust-name")?.value?.trim() || "",
-  email: document.getElementById("cust-email")?.value?.trim() || "",
-  phone: document.getElementById("cust-phone")?.value?.trim() || "",
-  address: document.getElementById("cust-address")?.value?.trim() || "",
-  city: document.getElementById("cust-city")?.value?.trim() || "",
-  state: document.getElementById("cust-state")?.value?.trim() || "",
-  zip: document.getElementById("cust-zip")?.value?.trim() || ""
-};
+      name: document.getElementById("cust-name")?.value?.trim() || "",
+      email: document.getElementById("cust-email")?.value?.trim() || "",
+      phone: document.getElementById("cust-phone")?.value?.trim() || "",
+      address: document.getElementById("cust-address")?.value?.trim() || "",
+      city: document.getElementById("cust-city")?.value?.trim() || "",
+      state: document.getElementById("cust-state")?.value?.trim() || "",
+      zip: document.getElementById("cust-zip")?.value?.trim() || "",
+    };
 
-console.log("cart being sent to server =", cart);
-if (result.status !== "OK") {
-  showPaymentStatus("Your card details could not be verified. Please review them and try again.");
-  throw new Error("Card tokenization failed");
-}
-
-const paymentRes = await fetch("/api/payments/square", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json"
-  },
-  body: JSON.stringify({
-    sourceId: result.token,
-    amount: Math.round(total * 100),
-    orderDetails: {
-      customer,
-      items: cart,
-      total: total
+    console.log("cart being sent to server =", cart);
+    if (result.status !== "OK") {
+      showPaymentStatus(
+        "Your card details could not be verified. Please review them and try again.",
+      );
+      throw new Error("Card tokenization failed");
     }
-  })
-});
 
-console.log("Raw payment response:", paymentRes);
+    const paymentRes = await fetch("/api/payments/square", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        sourceId: result.token,
+        amount: Math.round(total * 100),
+        orderDetails: {
+          customer,
+          items: cart,
+          total: total,
+        },
+      }),
+    });
 
-if (!paymentRes.ok) {
-  const errorText = await paymentRes.text();
-  console.error("Payment failed response:", errorText);
+    console.log("Raw payment response:", paymentRes);
 
-  const friendlyMessage = getUserFriendlyError(errorText);
+    if (!paymentRes.ok) {
+      const errorText = await paymentRes.text();
+      console.error("Payment failed response:", errorText);
 
-  showPaymentStatus(
-    `Payment failed.\n${friendlyMessage}\n\nYour card has not been charged.`
-  );
+      const friendlyMessage = getUserFriendlyError(errorText);
 
-  throw new Error("Payment request failed");
-}
+      showPaymentStatus(
+        `Payment failed.\n${friendlyMessage}\n\nYour card has not been charged.`,
+      );
 
-const paymentData = await paymentRes.json();
-console.log("Parsed payment data:", paymentData);
+      throw new Error("Payment request failed");
+    }
 
-localStorage.setItem("lastOrder", JSON.stringify({
-  paymentId: paymentData.paymentId,
-  total: `$${total.toFixed(2)}`,
-  items: cart
-}));
+    const paymentData = await paymentRes.json();
+    console.log("Parsed payment data:", paymentData);
 
-localStorage.removeItem("cart");
-renderCart();
+    localStorage.setItem(
+      "lastOrder",
+      JSON.stringify({
+        paymentId: paymentData.paymentId,
+        total: `$${total.toFixed(2)}`,
+        items: cart,
+      }),
+    );
+
+    localStorage.removeItem("cart");
+    renderCart();
 
     window.location.href = "/success.html";
   } catch (err) {
-  console.error("Square payment error:", err);
-} finally {
+    console.error("Square payment error:", err);
+  } finally {
     setPayButtonState(false, "Pay with Card");
   }
 }
@@ -1989,7 +2373,7 @@ const SIZE_ORDER = [
   "16x20",
   "20x24",
   "20x30",
-  "24x36"
+  "24x36",
 ];
 
 function sortSizesCustom(sizeEntries) {
@@ -2018,7 +2402,7 @@ window.handleUpsellClick = async function (material) {
   if (window.lastSelectedPhoto) {
     await openFormatModal(
       window.lastSelectedPhoto.src,
-      window.lastSelectedPhoto.title
+      window.lastSelectedPhoto.title,
     );
 
     setTimeout(() => {
@@ -2040,7 +2424,7 @@ window.handleUpsellClick = async function (material) {
   }, 200);
 };
 
- function renderPricingCards() {
+function renderPricingCards() {
   const container =
     document.getElementById("pricing-cards") ||
     document.getElementById("pricing-grid") ||
@@ -2052,67 +2436,141 @@ window.handleUpsellClick = async function (material) {
 
   container.innerHTML = "";
   container.style.setProperty("display", "grid", "important");
-container.style.setProperty("gap", "22px", "important");
-container.style.setProperty("align-items", "stretch", "important");
+  container.style.setProperty("gap", "22px", "important");
+  container.style.setProperty("align-items", "stretch", "important");
 
-if (window.innerWidth < 640) {
-  container.style.setProperty("grid-template-columns", "1fr", "important");
-} else {
-  container.style.setProperty(
-    "grid-template-columns",
-    "repeat(auto-fit, minmax(260px, 1fr))",
-    "important"
-  );
-}
+  if (window.innerWidth < 640) {
+    container.style.setProperty("grid-template-columns", "1fr", "important");
+  } else {
+    container.style.setProperty(
+      "grid-template-columns",
+      "repeat(auto-fit, minmax(260px, 1fr))",
+      "important",
+    );
+  }
 
   materials.forEach((material) => {
-    const sizes = getAvailableSizes(material);
-    const startingPrice = getStartingPrice(material);
-    const isMostPopular = material === MOST_POPULAR_MATERIAL;
+    const groupedSizes = getGroupedSizesForPricingCard(material);
+    const startingPrice = getStartingPriceForMaterial(material);
+    const isMostPopularMaterial = material === MOST_POPULAR_MATERIAL;
+    const mostPopularSize = MOST_POPULAR_SIZE_BY_MATERIAL[material] || "";
     const upsells = getUpsellsForMaterial(material);
+    const displayMaterial = MATERIAL_DISPLAY_NAMES[material] || material;
 
     const card = document.createElement("div");
     card.className = "pricing-card";
     card.style.display = "flex";
     card.style.flexDirection = "column";
     card.style.height = "100%";
-    card.style.background = isMostPopular
+    card.style.background = isMostPopularMaterial
       ? "linear-gradient(180deg, rgba(244,223,172,0.12) 0%, rgba(17,17,17,1) 18%)"
       : "linear-gradient(180deg, rgba(255,255,255,0.04) 0%, rgba(17,17,17,1) 18%)";
-    card.style.border = isMostPopular
+    card.style.border = isMostPopularMaterial
       ? "1px solid rgba(244,223,172,0.38)"
       : "1px solid rgba(255,255,255,0.10)";
     card.style.borderRadius = "24px";
     card.style.padding = "22px";
     card.style.color = "#fff";
-    card.style.boxShadow = isMostPopular
+    card.style.boxShadow = isMostPopularMaterial
       ? "0 16px 40px rgba(0,0,0,0.28), 0 0 0 1px rgba(244,223,172,0.08) inset"
       : "0 16px 40px rgba(0,0,0,0.20)";
     card.style.overflow = "hidden";
 
-    const visibleSizes = sizes.slice(0, 6);
+    const visibleSizes = groupedSizes.slice(0, 6);
 
-const sizeRows = visibleSizes
-  .map((size) => {
-    const price = getDisplayBasePrice(material, size);
+    const sizeRows = visibleSizes
+      .map((item) => {
+        const isPopularSize = item.size === mostPopularSize;
 
-    return `
+        return `
+          <div style="
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            padding:11px 0;
+            border-bottom:1px solid rgba(255,255,255,0.08);
+            font-size:0.96rem;
+            gap:12px;
+          ">
+            <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+              <span style="color:#e8e8e8;">${item.size}</span>
+              ${
+                isPopularSize
+                  ? `
+                <span style="
+                  background:rgba(244,223,172,0.14);
+                  color:#f4dfac;
+                  border:1px solid rgba(244,223,172,0.28);
+                  border-radius:999px;
+                  padding:4px 8px;
+                  font-size:0.68rem;
+                  font-weight:800;
+                  letter-spacing:0.06em;
+                  text-transform:uppercase;
+                ">
+                  Most Popular
+                </span>
+              `
+                  : ""
+              }
+            </div>
+
+            <strong style="color:#fff; white-space:nowrap;">
+              ${formatCurrency(item.basePrice)}
+            </strong>
+          </div>
+        `;
+      })
+      .join("");
+
+    const featuredSizeGroup =
+      groupedSizes.find((item) => item.size === mostPopularSize) ||
+      groupedSizes[0];
+
+    const finishMessage = getRecommendedFinishMessage(
+      material,
+      featuredSizeGroup,
+    );
+
+    const upsellHtml = `
       <div style="
-        display:flex;
-        justify-content:space-between;
-        align-items:center;
-        padding:11px 0;
-        border-bottom:1px solid rgba(255,255,255,0.08);
-        font-size:0.96rem;
+        margin-top:18px;
+        padding:16px;
+        border-radius:18px;
+        background:rgba(255,255,255,0.035);
+        border:1px solid rgba(255,255,255,0.08);
       ">
-        <span style="color:#e8e8e8;">${size}</span>
-        <strong style="color:#fff;">${formatCurrency(price)}</strong>
+        <div style="
+          font-size:0.78rem;
+          letter-spacing:0.08em;
+          text-transform:uppercase;
+          color:#d6b36a;
+          margin-bottom:12px;
+          font-weight:700;
+        ">
+          Recommended finish
+        </div>
+
+        <div style="
+          font-size:0.98rem;
+          font-weight:700;
+          color:#fff;
+          margin-bottom:6px;
+        ">
+          ${featuredSizeGroup?.size || "Popular choice"}
+        </div>
+
+        <div style="
+          font-size:0.92rem;
+          color:#cfcfcf;
+          line-height:1.5;
+        ">
+          ${finishMessage}
+        </div>
       </div>
     `;
-  })
-  .join("");
 
-    const upsellHtml = upsells.length
+    const alternateMaterialHtml = upsells.length
       ? `
         <div style="
           margin-top:18px;
@@ -2134,7 +2592,9 @@ const sizeRows = visibleSizes
 
           ${upsells
             .map((upsell, index) => {
-              const upsellStartingPrice = getStartingPrice(upsell.material);
+              const upsellStartingPrice = getStartingPriceForMaterial(
+                upsell.material,
+              );
 
               return `
                 <div style="
@@ -2149,16 +2609,16 @@ const sizeRows = visibleSizes
                     margin-bottom:6px;
                   ">
                     <strong
-  onclick="handleUpsellClick('${upsell.material}')"
-  style="
-    color:#fff;
-    font-size:0.98rem;
-    line-height:1.35;
-    cursor:pointer;
-  "
->
-  ${upsell.title}
-</strong>
+                      onclick="handleUpsellClick('${upsell.material}')"
+                      style="
+                        color:#fff;
+                        font-size:0.98rem;
+                        line-height:1.35;
+                        cursor:pointer;
+                      "
+                    >
+                      ${upsell.title}
+                    </strong>
 
                     <span style="
                       font-size:0.88rem;
@@ -2198,11 +2658,12 @@ const sizeRows = visibleSizes
           font-weight:800;
           line-height:1.2;
         ">
-          ${material}
+          ${displayMaterial}
         </div>
 
-        ${isMostPopular
-          ? `
+        ${
+          isMostPopularMaterial
+            ? `
           <div style="
             background:linear-gradient(180deg,#f4dfac,#d6b36a);
             color:#171717;
@@ -2218,7 +2679,8 @@ const sizeRows = visibleSizes
             Most Popular
           </div>
         `
-          : ""}
+            : ""
+        }
       </div>
 
       <div style="
@@ -2246,7 +2708,8 @@ const sizeRows = visibleSizes
       </div>
 
       <div style="margin-top:auto;">
-        ${upsellHtml || ""}
+        ${finishMessage ? upsellHtml : ""}
+        ${alternateMaterialHtml}
       </div>
     `;
 
@@ -2285,9 +2748,9 @@ function initContactForm() {
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify({ name, email, subject, message })
+        body: JSON.stringify({ name, email, subject, message }),
       });
 
       if (!res.ok) {
@@ -2324,8 +2787,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   refreshFormatOptions();
 
   window.addEventListener("resize", () => {
-  renderPricingCards();
-});
+    renderPricingCards();
+  });
 
   const params = new URLSearchParams(window.location.search);
   const page = params.get("page") || "home";
@@ -2363,7 +2826,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     "cust-address",
     "cust-city",
     "cust-state",
-    "cust-zip"
+    "cust-zip",
   ].forEach((id) => {
     const field = document.getElementById(id);
     if (field) {
