@@ -324,34 +324,36 @@
     <h2>Add New Price</h2>
 
     <div class="form-row">
-      <input type="text" id="new-material" placeholder="Material">
-      <input type="text" id="new-size" placeholder="Size">
-      <input type="number" id="new-price" placeholder="Price" step="0.01">
-      <button onclick="addPrice()">Add Price</button>
-    </div>
+  <input type="text" id="new-material" placeholder="Material">
+  <input type="text" id="new-size" placeholder="Size">
+  <input type="text" id="new-finish" placeholder="Finish">
+  <input type="number" id="new-price" placeholder="Price" step="0.01">
+  <button onclick="addPrice()">Add Price</button>
+</div>
 
     <div style="margin: 20px 0;">
       <input
-        type="text"
-        id="search-box"
-        placeholder="Search by material or size"
-        oninput="loadPricing()"
-      >
+  type="text"
+  id="search-box"
+  placeholder="Search by material, size, or finish"
+  oninput="loadPricing()"
+/>
     </div>
 
     <table id="pricing-table">
-      <thead>
-        <tr>
-          <th>Material</th>
-          <th>Size</th>
-          <th>Price</th>
-          <th>Save</th>
-          <th>Delete</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-  </div>
+    <table id="pricing-table">
+  <thead>
+    <tr>
+      <th>Material</th>
+      <th>Size</th>
+      <th>Finish</th>
+      <th>Price</th>
+      <th>Save</th>
+      <th>Delete</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
 
   <div id="orders-tab" class="tab-section">
     <h2 style="margin-top: 36px;">Orders</h2>
@@ -555,10 +557,16 @@ async function loadPricing() {
   const searchTerm = document.getElementById("search-box")?.value.toLowerCase().trim() || "";
 
   const filteredData = data.filter(row => {
-    const material = String(row.material || "").toLowerCase();
-    const size = String(row.size || "").toLowerCase();
-    return material.includes(searchTerm) || size.includes(searchTerm);
-  });
+  const material = String(row.material || "").toLowerCase();
+  const size = String(row.size || "").toLowerCase();
+  const finish = String(row.finish || "").toLowerCase();
+
+  return (
+    material.includes(searchTerm) ||
+    size.includes(searchTerm) ||
+    finish.includes(searchTerm)
+  );
+});
 
   const tbody = document.querySelector("#pricing-table tbody");
   tbody.innerHTML = "";
@@ -567,18 +575,19 @@ async function loadPricing() {
     const tr = document.createElement("tr");
 
     tr.innerHTML = `
-      <td>${row.material}</td>
-      <td>${row.size}</td>
-      <td>
-        <input type="number" step="0.01" value="${row.price}" id="price-${row.id}">
-      </td>
-      <td>
-        <button onclick="savePrice(${row.id})">Save</button>
-      </td>
-      <td>
-        <button class="danger" onclick="deletePrice(${row.id})">Delete</button>
-      </td>
-    `;
+  <td>${row.material || ""}</td>
+  <td>${row.size || ""}</td>
+  <td>${row.finish || ""}</td>
+  <td>
+    <input type="number" step="0.01" value="${row.price}" id="price-${row.id}">
+  </td>
+  <td>
+    <button onclick="savePrice(${row.id})">Save</button>
+  </td>
+  <td>
+    <button class="danger" onclick="deletePrice(${row.id})">Delete</button>
+  </td>
+`;
 
     tbody.appendChild(tr);
   });
@@ -937,13 +946,15 @@ async function savePrice(id) {
   await loadPricing();
 }
 
+
 async function addPrice() {
   const material = document.getElementById("new-material").value.trim();
   const size = document.getElementById("new-size").value.trim();
+  const finish = document.getElementById("new-finish").value.trim();
   const price = Number(document.getElementById("new-price").value);
 
-  if (!material || !size || Number.isNaN(price)) {
-    setStatus("Please enter material, size, and a valid price.", true);
+  if (!material || !size || !finish || Number.isNaN(price)) {
+    setStatus("Please enter material, size, finish, and a valid price.", true);
     return;
   }
 
@@ -953,7 +964,7 @@ async function addPrice() {
       "Content-Type": "application/json",
       "Authorization": `Bearer ${adminPassword}`
     },
-    body: JSON.stringify({ material, size, price })
+    body: JSON.stringify({ material, size, finish, price })
   });
 
   if (!res.ok) {
@@ -963,12 +974,12 @@ async function addPrice() {
 
   document.getElementById("new-material").value = "";
   document.getElementById("new-size").value = "";
+  document.getElementById("new-finish").value = "";
   document.getElementById("new-price").value = "";
 
   setStatus("Price added.");
   loadPricing();
 }
-
 async function deletePrice(id) {
     console.log("LOCAL DELETE CLICKED");
   console.log("origin =", window.location.origin);

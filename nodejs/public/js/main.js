@@ -58,7 +58,7 @@ let pricingLoaded = false;
 
 async function loadPricing() {
   try {
-    const res = await fetch("/api/pricing");
+    const res = await fetch("/api/public-pricing");
 
     if (!res.ok) {
       throw new Error(`Failed to load pricing: ${res.status}`);

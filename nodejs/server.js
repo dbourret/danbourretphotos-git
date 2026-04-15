@@ -149,30 +149,34 @@ app.get("/api/health", (req, res) => {
    PRICING
 ============================= */
 
-app.get("/api/pricing", async (req, res) => {
+app.get("/api/pricing", checkAdmin, async (req, res) => {
   try {
-    const [rows] = await db.execute(
-      `
-      SELECT
-        id,
-        material,
-        size,
-        finish,
-        price,
-        active
+    const [rows] = await db.execute(`
+      SELECT id, material, size, finish, price, active
+      FROM pricing
+      ORDER BY material, size, finish
+    `);
+
+    res.json(rows);
+  } catch (err) {
+    console.error("Failed to load pricing:", err);
+    res.status(500).json({ error: "Failed to load pricing." });
+  }
+});
+
+app.get("/api/public-pricing", async (req, res) => {
+  try {
+    const [rows] = await db.execute(`
+      SELECT material, size, finish, price
       FROM pricing
       WHERE active = 1
       ORDER BY material, size, finish
-      `,
-    );
+    `);
 
-    return res.json(rows);
-  } catch (error) {
-    console.error("Failed to fetch pricing:", error);
-
-    return res.status(500).json({
-      error: "Failed to fetch pricing",
-    });
+    res.json(rows);
+  } catch (err) {
+    console.error("Failed to load public pricing:", err);
+    res.status(500).json({ error: "Failed to load public pricing." });
   }
 });
 
@@ -1292,14 +1296,19 @@ FROM orders
 
 app.post("/api/pricing", checkAdmin, async (req, res) => {
   try {
-    const material = String(req.body.material || "").trim();
-    const size = String(req.body.size || "").trim();
-    const price = Number(req.body.price);
+    const { material, size, finish, price } = req.body;
 
-    if (!material || !size || Number.isNaN(price)) {
-      return res.status(400).json({
-        error: "Material, size, and valid price are required",
-      });
+    if (
+      !material ||
+      !size ||
+      !finish ||
+      price === undefined ||
+      price === null ||
+      Number.isNaN(Number(price))
+    ) {
+      return res
+        .status(400)
+        .json({ error: "material, size, finish, and price are required" });
     }
 
     await db.execute(
@@ -1307,19 +1316,18 @@ app.post("/api/pricing", checkAdmin, async (req, res) => {
       INSERT INTO pricing (
         material,
         size,
+        finish,
         price,
         active
-      ) VALUES (?, ?, ?, 1)
-      `,
-      [material, size, price],
+      ) VALUES (?, ?, ?, ?, 1)
+    `,
+      [material, size, finish, Number(price)],
     );
 
-    return res.json({ success: true });
-  } catch (error) {
-    console.error("Failed to add pricing:", error);
-    return res.status(500).json({
-      error: "Failed to add pricing",
-    });
+    res.json({ success: true });
+  } catch (err) {
+    console.error("Failed to add pricing:", err);
+    res.status(500).json({ error: "Failed to add pricing." });
   }
 });
 
