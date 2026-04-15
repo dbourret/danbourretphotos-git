@@ -196,11 +196,13 @@ function getPricingMaterials() {
   const allowedMaterials = Object.keys(STOREFRONT_ALLOWED);
 
   if (pricingLoaded && Array.isArray(pricingData) && pricingData.length) {
-    return [
-      ...new Set(pricingData.map((row) => String(row.material || "").trim())),
-    ]
-      .filter((material) => allowedMaterials.includes(material))
-      .filter(Boolean);
+    const materialsInDb = new Set(
+      pricingData
+        .map((row) => String(row.material || "").trim())
+        .filter(Boolean),
+    );
+
+    return allowedMaterials.filter((material) => materialsInDb.has(material));
   }
 
   return allowedMaterials;
@@ -590,11 +592,13 @@ function getAvailableMaterials() {
   const allowedMaterials = Object.keys(STOREFRONT_ALLOWED);
 
   if (pricingLoaded && pricingData.length) {
-    return [
-      ...new Set(pricingData.map((item) => item.material).filter(Boolean)),
-    ]
-      .filter((material) => allowedMaterials.includes(String(material)))
-      .sort((a, b) => String(a).localeCompare(String(b)));
+    const materialsInDb = new Set(
+      pricingData
+        .map((item) => String(item.material || "").trim())
+        .filter(Boolean),
+    );
+
+    return allowedMaterials.filter((material) => materialsInDb.has(material));
   }
 
   return allowedMaterials;
