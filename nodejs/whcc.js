@@ -13,6 +13,53 @@ const USE_FAKE_WHCC =
 const WHCC_ENABLE_SUBMIT =
   String(process.env.WHCC_ENABLE_SUBMIT).toLowerCase() === "true";
 
+function normalizeMaterial(material = "") {
+  const m = String(material).trim().toLowerCase();
+
+  if (["metal", "metal print", "metal prints"].includes(m)) return "metal";
+  if (["canvas", "canvas print", "canvas prints"].includes(m)) return "canvas";
+  if (["wood", "wood print", "wood prints"].includes(m)) return "wood";
+
+  // Treat all paper/poster/photo-paper products as one canonical bucket
+  if (
+    [
+      "poster",
+      "poster print",
+      "poster prints",
+      "print",
+      "prints",
+      "photo paper",
+      "photo print",
+      "photo prints",
+      "paper",
+    ].includes(m)
+  ) {
+    return "poster";
+  }
+
+  return m;
+}
+
+function normalizeFinish(finish = "") {
+  const f = String(finish).trim().toLowerCase();
+
+  if (["gloss", "glossy"].includes(f)) return "glossy";
+  if (["matte", "matt"].includes(f)) return "matte";
+  if (["semi-gloss", "semigloss", "semi gloss"].includes(f))
+    return "semi-gloss";
+  if (["lustre", "luster"].includes(f)) return "lustre";
+
+  return f;
+}
+
+function normalizeSize(size = "") {
+  return String(size).trim().toLowerCase();
+}
+
+function buildWhccKey({ material, size, finish }) {
+  return `${normalizeMaterial(material)}|${normalizeSize(size)}|${normalizeFinish(finish)}`;
+}
+
 function requireEnv(name) {
   const value = process.env[name];
   if (!value) {
@@ -60,102 +107,173 @@ const WHCC_PRODUCT_MAP = {
   // =========================
   // PHOTO PRINTS (your "poster")
   // =========================
-  // Finish mapping:
-  // lustre -> 5
-  // matte  -> 1614
-  // glossy -> using Pearl as closest available substitute for now (1613)
+  // Required pattern:
+  //   PrintingMaterial: 1  -> Paper
+  //   Paper: specific paper surface
+  //
+  // Paper IDs currently used in your map:
+  //   lustre -> 5
+  //   matte  -> 1614
+  //   glossy -> 1613 (Pearl as closest substitute for now)
 
   "poster|11x14|lustre": {
     productUID: 253,
-    options: { PrintMedia: 5 },
+    options: {
+      PrintingMaterial: 1,
+      Paper: 5,
+    },
   },
   "poster|11x14|matte": {
     productUID: 253,
-    options: { PrintMedia: 1614 },
+    options: {
+      PrintingMaterial: 1,
+      Paper: 1614,
+    },
   },
   "poster|11x14|glossy": {
     productUID: 253,
-    options: { PrintMedia: 1613 },
+    options: {
+      PrintingMaterial: 1,
+      Paper: 1613,
+    },
   },
 
   "poster|12x18|lustre": {
     productUID: 920,
-    options: { PrintMedia: 5 },
+    options: {
+      PrintingMaterial: 1,
+      Paper: 5,
+    },
   },
   "poster|12x18|matte": {
     productUID: 920,
-    options: { PrintMedia: 1614 },
+    options: {
+      PrintingMaterial: 1,
+      Paper: 1614,
+    },
   },
   "poster|12x18|glossy": {
     productUID: 920,
-    options: { PrintMedia: 1613 },
+    options: {
+      PrintingMaterial: 1,
+      Paper: 1613,
+    },
   },
 
   "poster|16x20|lustre": {
     productUID: 33,
-    options: { PrintMedia: 5 },
+    options: {
+      PrintingMaterial: 1,
+      Paper: 5,
+    },
   },
   "poster|16x20|matte": {
     productUID: 33,
-    options: { PrintMedia: 1614 },
+    options: {
+      PrintingMaterial: 1,
+      Paper: 1614,
+    },
   },
   "poster|16x20|glossy": {
     productUID: 33,
-    options: { PrintMedia: 1613 },
+    options: {
+      PrintingMaterial: 1,
+      Paper: 1613,
+    },
   },
 
   "poster|20x30|lustre": {
     productUID: 38,
-    options: { PrintMedia: 5 },
+    options: {
+      PrintingMaterial: 1,
+      Paper: 5,
+    },
   },
   "poster|20x30|matte": {
     productUID: 38,
-    options: { PrintMedia: 1614 },
+    options: {
+      PrintingMaterial: 1,
+      Paper: 1614,
+    },
   },
   "poster|20x30|glossy": {
     productUID: 38,
-    options: { PrintMedia: 1613 },
+    options: {
+      PrintingMaterial: 1,
+      Paper: 1613,
+    },
   },
 
   "poster|24x36|lustre": {
     productUID: 40,
-    options: { PrintMedia: 5 },
+    options: {
+      PrintingMaterial: 1,
+      Paper: 5,
+    },
   },
   "poster|24x36|matte": {
     productUID: 40,
-    options: { PrintMedia: 1614 },
+    options: {
+      PrintingMaterial: 1,
+      Paper: 1614,
+    },
   },
   "poster|24x36|glossy": {
     productUID: 40,
-    options: { PrintMedia: 1613 },
+    options: {
+      PrintingMaterial: 1,
+      Paper: 1613,
+    },
   },
 
   // =========================
   // WOOD
   // =========================
+  // Catalog shows wood prints require BOTH:
+  //   Wood Print Printing Media   -> 1875 (1/2" Maple Wood Panel)
+  //   Wood Print Mounting Options -> 1876 (Keyhole)
+
   "wood|5x7|": {
     productUID: 674,
-    options: { PrintMedia: 1875 },
+    options: {
+      WoodPrintPrintingMedia: 1875,
+      WoodPrintMountingOptions: 1876,
+    },
   },
   "wood|8x10|": {
     productUID: 677,
-    options: { PrintMedia: 1875 },
+    options: {
+      WoodPrintPrintingMedia: 1875,
+      WoodPrintMountingOptions: 1876,
+    },
   },
   "wood|11x14|": {
     productUID: 683,
-    options: { PrintMedia: 1875 },
+    options: {
+      WoodPrintPrintingMedia: 1875,
+      WoodPrintMountingOptions: 1876,
+    },
   },
   "wood|12x12|": {
     productUID: 684,
-    options: { PrintMedia: 1875 },
+    options: {
+      WoodPrintPrintingMedia: 1875,
+      WoodPrintMountingOptions: 1876,
+    },
   },
   "wood|16x20|": {
     productUID: 688,
-    options: { PrintMedia: 1875 },
+    options: {
+      WoodPrintPrintingMedia: 1875,
+      WoodPrintMountingOptions: 1876,
+    },
   },
   "wood|20x30|": {
     productUID: 692,
-    options: { PrintMedia: 1875 },
+    options: {
+      WoodPrintPrintingMedia: 1875,
+      WoodPrintMountingOptions: 1876,
+    },
   },
 
   // =========================
@@ -402,8 +520,13 @@ async function mapCartItemToWhcc(item, index = 0) {
     signedImageUrl,
   });
 
-  const key =
-    `${item.material}|${item.size}|${item.finish || ""}`.toLowerCase();
+  const key = buildWhccKey({
+    material: item.material,
+    size: item.size,
+    finish: item.finish || "",
+  });
+  console.log("WHCC key:", key);
+
   const mapping = WHCC_PRODUCT_MAP[key];
 
   validateWHCCMapping(key, mapping);
