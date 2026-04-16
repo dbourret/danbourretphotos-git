@@ -190,7 +190,9 @@ const WHCC_PRODUCT_MAP = {
   },
   "metal|8x10|semi-gloss": {
     productUID: 373,
-    options: { PrintMedia: 2052 },
+    options: {
+      Surface: 1974,
+    },
   },
 
   "metal|11x14|glossy": {
