@@ -160,105 +160,103 @@ const WHCC_PRODUCT_MAP = {
 
   // =========================
   // METAL
+  // Surface IDs from WHCC catalog:
+  // 651  = White High Gloss
+  // 1720 = White Matte
+  // 1974 = White Semi-Gloss
+  // 933  = Clear High Gloss
+  // 1721 = Clear Matte
   // =========================
-  // glossy -> 2051
-  // matte -> 2053
-  // semi-gloss -> 2052
 
   "metal|5x7|glossy": {
     productUID: 371,
-    options: { PrintMedia: 2051 },
+    options: { Surface: 651 },
   },
   "metal|5x7|matte": {
     productUID: 371,
-    options: {
-      Surface: 1720, // White Matte
-    },
+    options: { Surface: 1720 },
   },
   "metal|5x7|semi-gloss": {
     productUID: 371,
-    options: { PrintMedia: 2052 },
+    options: { Surface: 1974 },
   },
 
   "metal|8x10|glossy": {
     productUID: 373,
-    options: { PrintMedia: 2051 },
+    options: { Surface: 651 },
   },
   "metal|8x10|matte": {
     productUID: 373,
-    options: { PrintMedia: 2053 },
+    options: { Surface: 1720 },
   },
   "metal|8x10|semi-gloss": {
     productUID: 373,
-    options: {
-      Surface: 1974,
-    },
+    options: { Surface: 1974 },
   },
 
   "metal|11x14|glossy": {
     productUID: 356,
-    options: { PrintMedia: 2051 },
+    options: { Surface: 651 },
   },
   "metal|11x14|matte": {
     productUID: 356,
-    options: { PrintMedia: 2053 },
+    options: { Surface: 1720 },
   },
   "metal|11x14|semi-gloss": {
     productUID: 356,
-    options: { PrintMedia: 2052 },
+    options: { Surface: 1974 },
   },
 
   "metal|12x12|glossy": {
     productUID: 357,
-    options: { PrintMedia: 2051 },
+    options: { Surface: 651 },
   },
   "metal|12x12|matte": {
     productUID: 357,
-    options: { PrintMedia: 2053 },
+    options: { Surface: 1720 },
   },
   "metal|12x12|semi-gloss": {
     productUID: 357,
-    options: { PrintMedia: 2052 },
+    options: { Surface: 1974 },
   },
 
   "metal|16x20|glossy": {
     productUID: 361,
-    options: { PrintMedia: 2051 },
+    options: { Surface: 651 },
   },
   "metal|16x20|matte": {
     productUID: 361,
-    options: { PrintMedia: 2053 },
+    options: { Surface: 1720 },
   },
   "metal|16x20|semi-gloss": {
     productUID: 361,
-    options: { PrintMedia: 2052 },
+    options: { Surface: 1974 },
   },
 
   "metal|20x24|glossy": {
     productUID: 364,
-    options: { PrintMedia: 2051 },
+    options: { Surface: 651 },
   },
   "metal|20x24|matte": {
     productUID: 364,
-    options: { PrintMedia: 2053 },
+    options: { Surface: 1720 },
   },
   "metal|20x24|semi-gloss": {
     productUID: 364,
-    options: { PrintMedia: 2052 },
+    options: { Surface: 1974 },
   },
 
-  // Substitute 20x24 until exact 20x30 metal UID is confirmed
   "metal|20x30|glossy": {
-    productUID: 364,
-    options: { PrintMedia: 2051 },
+    productUID: 365,
+    options: { Surface: 651 },
   },
   "metal|20x30|matte": {
-    productUID: 364,
-    options: { PrintMedia: 2053 },
+    productUID: 365,
+    options: { Surface: 1720 },
   },
   "metal|20x30|semi-gloss": {
-    productUID: 364,
-    options: { PrintMedia: 2052 },
+    productUID: 365,
+    options: { Surface: 1974 },
   },
 
   // =========================
