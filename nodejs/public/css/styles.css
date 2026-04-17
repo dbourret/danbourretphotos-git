@@ -332,6 +332,45 @@ main {
    GALLERY
 ============================= */
 
+/* GALLERY FILTER BUTTONS */
+.gallery-filters {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.gallery-filters button {
+  min-height: auto;
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  border-radius: 18px;
+  border: 1px solid var(--gold);
+  background: transparent;
+  color: var(--gold);
+  box-shadow: none;
+  transition: all 0.2s ease;
+}
+
+.gallery-filters button:hover {
+  background: var(--gold);
+  color: #000;
+  transform: translateY(-1px);
+}
+
+.gallery-filters button.active {
+  background: var(--gold);
+  color: #000;
+}
+
+.gallery-filters button.active {
+  background: var(--gold);
+  color: #000;
+}
+
 .gallery-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));

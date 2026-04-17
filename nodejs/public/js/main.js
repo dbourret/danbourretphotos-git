@@ -668,9 +668,9 @@ function ensureFormatModal() {
   modal.style.inset = "0";
   modal.style.zIndex = "99999";
   modal.style.display = "none";
-  modal.style.alignItems = "center";
+  modal.style.alignItems = "flex-start";
   modal.style.justifyContent = "center";
-  modal.style.padding = "24px";
+  modal.style.padding = window.innerWidth <= 768 ? "12px" : "24px";
   modal.style.background = "rgba(0,0,0,0.7)";
   modal.style.backdropFilter = "blur(6px)";
 
@@ -744,8 +744,9 @@ function ensureFormatModal() {
   backBtn.onclick = closeFormatModal;
 
   panel.style.width = "min(620px, 100%)";
-  panel.style.maxHeight = "90vh";
+  panel.style.maxHeight = window.innerWidth <= 768 ? "96vh" : "90vh";
   panel.style.overflowY = "auto";
+  panel.style.marginTop = window.innerWidth <= 768 ? "8px" : "24px";
   panel.style.background = "#111";
   panel.style.border = "1px solid rgba(255,255,255,0.12)";
   panel.style.borderRadius = "24px";
