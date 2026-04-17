@@ -341,21 +341,21 @@
     </div>
 
     <table id="pricing-table">
-    <table id="pricing-table">
-  <thead>
-    <tr>
-      <th>Material</th>
-      <th>Size</th>
-      <th>Finish</th>
-      <th>Price</th>
-      <th>Save</th>
-      <th>Delete</th>
-    </tr>
-  </thead>
-  <tbody></tbody>
-</table>
+      <thead>
+        <tr>
+          <th>Material</th>
+          <th>Size</th>
+          <th>Finish</th>
+          <th>Price</th>
+          <th>Save</th>
+          <th>Delete</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
 
-  <div id="orders-tab" class="tab-section">
+  <div id="orders-tab" class="tab-section">    
     <h2 style="margin-top: 36px;">Orders</h2>
 
     <div style="margin: 12px 0 18px;">
@@ -436,6 +436,38 @@
 <script>
 let adminPassword = "";
 let currentOrderFilter = "all";
+
+async function cycleOrderStatus(orderId, currentStatus) {
+  const orderFlow = [
+    "pending",
+    "paid",
+    "processing",
+    "shipped",
+    "completed"
+  ];
+
+  let index = orderFlow.indexOf(currentStatus);
+
+  if (index === -1) {
+    index = 0;
+  } else {
+    index = (index + 1) % orderFlow.length;
+  }
+
+  const nextStatus = orderFlow[index];
+
+  await fetch(`/api/orders/${orderId}/status`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${adminPassword}`
+    },
+    body: JSON.stringify({ status: nextStatus })
+  });
+
+  // refresh UI
+  loadOrders();
+}
 
 function initializeTabs() {
         console.log("initializeTabs ran");
@@ -681,29 +713,15 @@ async function loadOrders() {
     <td>$${Number(order.order_total || 0).toFixed(2)}</td>
     <td>${formatDate(order.created_at)}</td>
   <td>
-  <div class="status-badge status-${normalizedStatus}" id="badge-${order.id}">
+  <div 
+    class="status-badge status-${normalizedStatus}" 
+    style="cursor:pointer;"
+    onclick="cycleOrderStatus(${order.id}, '${normalizedStatus}')"
+    title="Click to change status"
+  >
     ${getStatusLabel(normalizedStatus)}
   </div>
-
-  <select
-    id="status-${order.id}"
-    class="status-select status-${normalizedStatus}"
-    onchange="updateOrderStatus(${order.id}); updateStatusColor(${order.id})"
-  >
-    <option value="pending" ${normalizedStatus === "pending" ? "selected" : ""}>⏳ PENDING</option>
-    <option value="paid" ${normalizedStatus === "paid" ? "selected" : ""}>💳 PAID</option>
-    <option value="processing" ${normalizedStatus === "processing" ? "selected" : ""}>⚙️ PROCESSING</option>
-    <option value="shipped" ${normalizedStatus === "shipped" ? "selected" : ""}>📦 SHIPPED</option>
-    <option value="completed" ${normalizedStatus === "completed" ? "selected" : ""}>✅ COMPLETED</option>
-    <option value="cancelled" ${normalizedStatus === "cancelled" ? "selected" : ""}>✖ CANCELLED</option>
-  </select>
-
-  <div style="margin-top:8px; display:flex; gap:8px; flex-wrap:wrap;">
-    <button onclick="setOrderStatus(${order.id}, 'shipped')">Mark Shipped</button>
-    <button onclick="setOrderStatus(${order.id}, 'completed')">Mark Completed</button>
-  </div>
 </td>
-<td>
   <button onclick="toggleOrderDetails(${order.id}, this)">View</button>
 </td>
   `;
@@ -790,7 +808,7 @@ try {
           Customer Details
         </div>
 
-        <div style="line-height:1.8; color:#e9e9e9;">
+                <div style="line-height:1.8; color:#e9e9e9;">
           <div><strong>Name:</strong> ${order.customer_name || ""}</div>
           <div><strong>Email:</strong> ${order.customer_email || ""}</div>
           <div><strong>Phone:</strong> ${order.customer_phone || ""}</div>
@@ -798,6 +816,22 @@ try {
           <div><strong>City:</strong> ${order.customer_city || ""}</div>
           <div><strong>State:</strong> ${order.customer_state || ""}</div>
           <div><strong>ZIP:</strong> ${order.customer_zip || ""}</div>
+          <hr style="border:none; border-top:1px solid #2a2a2a; margin:14px 0;">
+          <div><strong>Customer Total:</strong> $${Number(order.order_total || 0).toFixed(2)}</div>
+          <div><strong>WHCC Product Cost:</strong> ${Number(order.whcc_product_cost || 0) > 0 ? `$${Number(order.whcc_product_cost).toFixed(2)}` : "Not returned"}</div>
+<div><strong>WHCC Shipping:</strong> ${Number(order.whcc_shipping_cost || 0) > 0 ? `$${Number(order.whcc_shipping_cost).toFixed(2)}` : "Not returned"}</div>
+<div><strong>WHCC Tax:</strong> ${Number(order.whcc_tax || 0) > 0 ? `$${Number(order.whcc_tax).toFixed(2)}` : "Not returned"}</div>
+<div><strong>WHCC Subtotal:</strong> ${Number(order.whcc_subtotal || 0) > 0 ? `$${Number(order.whcc_subtotal).toFixed(2)}` : "Not returned"}</div>
+<div><strong>WHCC Total:</strong> ${Number(order.whcc_total || 0) > 0 ? `$${Number(order.whcc_total).toFixed(2)}` : "Not returned"}</div>
+          <div>
+  <strong>Estimated Gross Profit:</strong>
+  ${
+    Number(order.whcc_total || 0) > 0
+      ? `$${(Number(order.order_total || 0) - Number(order.whcc_total || 0)).toFixed(2)}`
+      : "Not available until WHCC cost is returned"
+  }
+</div>
+          <div><strong>WHCC Confirmation ID:</strong> ${order.whcc_confirmation_id || ""}</div>
         </div>
       </div>
 

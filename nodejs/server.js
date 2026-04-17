@@ -34,6 +34,38 @@ const mysql = require("mysql2/promise");
 const rateLimit = require("express-rate-limit");
 const { SquareClient, SquareEnvironment, SquareError } = require("square");
 
+function extractWhccCosts(whccResult) {
+  const order = whccResult?.importResponse?.Orders?.[0];
+  const products = Array.isArray(order?.Products) ? order.Products : [];
+
+  const subtotal = Number(order?.SubTotal || 0);
+  const tax = Number(order?.Tax || 0);
+  const total = Number(order?.Total || 0);
+
+  let productCost = 0;
+  let shippingCost = 0;
+
+  for (const product of products) {
+    const description = String(product.ProductDescription || "").toLowerCase();
+    const price = Number(product.Price || 0);
+
+    if (description.includes("shipping")) {
+      shippingCost += price;
+    } else {
+      productCost += price;
+    }
+  }
+
+  return {
+    subtotal,
+    tax,
+    total,
+    productCost,
+    shippingCost,
+    raw: order || null,
+  };
+}
+
 const app = express();
 app.use(express.json());
 const PORT = Number(process.env.PORT) || 3000;
@@ -1073,19 +1105,37 @@ app.post("/api/payments/square", async (req, res) => {
       console.log("[WHCC RESULT]:", JSON.stringify(whccResult, null, 2));
       console.log("[WHCC CONFIRMATION ID]:", whccResult?.confirmationId);
 
+      const whccCosts = extractWhccCosts(whccResult);
+      console.log("[WHCC COSTS PARSED]:", JSON.stringify(whccCosts, null, 2));
+      console.log(
+        "[WHCC IMPORT RESPONSE ORDERS]:",
+        JSON.stringify(whccResult?.importResponse?.Orders || null, null, 2),
+      );
       await db.execute(
         `
         UPDATE orders
         SET
           whcc_status = ?,
           whcc_confirmation_id = ?,
-          whcc_error = ?
+          whcc_error = ?,
+          whcc_subtotal = ?,
+          whcc_tax = ?,
+          whcc_total = ?,
+          whcc_product_cost = ?,
+          whcc_shipping_cost = ?,
+          whcc_cost_json = ?
         WHERE square_payment_id = ?
         `,
         [
           JSON.stringify(whccResult),
           whccResult?.confirmationId || null,
           null,
+          whccCosts.subtotal,
+          whccCosts.tax,
+          whccCosts.total,
+          whccCosts.productCost,
+          whccCosts.shippingCost,
+          JSON.stringify(whccCosts.raw),
           squarePaymentId,
         ],
       );
@@ -1287,19 +1337,25 @@ app.get("/api/orders", async (req, res) => {
   try {
     const [rows] = await db.query(`
       SELECT
-  id,
-  customer_name,
-  customer_email,
-  customer_phone,
-  customer_address,
-  customer_city,
-  customer_state,
-  customer_zip,
-  order_total,
-  items_json,
-  status,
-  created_at
-FROM orders
+        id,
+        customer_name,
+        customer_email,
+        customer_phone,
+        customer_address,
+        customer_city,
+        customer_state,
+        customer_zip,
+        order_total,
+        items_json,
+        status,
+        created_at,
+        whcc_subtotal,
+        whcc_tax,
+        whcc_total,
+        whcc_product_cost,
+        whcc_shipping_cost,
+        whcc_confirmation_id
+      FROM orders
       ORDER BY created_at DESC
     `);
 
