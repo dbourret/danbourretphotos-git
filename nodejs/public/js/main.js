@@ -678,10 +678,17 @@ function ensureFormatModal() {
     <div id="format-modal-panel">
       <button id="format-modal-close" type="button" aria-label="Close">×</button>
       <h2 id="format-modal-title">Choose Your Print Options</h2>
+<div id="format-photo-title" style="
+  margin: -4px 0 14px;
+  color: #d7d7d7;
+  font-size: 0.98rem;
+  line-height: 1.4;
+  font-weight: 500;
+"></div>
 
-      <div id="format-preview-wrap">
-        <img id="modal-preview" alt="Selected photo preview" />
-      </div>
+<div id="format-preview-wrap">
+  <img id="modal-preview" alt="Selected photo preview" />
+</div>
 
       <div class="format-field">
   <label for="modal-material">Format</label>
@@ -725,6 +732,7 @@ function ensureFormatModal() {
   const panel = document.getElementById("format-modal-panel");
   const closeBtn = document.getElementById("format-modal-close");
   const preview = document.getElementById("modal-preview");
+  const photoTitleEl = document.getElementById("format-photo-title");
   const size = document.getElementById("modal-size");
   const material = document.getElementById("modal-material");
   const finish = document.getElementById("modal-finish");
@@ -1372,10 +1380,13 @@ async function openFormatModal(image, title = "") {
   pendingImage = image;
   pendingTitle = title;
 
+  console.log("openFormatModal image =", image);
+
   await loadPricing();
   refreshFormatOptions();
 
   const preview = document.getElementById("modal-preview");
+  const photoTitleEl = document.getElementById("format-photo-title");
   const material = document.getElementById("modal-material");
   const size = document.getElementById("modal-size");
   const finish = document.getElementById("modal-finish");
@@ -1383,22 +1394,57 @@ async function openFormatModal(image, title = "") {
   const priceEl = document.getElementById("format-price");
 
   preview.src = image;
+  if (photoTitleEl) {
+    photoTitleEl.textContent = title || "Selected Photo";
+  }
   populateMaterials(material);
-  material.value = "";
+
   size.innerHTML = `<option value="">Select size</option>`;
   size.value = "";
   size.disabled = true;
+
   finish.innerHTML = `<option value="">Select finish</option>`;
   finish.value = "";
   finish.disabled = true;
 
+  material.value = MOST_POPULAR_MATERIAL || "Metal";
+
+  const defaultSizes = [...new Set(getAvailableSizes(material.value))];
+
+  size.innerHTML = `<option value="">Select size</option>`;
+
+  defaultSizes.forEach((sizeValue) => {
+    const option = document.createElement("option");
+    option.value = sizeValue;
+    option.textContent = sizeValue;
+    size.appendChild(option);
+  });
+
+  size.disabled = defaultSizes.length === 0;
+
+  const preferredSize = MOST_POPULAR_SIZE_BY_MATERIAL[material.value] || "";
+  if (preferredSize && defaultSizes.includes(preferredSize)) {
+    size.value = preferredSize;
+  } else {
+    size.value = "";
+  }
+
+  finish.innerHTML = `<option value="">Select finish</option>`;
+  finish.value = "";
+  finish.disabled = true;
+
+  if (size.value) {
+    size.dispatchEvent(new Event("change"));
+  }
+
+  if (!finish.disabled && !finish.value && finish.options.length > 1) {
+    finish.value = finish.options[1].value;
+    finish.dispatchEvent(new Event("change"));
+  }
   const finishField = document.getElementById("modal-finish-field");
   if (finishField) {
     finishField.style.display = "block";
   }
-  checkoutBtn.disabled = true;
-  checkoutBtn.style.opacity = "0.55";
-  priceEl.textContent = "";
 
   modal.style.display = "flex";
 }
@@ -1584,19 +1630,67 @@ function showLightbox(index) {
 
   lightboxImg.src = sourceImg.src;
   lightboxImg.alt = sourceImg.alt || "Expanded gallery image";
-  const baseCaption = sourceImg.dataset.caption || "";
+  const photoTitle =
+    sourceImg.alt ||
+    window.galleryPhotos?.[currentIndex]?.title ||
+    "Selected Photo";
 
-  caption.innerHTML = `
-  ${baseCaption}
-  <div style="font-size:0.8rem; color:#aaa; font-style:italic; margin-top:6px;">
-    Preview optimized for web — prints use full-resolution originals
+  const baseCaption = `
+  <div style="font-size:1rem; font-weight:700; color:#fff; margin-bottom:4px;">
+    ${photoTitle}
   </div>
+  ${
+    sourceImg.dataset.caption
+      ? `<div>${sourceImg.dataset.caption}</div>`
+      : `<div style="color:#d7d7d7;">Premium print available in multiple formats and sizes.</div>`
+  }
 `;
+
+  const buyBtn = document.getElementById("lightbox-buy-btn");
+  if (buyBtn) {
+    buyBtn.onclick = async () => {
+      const photos = window.galleryPhotos || [];
+      const selectedPhoto = photos[currentIndex];
+
+      if (!selectedPhoto || !selectedPhoto.src) {
+        console.error("No selected photo found for lightbox purchase");
+        return;
+      }
+
+      closeLightbox();
+      await openFormatModal(selectedPhoto.src, selectedPhoto.title || "");
+    };
+  }
+
+  const captionText = document.getElementById("lightbox-caption-text");
+
+  if (captionText) {
+    captionText.innerHTML = `
+    ${baseCaption}
+    <div style="font-size:0.8rem; color:#aaa; font-style:italic; margin-top:6px;">
+      Preview optimized for web — prints use full-resolution originals
+    </div>
+  `;
+  }
+  const wasAlreadyOpen = lightboxIsOpen;
+
   resetLightboxTransform();
   lightboxIsOpen = true;
 
   hideSiteChromeForLightbox();
-  animateLightboxOpen();
+
+  if (!wasAlreadyOpen) {
+    animateLightboxOpen();
+  } else {
+    lightbox.style.display = "flex";
+    lightbox.style.opacity = "1";
+
+    const content = getLightboxContent();
+    if (content) {
+      content.style.opacity = "1";
+      content.style.transform = "scale(1)";
+    }
+  }
 
   lightbox.focus();
 }
@@ -1761,14 +1855,33 @@ function ensureLightbox() {
     text-align: center;
     color: #fff;
     background: rgba(0,0,0,0.58);
-    padding: 10px 14px;
+    padding: 12px 14px 14px;
     border-radius: 12px;
     z-index: 100001;
     line-height: 1.5;
     font-size: 0.92rem;
     box-sizing: border-box;
   "
-></div>
+>
+  <div id="lightbox-caption-text"></div>
+  <div style="margin-top:10px;">
+    <button
+      id="lightbox-buy-btn"
+      type="button"
+      style="
+        padding:10px 16px;
+        border:none;
+        border-radius:12px;
+        background:linear-gradient(180deg,#f4dfac,#d6b36a);
+        color:#171717;
+        font-weight:700;
+        cursor:pointer;
+      "
+    >
+      Choose Print Options
+    </button>
+  </div>
+</div>
     </div>
   `;
 

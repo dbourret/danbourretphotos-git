@@ -96,6 +96,44 @@ console.log("publicDir =", publicDir);
 
 app.disable("x-powered-by");
 
+async function estimateWhccCostsFromItems(items) {
+  let productCost = 0;
+  let shippingCost = 0;
+
+  for (const item of items || []) {
+    const material = normalizeMaterialForDb(item.material || "");
+    const size = String(item.size || "").trim();
+    const finish = normalizeFinishForDb(item.finish || "");
+
+    const [rows] = await db.execute(
+      `
+      SELECT product_cost, shipping_cost
+      FROM whcc_costs
+      WHERE material = ? AND size = ? AND finish = ? AND active = 1
+      LIMIT 1
+      `,
+      [material, size, finish],
+    );
+
+    if (!rows.length) {
+      throw new Error(
+        `Missing WHCC cost estimate for ${material} ${size} ${finish}`,
+      );
+    }
+
+    productCost += Number(rows[0].product_cost || 0);
+    shippingCost += Number(rows[0].shipping_cost || 0);
+  }
+
+  return {
+    productCost,
+    shippingCost,
+    subtotal: productCost + shippingCost,
+    tax: 0,
+    total: productCost + shippingCost,
+  };
+}
+
 function checkAdmin(req, res, next) {
   const authHeader = req.headers.authorization;
 
@@ -1008,6 +1046,7 @@ app.post("/api/payments/square", async (req, res) => {
     const status = "paid";
 
     const items = orderDetails.items || orderDetails.selections || [];
+    const estimatedWhccCosts = await estimateWhccCostsFromItems(items);
 
     console.log("ORDER DB PAYLOAD:", {
       squarePaymentId,
@@ -1027,7 +1066,7 @@ app.post("/api/payments/square", async (req, res) => {
     try {
       await db.execute(
         `
-        INSERT INTO orders (
+                INSERT INTO orders (
           square_payment_id,
           square_order_id,
           customer_name,
@@ -1040,8 +1079,13 @@ app.post("/api/payments/square", async (req, res) => {
           order_total,
           currency,
           items_json,
-          status
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+          status,
+          estimated_whcc_subtotal,
+          estimated_whcc_tax,
+          estimated_whcc_total,
+          estimated_whcc_product_cost,
+          estimated_whcc_shipping_cost
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         `,
         [
           squarePaymentId,
@@ -1057,6 +1101,11 @@ app.post("/api/payments/square", async (req, res) => {
           currency,
           JSON.stringify(items),
           status,
+          estimatedWhccCosts.subtotal,
+          estimatedWhccCosts.tax,
+          estimatedWhccCosts.total,
+          estimatedWhccCosts.productCost,
+          estimatedWhccCosts.shippingCost,
         ],
       );
 
@@ -1336,28 +1385,33 @@ app.get("/api/orders", async (req, res) => {
 
   try {
     const [rows] = await db.query(`
-      SELECT
-        id,
-        customer_name,
-        customer_email,
-        customer_phone,
-        customer_address,
-        customer_city,
-        customer_state,
-        customer_zip,
-        order_total,
-        items_json,
-        status,
-        created_at,
-        whcc_subtotal,
-        whcc_tax,
-        whcc_total,
-        whcc_product_cost,
-        whcc_shipping_cost,
-        whcc_confirmation_id
-      FROM orders
-      ORDER BY created_at DESC
-    `);
+  SELECT
+    id,
+    customer_name,
+    customer_email,
+    customer_phone,
+    customer_address,
+    customer_city,
+    customer_state,
+    customer_zip,
+    order_total,
+    items_json,
+    status,
+    created_at,
+    whcc_subtotal,
+    whcc_tax,
+    whcc_total,
+    whcc_product_cost,
+    whcc_shipping_cost,
+    whcc_confirmation_id,
+    estimated_whcc_subtotal,
+    estimated_whcc_tax,
+    estimated_whcc_total,
+    estimated_whcc_product_cost,
+    estimated_whcc_shipping_cost
+  FROM orders
+  ORDER BY created_at DESC
+`);
 
     res.json(rows);
   } catch (err) {

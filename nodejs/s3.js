@@ -9,7 +9,7 @@ const s3 = new S3Client({
   },
 });
 
-async function generateSignedImageUrl(key, expiresInSeconds = 900) {
+async function generateSignedImageUrl(key) {
   if (!key) {
     throw new Error("Missing S3 object key");
   }
@@ -19,9 +19,20 @@ async function generateSignedImageUrl(key, expiresInSeconds = 900) {
     Key: key,
   });
 
-  return await getSignedUrl(s3, command, {
+  const expiresInSeconds = 259200; // 72 hours
+
+  const url = await getSignedUrl(s3, command, {
     expiresIn: expiresInSeconds,
   });
+
+  console.log("SIGNED URL DEBUG:", {
+    key,
+    bucket: process.env.S3_BUCKET_NAME,
+    expiresInSeconds,
+    url,
+  });
+
+  return url;
 }
 
 module.exports = {

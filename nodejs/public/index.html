@@ -35,11 +35,12 @@
           <div class="hero-copy">
             <span class="eyebrow">Premium wildlife collection</span>
             <h2 class="hero-title">
-              Photography that brings nature and beauty into your space.
+              Museum-quality wildlife photography designed to elevate your
+              space.
             </h2>
             <p class="lead">
-              Dan Bourret Photos captures vivid wildlife and nature moments
-              designed for collectors, home decor, and premium wall art.
+              Dan Bourret Photos offers premium wildlife and nature prints
+              crafted for collectors, home decor, and statement wall art.
             </p>
 
             <div class="button-row">
@@ -78,13 +79,43 @@
             <h2>Featured wildlife collection</h2>
             <p>
               Browse the collection below. Click any image to view it in detail
-              or add it to your cart.<br />
+              or choose print options for your preferred format and size.<br />
               <span style="font-size: 0.9rem; color: #aaa; font-style: italic">
                 Images displayed are optimized for web viewing; all prints are
                 produced using full-resolution originals for exceptional clarity
                 and quality.
               </span>
             </p>
+          </div>
+
+          <div class="gallery-filters" id="gallery-filters">
+            <button
+              type="button"
+              class="btn btn-secondary active"
+              data-filter="all"
+            >
+              All
+            </button>
+            <button type="button" class="btn btn-secondary" data-filter="birds">
+              Birds
+            </button>
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-filter="animals"
+            >
+              Animals
+            </button>
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-filter="flowers"
+            >
+              Flowers
+            </button>
+            <button type="button" class="btn btn-secondary" data-filter="misc">
+              Scenic / Misc
+            </button>
           </div>
 
           <div class="gallery-grid" id="gallery-grid"></div>
@@ -168,6 +199,22 @@
 
           <div class="card">
             <h3>Checkout</h3>
+
+            <div
+              class="card"
+              style="margin-bottom: 18px; background: rgba(255, 255, 255, 0.03)"
+            >
+              <h4 style="margin-bottom: 10px">Why order here?</h4>
+              <ul class="info-list">
+                <li>Printed by a professional lab using premium materials</li>
+                <li>Secure payment processed through Square</li>
+                <li>Produced from full-resolution original images</li>
+                <li>Carefully packaged for safe delivery</li>
+              </ul>
+              <p class="muted" style="margin-top: 10px">
+                Estimated delivery times will vary by product and destination.
+              </p>
+            </div>
 
             <div class="checkout-grid">
               <input id="cust-name" type="text" placeholder="Full Name" />

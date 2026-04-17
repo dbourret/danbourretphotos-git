@@ -7,7 +7,8 @@
   {
     "src": "images/misc/monarch_butterfly_2.jpg",
     "title": "Monarch Butterfly 2",
-    "category": "misc"
+    "category": "misc",
+    "description": "An intimate and richly detailed nature scene, where delicate textures and vivid color contrast come together to create a captivating statement piece ideal for larger presentation."
   },
   {
     "src": "images/misc/monarch_butterfly_3.jpg",
@@ -24,234 +25,239 @@
     "title": "Blooming Orchids",
     "category": "flowers"
   },
-    {
+  {
     "src": "images/flowers/phalaenopsis_orchid.jpg",
     "title": "Phalaenopsis Orchid",
     "category": "flowers"
   },
-    {
+  {
     "src": "images/flowers/purple_orchid.jpg",
     "title": "Purple Orchid",
     "category": "flowers"
   },
-    {
+  {
     "src": "images/flowers/white_cattleya_orchid.jpg",
     "title": "White Cattleya Orchid",
     "category": "flowers"
   },
-    {
+  {
     "src": "images/flowers/white_phalaenopsis_orchid.jpg",
     "title": "White Phalaenopsis Orchid",
     "category": "flowers"
   },
-    {
+  {
     "src": "images/birds/3parakeets.jpg",
     "title": "3 Parakeets",
     "category": "birds"
   },
-    {
+  {
     "src": "images/birds/7parakeets.jpg",
     "title": "7 Parakeets",
     "category": "birds"
   },
-    {
+  {
     "src": "images/birds/american_white_ibis.jpg",
     "title": "American White Ibis",
     "category": "birds"
   },
-    {
+  {
     "src": "images/birds/cardinal.jpg",
     "title": "Cardinal",
     "category": "birds"
   },
-    {
+  {
     "src": "images/birds/caribbean_flamingo.jpg",
     "title": "Caribbean Flamingo",
     "category": "birds"
   },
-    {
+  {
     "src": "images/birds/catalina_macaw.jpg",
     "title": "Catalina Macaw 1",
     "category": "birds"
   },
-    {
+  {
     "src": "images/birds/catalina_macaw2.jpg",
     "title": "Catalina Macaw 2",
     "category": "birds"
   },
-    {
+  {
     "src": "images/birds/catalina_macaw3.jpg",
     "title": "Catalina Macaw 3",
     "category": "birds"
   },
-    {
+  {
     "src": "images/birds/flamingo.jpg",
     "title": "Flamingo 1",
     "category": "birds"
   },
-    {
+  {
     "src": "images/birds/flamingo1.jpg",
     "title": "Flamingo 2",
     "category": "birds"
   },
-    {
+  {
     "src": "images/birds/flamingo2.jpg",
     "title": "Flamingo 3",
     "category": "birds"
   },
-    {
+  {
     "src": "images/birds/grackle.jpg",
     "title": "Grackle",
     "category": "birds"
   },
-    {
+  {
     "src": "images/birds/great_blue_heron.jpg",
     "title": "Great Blue Heron",
-    "category": "birds"
+    "category": "birds",
+    "description": "A graceful and dynamic moment frozen in time, showcasing the heron’s power and elegance against a natural backdrop—perfectly suited for a striking, large-format display."
   },
-    {
+  {
     "src": "images/birds/great_blue_heron_beach.jpg",
     "title": "Great Blue Heron on the Beach",
     "category": "birds"
   },
-    {
+  {
     "src": "images/birds/great_egret.jpg",
     "title": "Great Egret",
     "category": "birds"
   },
-    {
+  {
     "src": "images/birds/mandarin_duck.jpg",
     "title": "Mandarin Duck",
-    "category": "birds"
+    "category": "birds",
+    "description": "Vibrant plumage and fine detail make this piece especially strong in metal and glossy finishes."
   },
-    {
+  {
     "src": "images/birds/moluccan_cockatoo.jpg",
     "title": "Moluccan Cockatoo",
     "category": "birds"
   },
-    {
+  {
     "src": "images/birds/nanday_parakeet.jpg",
     "title": "Nanday Parakeet",
     "category": "birds"
   },
-    {
+  {
     "src": "images/birds/nanday_parakeet_in_flight.jpg",
     "title": "Nanday Parakeet In Flight",
     "category": "birds"
   },
-    {
+  {
     "src": "images/birds/parrot1.jpg",
     "title": "Parrot 1",
     "category": "birds"
   },
-    {
+  {
     "src": "images/birds/parrot2.jpg",
     "title": "Parrot 2",
     "category": "birds"
   },
-    {
+  {
     "src": "images/birds/peacock.jpg",
     "title": "Peacock",
     "category": "birds"
   },
-    {
+  {
     "src": "images/birds/scarlet_macaw.jpg",
     "title": "Scarlet Macaw",
-    "category": "birds"
+    "category": "birds",
+    "description": "A vibrant, high-energy composition capturing the macaw in full motion, its radiant colors and sweeping wings creating a bold visual centerpiece that commands attention as a large statement print."
   },
-    {
+  {
     "src": "images/birds/scarlet_macaw2.jpg",
     "title": "Scarlet Macaw 2",
     "category": "birds"
   },
-    {
+  {
     "src": "images/birds/two_nanday_parakeets.jpg",
     "title": "Two Nanday Parakeets",
     "category": "birds"
   },
-    {
+  {
     "src": "images/birds/white_cockatoo.jpg",
     "title": "White Cockatoo",
     "category": "birds"
   },
-    {
+  {
     "src": "images/birds/yellow_naped_amazon_parrot.jpg",
     "title": "Yellow Naped Amazon Parrot",
     "category": "birds"
   },
-    {
+  {
     "src": "images/animals/african_spurred_tortoise.jpg",
     "title": "African Spurred Tortoise",
     "category": "animals"
   },
-    {
+  {
     "src": "images/animals/alligator.jpg",
     "title": "Alligator",
     "category": "animals"
   },
-    {
+  {
     "src": "images/animals/bengal_tiger.jpg",
     "title": "Bengal Tiger",
-    "category": "animals"
+    "category": "animals",
+    "description": "A striking wildlife portrait with bold detail and rich color, ideal for statement wall art."
   },
-    {
+  {
     "src": "images/animals/donkey.jpg",
     "title": "Donkey",
     "category": "animals"
   },
-    {
+  {
     "src": "images/animals/ring-tailed_lemur.jpg",
     "title": "Ring-Tailed Lemur",
     "category": "animals"
   },
-    {
+  {
     "src": "images/animals/zebra.jpg",
     "title": "Zebra",
     "category": "animals"
   },
-    {
+  {
     "src": "images/misc/moonlit_monuments_tidal_basin.jpg",
     "title": "Moonlit Monuments Tidal Basin",
     "category": "misc"
   },
-    {
+  {
     "src": "images/misc/porch.jpg",
     "title": "Porch",
     "category": "misc"
   },
-    {
+  {
     "src": "images/misc/rocking_chair.jpg",
     "title": "Rocking Chair",
     "category": "misc"
   },
-    {
+  {
     "src": "images/misc/statue_of_liberty.jpg",
     "title": "Statue Of Liberty",
     "category": "misc"
   },
-    {
+  {
     "src": "images/misc/sunset_boat.jpg",
     "title": "Sunset with Boat",
     "category": "misc"
   },
-    {
+  {
     "src": "images/misc/sunset.jpg",
     "title": "Sunset 1",
     "category": "misc"
   },
-    {
+  {
     "src": "images/misc/sunset2.jpg",
     "title": "Sunset 2",
     "category": "misc"
   },
-    {
+  {
     "src": "images/misc/us_capitol.jpg",
     "title": "US Capitol",
     "category": "misc"
   },
-    {
+  {
     "src": "images/misc/washington_monument_reflecting_pool.jpg",
     "title": "Washington Monument Reflecting Pool",
-    "category": "misc"
+    "category": "misc",
+    "description": "A dramatic scenic composition that works beautifully as a larger statement print."
   }
 ]

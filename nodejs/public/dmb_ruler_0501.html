@@ -808,30 +808,51 @@ try {
           Customer Details
         </div>
 
-                <div style="line-height:1.8; color:#e9e9e9;">
-          <div><strong>Name:</strong> ${order.customer_name || ""}</div>
-          <div><strong>Email:</strong> ${order.customer_email || ""}</div>
-          <div><strong>Phone:</strong> ${order.customer_phone || ""}</div>
-          <div><strong>Address:</strong> ${order.customer_address || ""}</div>
-          <div><strong>City:</strong> ${order.customer_city || ""}</div>
-          <div><strong>State:</strong> ${order.customer_state || ""}</div>
-          <div><strong>ZIP:</strong> ${order.customer_zip || ""}</div>
-          <hr style="border:none; border-top:1px solid #2a2a2a; margin:14px 0;">
-          <div><strong>Customer Total:</strong> $${Number(order.order_total || 0).toFixed(2)}</div>
-          <div><strong>WHCC Product Cost:</strong> ${Number(order.whcc_product_cost || 0) > 0 ? `$${Number(order.whcc_product_cost).toFixed(2)}` : "Not returned"}</div>
-<div><strong>WHCC Shipping:</strong> ${Number(order.whcc_shipping_cost || 0) > 0 ? `$${Number(order.whcc_shipping_cost).toFixed(2)}` : "Not returned"}</div>
-<div><strong>WHCC Tax:</strong> ${Number(order.whcc_tax || 0) > 0 ? `$${Number(order.whcc_tax).toFixed(2)}` : "Not returned"}</div>
-<div><strong>WHCC Subtotal:</strong> ${Number(order.whcc_subtotal || 0) > 0 ? `$${Number(order.whcc_subtotal).toFixed(2)}` : "Not returned"}</div>
-<div><strong>WHCC Total:</strong> ${Number(order.whcc_total || 0) > 0 ? `$${Number(order.whcc_total).toFixed(2)}` : "Not returned"}</div>
-          <div>
-  <strong>Estimated Gross Profit:</strong>
-  ${
-    Number(order.whcc_total || 0) > 0
-      ? `$${(Number(order.order_total || 0) - Number(order.whcc_total || 0)).toFixed(2)}`
-      : "Not available until WHCC cost is returned"
-  }
+<div style="line-height:1.8; color:#e9e9e9;">
+  <div><strong>Name:</strong> ${order.customer_name || ""}</div>
+  <div><strong>Email:</strong> ${order.customer_email || ""}</div>
+  <div><strong>Phone:</strong> ${order.customer_phone || ""}</div>
+  <div><strong>Address:</strong> ${order.customer_address || ""}</div>
+  <div><strong>City:</strong> ${order.customer_city || ""}</div>
+  <div><strong>State:</strong> ${order.customer_state || ""}</div>
+  <div><strong>ZIP:</strong> ${order.customer_zip || ""}</div>
+  <hr style="border:none; border-top:1px solid #2a2a2a; margin:14px 0;">
+  <div><strong>Customer Total:</strong> $${Number(order.order_total || 0).toFixed(2)}</div>
+  ${(() => {
+    const actualTotal = Number(order.whcc_total || 0);
+    const actualProduct = Number(order.whcc_product_cost || 0);
+    const actualShipping = Number(order.whcc_shipping_cost || 0);
+    const actualTax = Number(order.whcc_tax || 0);
+    const actualSubtotal = Number(order.whcc_subtotal || 0);
+
+    const estimatedTotal = Number(order.estimated_whcc_total || 0);
+    const estimatedProduct = Number(order.estimated_whcc_product_cost || 0);
+    const estimatedShipping = Number(order.estimated_whcc_shipping_cost || 0);
+    const estimatedTax = Number(order.estimated_whcc_tax || 0);
+    const estimatedSubtotal = Number(order.estimated_whcc_subtotal || 0);
+
+    const useActual = actualTotal > 0;
+
+    const displayProduct = useActual ? actualProduct : estimatedProduct;
+    const displayShipping = useActual ? actualShipping : estimatedShipping;
+    const displayTax = useActual ? actualTax : estimatedTax;
+    const displaySubtotal = useActual ? actualSubtotal : estimatedSubtotal;
+    const displayTotal = useActual ? actualTotal : estimatedTotal;
+
+    const grossProfit = Number(order.order_total || 0) - displayTotal;
+
+    return `
+      <div><strong>Cost Source:</strong> ${useActual ? "Actual WHCC" : "Estimated"}</div>
+      <div><strong>WHCC Product Cost:</strong> $${displayProduct.toFixed(2)}</div>
+      <div><strong>WHCC Shipping:</strong> $${displayShipping.toFixed(2)}</div>
+      <div><strong>WHCC Tax:</strong> $${displayTax.toFixed(2)}</div>
+      <div><strong>WHCC Subtotal:</strong> $${displaySubtotal.toFixed(2)}</div>
+      <div><strong>WHCC Total:</strong> $${displayTotal.toFixed(2)}</div>
+      <div><strong>Estimated Gross Profit:</strong> $${grossProfit.toFixed(2)}</div>
+    `;
+  })()}
+  <div><strong>WHCC Confirmation ID:</strong> ${order.whcc_confirmation_id || ""}</div>
 </div>
-          <div><strong>WHCC Confirmation ID:</strong> ${order.whcc_confirmation_id || ""}</div>
         </div>
       </div>
 
