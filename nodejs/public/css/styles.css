@@ -341,32 +341,30 @@ main {
   flex-wrap: wrap;
 }
 
-.gallery-filters button {
-  min-height: auto;
-  padding: 6px 14px;
-  font-size: 13px;
+.gallery-filters button,
+.gallery-filters .btn {
+  min-height: 36px !important;
+  padding: 6px 14px !important;
+  font-size: 13px !important;
   font-weight: 600;
   letter-spacing: 0.02em;
-  border-radius: 18px;
+  border-radius: 18px !important;
   border: 1px solid var(--gold);
   background: transparent;
   color: var(--gold);
-  box-shadow: none;
+  box-shadow: none !important;
   transition: all 0.2s ease;
 }
 
-.gallery-filters button:hover {
+.gallery-filters button:hover,
+.gallery-filters .btn:hover {
   background: var(--gold);
   color: #000;
   transform: translateY(-1px);
 }
 
-.gallery-filters button.active {
-  background: var(--gold);
-  color: #000;
-}
-
-.gallery-filters button.active {
+.gallery-filters button.active,
+.gallery-filters .btn.active {
   background: var(--gold);
   color: #000;
 }
