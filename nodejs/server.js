@@ -1,11 +1,6 @@
 require("dotenv").config();
 
 const path = require("path");
-console.error = (...args) => {
-  const msg = `[${new Date().toISOString()}] ERROR ${util.format(...args)}\n`;
-  logStream.write(msg);
-  originalError(...args);
-};
 
 const { fulfillOrderWithWhcc, getWhccAccessToken } = require("./whcc");
 
