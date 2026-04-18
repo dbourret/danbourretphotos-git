@@ -1,5 +1,27 @@
 require("dotenv").config();
 
+const fs = require("fs");
+const path = require("path");
+const util = require("util");
+
+const logFile = path.join(__dirname, "server.log");
+const logStream = fs.createWriteStream(logFile, { flags: "a" });
+
+const originalLog = console.log;
+const originalError = console.error;
+
+console.log = (...args) => {
+  const msg = `[${new Date().toISOString()}] ${util.format(...args)}\n`;
+  logStream.write(msg);
+  originalLog(...args);
+};
+
+console.error = (...args) => {
+  const msg = `[${new Date().toISOString()}] ERROR ${util.format(...args)}\n`;
+  logStream.write(msg);
+  originalError(...args);
+};
+
 const { fulfillOrderWithWhcc, getWhccAccessToken } = require("./whcc");
 
 console.log("DB_HOST =", process.env.DB_HOST);
@@ -27,7 +49,6 @@ function normalizeFinishForDb(finish = "") {
   return String(finish).trim().toLowerCase();
 }
 const express = require("express");
-const path = require("path");
 const crypto = require("crypto");
 const nodemailer = require("nodemailer");
 const mysql = require("mysql2/promise");
@@ -818,9 +839,6 @@ ${notes || "None"}
   `;
 
   console.log("About to send email...");
-  console.log("SMTP host:", process.env.SMTP_HOST);
-  console.log("SMTP port:", process.env.SMTP_PORT);
-  console.log("SMTP user:", process.env.SMTP_USER);
   console.log("ORDER_FROM_EMAIL:", process.env.ORDER_FROM_EMAIL);
   console.log("ORDER_NOTIFY_EMAIL:", process.env.ORDER_NOTIFY_EMAIL);
   console.log("Subject:", subject);
@@ -918,7 +936,7 @@ Dan Bourret Photos
       html: customerHtml,
     });
 
-    console.log("Customer confirmation email sent to:", customer.email);
+    console.log("Customer confirmation email sent");
   }
 
   console.log("Email send result:", info);
@@ -1005,8 +1023,10 @@ app.post("/api/payments/square", async (req, res) => {
       });
     }
 
-    console.log("Square payment req.body:", JSON.stringify(req.body, null, 2));
-    console.log("orderDetails:", JSON.stringify(orderDetails, null, 2));
+    console.log("Square payment received", {
+      hasItems: !!orderDetails?.items?.length,
+      amount: calculatedTotal,
+    });
 
     const calculatedTotal = await calculateOrderTotal(orderDetails.items);
     const amountInCents = BigInt(Math.round(calculatedTotal * 100));

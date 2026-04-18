@@ -1,6 +1,11 @@
 // whcc.js
 // Node 18+ recommended (uses built-in fetch)
 console.log("WHCC_NOTIFICATION_EMAIL =", process.env.WHCC_NOTIFICATION_EMAIL);
+const { S3Client, GetObjectCommand } = require("@aws-sdk/client-s3");
+
+const s3 = new S3Client({
+  region: process.env.AWS_REGION,
+});
 const crypto = require("crypto");
 const { generateSignedImageUrl } = require("./s3");
 
@@ -12,6 +17,24 @@ const USE_FAKE_WHCC =
 
 const WHCC_ENABLE_SUBMIT =
   String(process.env.WHCC_ENABLE_SUBMIT).toLowerCase() === "true";
+
+async function computeS3ImageMd5(bucket, key) {
+  const result = await s3.send(
+    new GetObjectCommand({
+      Bucket: bucket,
+      Key: key,
+    }),
+  );
+
+  const chunks = [];
+  for await (const chunk of result.Body) {
+    chunks.push(chunk);
+  }
+
+  const buffer = Buffer.concat(chunks);
+
+  return crypto.createHash("md5").update(buffer).digest("hex");
+}
 
 function normalizeMaterial(material = "") {
   const m = String(material).trim().toLowerCase();
@@ -504,21 +527,33 @@ function validateWHCCMapping(key, mapping) {
   }
 }
 
-async function mapCartItemToWhcc(item, index = 0) {
-  const imageKey =
-    item.imageKey || (item.image ? item.image.split("/").pop() : "");
+async function mapCartItemToWhcc(item, index) {
+  const imageKey = item.imageKey;
+  const signedImageUrl = await generateSignedImageUrl(imageKey, 259200);
 
-  if (!imageKey) {
-    throw new Error(`Missing imageKey for item: ${item.title || "Untitled"}`);
+  const imageHash = await computeS3ImageMd5(
+    process.env.S3_BUCKET_NAME,
+    imageKey,
+  );
+
+  if (!signedImageUrl) {
+    throw new Error(`Failed to generate signed URL for ${imageKey}`);
   }
 
-  const signedImageUrl = await generateSignedImageUrl(imageKey);
+  console.log("WHCC HASH DEBUG:", {
+    imageKey,
+    imageHash,
+    signedImageUrl,
+  });
 
   console.log("✅ Signed URL created:", {
     title: item.title,
     imageKey,
     signedImageUrl,
   });
+
+  console.log("URL hash:", md5Hex(signedImageUrl));
+  console.log("IMAGE hash:", imageHash);
 
   const key = buildWhccKey({
     material: item.material,
@@ -528,22 +563,19 @@ async function mapCartItemToWhcc(item, index = 0) {
   console.log("WHCC key:", key);
 
   const mapping = WHCC_PRODUCT_MAP[key];
-
   validateWHCCMapping(key, mapping);
 
   return {
     ProductUID: mapping.productUID,
     Quantity: Number(item.quantity || 1),
-
     ItemAssets: [
       {
         AssetPath: signedImageUrl,
         PrintedFileName: printedFileNameFromItem(item, index),
-        ImageHash: md5Hex(signedImageUrl),
+        ImageHash: imageHash,
         AutoRotate: true,
       },
     ],
-
     ItemAttributes: Object.values(mapping.options || {}).map((attributeId) => ({
       AttributeUID: attributeId,
     })),
@@ -664,6 +696,23 @@ async function buildWhccOrderRequest({ orderId, customer, items }) {
       },
     ],
   };
+}
+
+function normalizeImageKey(item) {
+  if (!item) {
+    throw new Error("Missing item for image key");
+  }
+
+  if (item.imageKey) {
+    return String(item.imageKey).trim();
+  }
+
+  if (item.image) {
+    // fallback if you ever pass full path like "images/misc/photo.jpg"
+    return item.image.split("/").pop();
+  }
+
+  throw new Error(`Missing imageKey for item: ${JSON.stringify(item)}`);
 }
 
 async function getWhccAccessToken() {
