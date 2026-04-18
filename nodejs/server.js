@@ -1,21 +1,6 @@
 require("dotenv").config();
 
-const fs = require("fs");
 const path = require("path");
-const util = require("util");
-
-const logFile = path.join(__dirname, "server.log");
-const logStream = fs.createWriteStream(logFile, { flags: "a" });
-
-const originalLog = console.log;
-const originalError = console.error;
-
-console.log = (...args) => {
-  const msg = `[${new Date().toISOString()}] ${util.format(...args)}\n`;
-  logStream.write(msg);
-  originalLog(...args);
-};
-
 console.error = (...args) => {
   const msg = `[${new Date().toISOString()}] ERROR ${util.format(...args)}\n`;
   logStream.write(msg);
@@ -1023,13 +1008,13 @@ app.post("/api/payments/square", async (req, res) => {
       });
     }
 
+    const calculatedTotal = await calculateOrderTotal(orderDetails.items);
+    const amountInCents = BigInt(Math.round(calculatedTotal * 100));
+
     console.log("Square payment received", {
       hasItems: !!orderDetails?.items?.length,
       amount: calculatedTotal,
     });
-
-    const calculatedTotal = await calculateOrderTotal(orderDetails.items);
-    const amountInCents = BigInt(Math.round(calculatedTotal * 100));
 
     const paymentResponse = await squareClient.payments.create({
       sourceId,
