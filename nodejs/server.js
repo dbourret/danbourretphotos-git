@@ -1055,8 +1055,15 @@ app.post("/api/payments/square", async (req, res) => {
     const payment =
       paymentResponse.result?.payment || paymentResponse.payment || null;
 
-    console.log("SQUARE PAYMENT OBJECT:", payment);
-    console.log("SQUARE PAYMENT ID:", payment?.id);
+    console.log(
+      "SQUARE PAYMENT OBJECT:",
+      JSON.stringify(
+        payment,
+        (_, value) => (typeof value === "bigint" ? value.toString() : value),
+        2,
+      ),
+    );
+    console.log("SQUARE PAYMENT ID:", String(payment?.id || ""));
 
     if (!payment?.id) {
       throw new Error(
