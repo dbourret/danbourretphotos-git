@@ -1011,6 +1011,26 @@ app.post("/api/payments/square", async (req, res) => {
       amount: calculatedTotal,
     });
 
+    // 🔒 PRE-FLIGHT S3 VALIDATION (PREVENT REFUNDS)
+    const { verifyS3ObjectExists } = require("./whcc"); // or wherever you put it
+
+    for (const item of orderDetails.items) {
+      const exists = await verifyS3ObjectExists(
+        process.env.S3_BUCKET_NAME,
+        item.imageKey,
+      );
+
+      if (!exists) {
+        console.error("❌ Missing S3 object:", item.imageKey);
+
+        return res.status(400).json({
+          error: `Image not found: ${item.imageKey}`,
+        });
+      }
+
+      console.log("✅ S3 verified:", item.imageKey);
+    }
+
     const paymentResponse = await squareClient.payments.create({
       sourceId,
       idempotencyKey: checkoutAttemptId,
@@ -1019,7 +1039,22 @@ app.post("/api/payments/square", async (req, res) => {
         currency: "USD",
       },
       locationId: process.env.SQUARE_LOCATION_ID,
+
+      // Delayed capture
+      autocomplete: false,
+
+      // Optional: shorten the window if you want
+      // delayDuration: "PT12H",
+      // delayAction: "CANCEL",
     });
+
+    async function completeSquarePayment(paymentId) {
+      return await squareClient.payments.complete(paymentId);
+    }
+
+    async function cancelSquarePayment(paymentId) {
+      return await squareClient.payments.cancel(paymentId);
+    }
 
     const payment = paymentResponse.payment;
 
@@ -1151,6 +1186,13 @@ app.post("/api/payments/square", async (req, res) => {
       });
 
       console.log("[WHCC SUCCESS]");
+
+      // ✅ CAPTURE PAYMENT HERE
+      if (squarePaymentId) {
+        await completeSquarePayment(squarePaymentId);
+        console.log("[SQUARE CAPTURED]:", squarePaymentId);
+      }
+
       console.log("[WHCC RESULT]:", JSON.stringify(whccResult, null, 2));
       console.log("[WHCC CONFIRMATION ID]:", whccResult?.confirmationId);
 
@@ -1191,6 +1233,16 @@ app.post("/api/payments/square", async (req, res) => {
     } catch (whccError) {
       whccErrorMessage = whccError.message || "Unknown WHCC error";
       console.error("[WHCC FAILED]:", whccErrorMessage);
+
+      // ❌ CANCEL PAYMENT (NO REFUND NEEDED)
+      if (squarePaymentId) {
+        try {
+          await cancelSquarePayment(squarePaymentId);
+          console.log("[SQUARE CANCELED]:", squarePaymentId);
+        } catch (cancelError) {
+          console.error("[SQUARE CANCEL FAILED]:", cancelError.message);
+        }
+      }
 
       await db.execute(
         `

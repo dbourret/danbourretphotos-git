@@ -1,22 +1,33 @@
 // whcc.js
 // Node 18+ recommended (uses built-in fetch)
 console.log("WHCC_NOTIFICATION_EMAIL =", process.env.WHCC_NOTIFICATION_EMAIL);
-const { S3Client, GetObjectCommand } = require("@aws-sdk/client-s3");
+
+const {
+  S3Client,
+  HeadObjectCommand,
+  GetObjectCommand,
+} = require("@aws-sdk/client-s3");
+const crypto = require("crypto");
+const { generateSignedImageUrl } = require("./s3");
 
 const s3 = new S3Client({
   region: process.env.AWS_REGION,
 });
-const crypto = require("crypto");
-const { generateSignedImageUrl } = require("./s3");
 
-const WHCC_BASE_URL =
-  process.env.WHCC_BASE_URL || "https://sandbox.apps.whcc.com";
-
-const USE_FAKE_WHCC =
-  String(process.env.USE_FAKE_WHCC).toLowerCase() === "true";
-
-const WHCC_ENABLE_SUBMIT =
-  String(process.env.WHCC_ENABLE_SUBMIT).toLowerCase() === "true";
+async function verifyS3ObjectExists(bucket, key) {
+  try {
+    await s3.send(
+      new HeadObjectCommand({
+        Bucket: bucket,
+        Key: key,
+      }),
+    );
+    return true;
+  } catch (err) {
+    if (err.name === "NotFound") return false;
+    throw err;
+  }
+}
 
 async function computeS3ImageMd5(bucket, key) {
   const result = await s3.send(
@@ -886,4 +897,5 @@ module.exports = {
   fulfillOrderWithWhcc,
   buildWhccOrderRequest,
   getWhccAccessToken,
+  verifyS3ObjectExists, // 👈 ADD THIS
 };
