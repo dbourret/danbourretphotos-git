@@ -1,8 +1,11 @@
 require("dotenv").config();
 
 const path = require("path");
-
-const { fulfillOrderWithWhcc, getWhccAccessToken } = require("./whcc");
+const {
+  fulfillOrderWithWhcc,
+  getWhccAccessToken,
+  verifyS3ObjectExists,
+} = require("./whcc");
 
 console.log("DB_HOST =", process.env.DB_HOST);
 console.log("DB_USER =", process.env.DB_USER);
@@ -1012,8 +1015,6 @@ app.post("/api/payments/square", async (req, res) => {
     });
 
     // 🔒 PRE-FLIGHT S3 VALIDATION (PREVENT REFUNDS)
-    const { verifyS3ObjectExists } = require("./whcc"); // or wherever you put it
-
     for (const item of orderDetails.items) {
       const exists = await verifyS3ObjectExists(
         process.env.S3_BUCKET_NAME,

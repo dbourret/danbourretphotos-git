@@ -14,6 +14,15 @@ const s3 = new S3Client({
   region: process.env.AWS_REGION,
 });
 
+const WHCC_BASE_URL =
+  process.env.WHCC_BASE_URL || "https://sandbox.apps.whcc.com";
+
+const USE_FAKE_WHCC =
+  String(process.env.USE_FAKE_WHCC).toLowerCase() === "true";
+
+const WHCC_ENABLE_SUBMIT =
+  String(process.env.WHCC_ENABLE_SUBMIT).toLowerCase() === "true";
+
 async function verifyS3ObjectExists(bucket, key) {
   try {
     await s3.send(
