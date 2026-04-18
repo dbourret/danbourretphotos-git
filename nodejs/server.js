@@ -1040,24 +1040,41 @@ app.post("/api/payments/square", async (req, res) => {
         currency: "USD",
       },
       locationId: process.env.SQUARE_LOCATION_ID,
-
-      // Delayed capture
       autocomplete: false,
-
-      // Optional: shorten the window if you want
-      // delayDuration: "PT12H",
-      // delayAction: "CANCEL",
     });
 
+    console.log(
+      "SQUARE CREATE RESPONSE:",
+      JSON.stringify(
+        paymentResponse,
+        (_, value) => (typeof value === "bigint" ? value.toString() : value),
+        2,
+      ),
+    );
+
+    const payment =
+      paymentResponse.result?.payment || paymentResponse.payment || null;
+
+    console.log("SQUARE PAYMENT OBJECT:", payment);
+    console.log("SQUARE PAYMENT ID:", payment?.id);
+
+    if (!payment?.id) {
+      throw new Error(
+        "Square payment create response did not include a payment id",
+      );
+    }
+
     async function completeSquarePayment(paymentId) {
-      return await squareClient.payments.complete(paymentId);
+      return await squareClient.payments.complete({
+        paymentId,
+      });
     }
 
     async function cancelSquarePayment(paymentId) {
-      return await squareClient.payments.cancel(paymentId);
+      return await squareClient.payments.cancel({
+        paymentId,
+      });
     }
-
-    const payment = paymentResponse.payment;
 
     console.log(
       "items received by server =",
@@ -1069,6 +1086,10 @@ app.post("/api/payments/square", async (req, res) => {
     const squarePaymentId = payment?.id || null;
     const squareOrderId = payment?.orderId || null;
 
+    if (!squarePaymentId) {
+      throw new Error("Missing squarePaymentId before capture/cancel");
+    }
+
     const customerName = customer.name || null;
     const customerEmail = customer.email || null;
     const customerPhone = customer.phone || null;
@@ -1079,7 +1100,7 @@ app.post("/api/payments/square", async (req, res) => {
 
     const orderTotal = calculatedTotal;
     const currency = "USD";
-    const status = "paid";
+    const status = "pending";
 
     const items = orderDetails.items || orderDetails.selections || [];
     const estimatedWhccCosts = await estimateWhccCostsFromItems(items);
@@ -1102,27 +1123,27 @@ app.post("/api/payments/square", async (req, res) => {
     try {
       await db.execute(
         `
-                INSERT INTO orders (
-          square_payment_id,
-          square_order_id,
-          customer_name,
-          customer_email,
-          customer_phone,
-          customer_address,
-          customer_city,
-          customer_state,
-          customer_zip,
-          order_total,
-          currency,
-          items_json,
-          status,
-          estimated_whcc_subtotal,
-          estimated_whcc_tax,
-          estimated_whcc_total,
-          estimated_whcc_product_cost,
-          estimated_whcc_shipping_cost
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        `,
+            INSERT INTO orders (
+      square_payment_id,
+      square_order_id,
+      customer_name,
+      customer_email,
+      customer_phone,
+      customer_address,
+      customer_city,
+      customer_state,
+      customer_zip,
+      order_total,
+      currency,
+      items_json,
+      status,
+      estimated_whcc_subtotal,
+      estimated_whcc_tax,
+      estimated_whcc_total,
+      estimated_whcc_product_cost,
+      estimated_whcc_shipping_cost
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `,
         [
           squarePaymentId,
           squareOrderId,
@@ -1156,6 +1177,7 @@ app.post("/api/payments/square", async (req, res) => {
 
     let whccResult = null;
     let whccErrorMessage = null;
+    let paymentCaptured = false;
 
     try {
       console.log("[WHCC] starting fulfillment");
@@ -1187,15 +1209,14 @@ app.post("/api/payments/square", async (req, res) => {
       });
 
       console.log("[WHCC SUCCESS]");
-
-      // ✅ CAPTURE PAYMENT HERE
-      if (squarePaymentId) {
-        await completeSquarePayment(squarePaymentId);
-        console.log("[SQUARE CAPTURED]:", squarePaymentId);
-      }
-
       console.log("[WHCC RESULT]:", JSON.stringify(whccResult, null, 2));
       console.log("[WHCC CONFIRMATION ID]:", whccResult?.confirmationId);
+
+      if (squarePaymentId) {
+        await completeSquarePayment(squarePaymentId);
+        paymentCaptured = true;
+        console.log("[SQUARE CAPTURED]:", squarePaymentId);
+      }
 
       const whccCosts = extractWhccCosts(whccResult);
       console.log("[WHCC COSTS PARSED]:", JSON.stringify(whccCosts, null, 2));
@@ -1203,22 +1224,25 @@ app.post("/api/payments/square", async (req, res) => {
         "[WHCC IMPORT RESPONSE ORDERS]:",
         JSON.stringify(whccResult?.importResponse?.Orders || null, null, 2),
       );
+
       await db.execute(
         `
-        UPDATE orders
-        SET
-          whcc_status = ?,
-          whcc_confirmation_id = ?,
-          whcc_error = ?,
-          whcc_subtotal = ?,
-          whcc_tax = ?,
-          whcc_total = ?,
-          whcc_product_cost = ?,
-          whcc_shipping_cost = ?,
-          whcc_cost_json = ?
-        WHERE square_payment_id = ?
-        `,
+    UPDATE orders
+    SET
+      status = ?,
+      whcc_status = ?,
+      whcc_confirmation_id = ?,
+      whcc_error = ?,
+      whcc_subtotal = ?,
+      whcc_tax = ?,
+      whcc_total = ?,
+      whcc_product_cost = ?,
+      whcc_shipping_cost = ?,
+      whcc_cost_json = ?
+    WHERE square_payment_id = ?
+    `,
         [
+          "paid",
           JSON.stringify(whccResult),
           whccResult?.confirmationId || null,
           null,
@@ -1233,10 +1257,9 @@ app.post("/api/payments/square", async (req, res) => {
       );
     } catch (whccError) {
       whccErrorMessage = whccError.message || "Unknown WHCC error";
-      console.error("[WHCC FAILED]:", whccErrorMessage);
+      console.error("[ORDER FLOW FAILED]:", whccErrorMessage);
 
-      // ❌ CANCEL PAYMENT (NO REFUND NEEDED)
-      if (squarePaymentId) {
+      if (squarePaymentId && !paymentCaptured) {
         try {
           await cancelSquarePayment(squarePaymentId);
           console.log("[SQUARE CANCELED]:", squarePaymentId);
@@ -1247,15 +1270,20 @@ app.post("/api/payments/square", async (req, res) => {
 
       await db.execute(
         `
-        UPDATE orders
-        SET
-          whcc_status = ?,
-          whcc_confirmation_id = ?,
-          whcc_error = ?
-        WHERE square_payment_id = ?
-        `,
-        [null, null, whccErrorMessage, squarePaymentId],
+    UPDATE orders
+    SET
+      status = ?,
+      whcc_status = ?,
+      whcc_confirmation_id = ?,
+      whcc_error = ?
+    WHERE square_payment_id = ?
+    `,
+        ["cancelled", null, null, whccErrorMessage, squarePaymentId],
       );
+
+      return res.status(500).json({
+        error: `Order could not be completed: ${whccErrorMessage}`,
+      });
     }
 
     console.log("[EMAIL] attempting to send order emails");
@@ -1281,7 +1309,7 @@ app.post("/api/payments/square", async (req, res) => {
     return res.status(200).json({
       success: true,
       paymentId: payment?.id || null,
-      status: payment?.status || null,
+      status: "COMPLETED",
       receiptUrl: payment?.receiptUrl || null,
       redirectUrl: `/success.html?paymentId=${encodeURIComponent(payment?.id || "")}`,
     });

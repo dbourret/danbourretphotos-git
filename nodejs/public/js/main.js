@@ -720,11 +720,10 @@ function ensureFormatModal() {
   display:none;
 "></div>
 
-      <div id="format-actions">
-        <button id="modal-back" type="button">Cancel</button>
-        <button id="modal-checkout" type="button" disabled>Add To Cart</button>
-      </div>
-    </div>
+  <div id="format-actions">
+  <button id="modal-back" type="button">Cancel</button>
+  <button id="modal-checkout" type="button" disabled>Add To Cart</button>
+</div>
   `;
 
   document.body.appendChild(modal);
@@ -2444,12 +2443,7 @@ async function handleSquarePayment() {
       throw new Error("Card tokenization failed");
     }
 
-    let checkoutAttemptId = sessionStorage.getItem("checkoutAttemptId");
-
-    if (!checkoutAttemptId) {
-      checkoutAttemptId = crypto.randomUUID();
-      sessionStorage.setItem("checkoutAttemptId", checkoutAttemptId);
-    }
+    const checkoutAttemptId = crypto.randomUUID();
 
     const paymentRes = await fetch("/api/payments/square", {
       method: "POST",
@@ -2483,9 +2477,6 @@ async function handleSquarePayment() {
 
     const paymentData = await paymentRes.json();
     console.log("Parsed payment data:", paymentData);
-
-    // ✅ CLEAR IDEMPOTENCY KEY HERE
-    sessionStorage.removeItem("checkoutAttemptId");
 
     localStorage.setItem(
       "lastOrder",
