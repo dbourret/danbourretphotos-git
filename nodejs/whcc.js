@@ -551,6 +551,12 @@ async function mapCartItemToWhcc(item, index) {
   const imageKey = item.imageKey;
   const signedImageUrl = await generateSignedImageUrl(imageKey, 259200);
 
+  console.log("SIGNED URL DEBUG:", {
+    key: imageKey,
+    expiresInSeconds: 259200,
+    urlGenerated: !!signedImageUrl,
+  });
+
   const imageHash = await computeS3ImageMd5(
     process.env.S3_BUCKET_NAME,
     imageKey,
@@ -559,21 +565,6 @@ async function mapCartItemToWhcc(item, index) {
   if (!signedImageUrl) {
     throw new Error(`Failed to generate signed URL for ${imageKey}`);
   }
-
-  console.log("WHCC HASH DEBUG:", {
-    imageKey,
-    imageHash,
-    signedImageUrl,
-  });
-
-  console.log("✅ Signed URL created:", {
-    title: item.title,
-    imageKey,
-    signedImageUrl,
-  });
-
-  console.log("URL hash:", md5Hex(signedImageUrl));
-  console.log("IMAGE hash:", imageHash);
 
   const key = buildWhccKey({
     material: item.material,
@@ -745,19 +736,11 @@ async function getWhccAccessToken() {
   url.searchParams.set("consumer_secret", consumerSecret);
 
   console.log("WHCC auth target:", WHCC_BASE_URL);
-  console.log("WHCC key present:", Boolean(process.env.WHCC_CONSUMER_KEY));
-  console.log(
-    "WHCC secret present:",
-    Boolean(process.env.WHCC_CONSUMER_SECRET),
-  );
-  console.log(
-    "WHCC key length:",
-    String(process.env.WHCC_CONSUMER_KEY || "").trim().length,
-  );
-  console.log(
-    "WHCC secret length:",
-    String(process.env.WHCC_CONSUMER_SECRET || "").trim().length,
-  );
+  console.log("WHCC credentials loaded:", {
+    keyPresent: !!process.env.WHCC_CONSUMER_KEY,
+    secretPresent: !!process.env.WHCC_CONSUMER_SECRET,
+  });
+
   const response = await fetch(url.toString(), {
     method: "GET",
   });

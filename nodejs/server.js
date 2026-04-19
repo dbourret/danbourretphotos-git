@@ -24,6 +24,25 @@ const MATERIAL_DB_MAP = {
   canvas: "Canvas",
 };
 
+// ----------------------------------
+// Debug logging helpers
+// ----------------------------------
+const DEBUG_ORDERS = true;
+const DEBUG_WHCC = true;
+const DEBUG_EMAIL = true;
+
+function logOrder(...args) {
+  if (DEBUG_ORDERS) console.log(...args);
+}
+
+function logWhcc(...args) {
+  if (DEBUG_WHCC) console.log(...args);
+}
+
+function logEmail(...args) {
+  if (DEBUG_EMAIL) console.log(...args);
+}
+
 function normalizeMaterialForDb(material = "") {
   return MATERIAL_DB_MAP[String(material).trim().toLowerCase()] || material;
 }
@@ -37,6 +56,12 @@ const nodemailer = require("nodemailer");
 const mysql = require("mysql2/promise");
 const rateLimit = require("express-rate-limit");
 const { SquareClient, SquareEnvironment, SquareError } = require("square");
+
+function debugLog(...args) {
+  if (!IS_PRODUCTION) {
+    console.log(...args);
+  }
+}
 
 function extractWhccCosts(whccResult) {
   const order = whccResult?.importResponse?.Orders?.[0];
@@ -158,12 +183,28 @@ function checkAdmin(req, res, next) {
   next();
 }
 
-/* =============================
-   REQUEST LOGGING
-============================= */
+// ----------------------------------
+// Request logging
+// ----------------------------------
+const DEBUG_REQUESTS = true;
 
 app.use((req, res, next) => {
-  console.log(`REQUEST: ${req.url}`);
+  if (!DEBUG_REQUESTS) return next();
+
+  const url = req.url || "";
+
+  // Only log API calls and a few important pages
+  const shouldLog =
+    url.startsWith("/api/") ||
+    url === "/" ||
+    url.startsWith("/success.html") ||
+    url.startsWith("/cart.html") ||
+    url.startsWith("/checkout.html");
+
+  if (shouldLog) {
+    console.log(`REQUEST: ${req.method} ${url}`);
+  }
+
   next();
 });
 
@@ -377,11 +418,11 @@ app.post("/api/contact", async (req, res) => {
     });
 
     try {
-      console.log("CONTACT DB PAYLOAD:", {
-        name,
-        email,
-        subject,
-        message,
+      console.log("[CONTACT SUBMISSION RECEIVED]", {
+        hasName: Boolean(name),
+        hasEmail: Boolean(email),
+        hasSubject: Boolean(subject),
+        hasMessage: Boolean(message),
       });
 
       await db.execute(
@@ -978,15 +1019,15 @@ app.post("/api/payments/square", async (req, res) => {
   try {
     const { sourceId, orderDetails = {}, checkoutAttemptId } = req.body;
 
-    console.log("====================================");
-    console.log("[ORDER START]");
+    logOrder("====================================");
+    logOrder("[ORDER START]");
 
     const orderId = `order-${Date.now()}`;
 
-    console.log("internalOrderId:", orderId);
-    console.log("checkoutAttemptId:", checkoutAttemptId);
-    console.log("submitEnabled:", process.env.WHCC_ENABLE_SUBMIT);
-    console.log("items:", JSON.stringify(orderDetails.items || [], null, 2));
+    logOrder("internalOrderId:", orderId);
+    logOrder("checkoutAttemptId:", checkoutAttemptId);
+    logOrder("submitEnabled:", process.env.WHCC_ENABLE_SUBMIT);
+    logOrder("items:", JSON.stringify(orderDetails.items || [], null, 2));
 
     if (!checkoutAttemptId) {
       return res.status(400).json({ error: "Missing checkoutAttemptId" });
@@ -1009,7 +1050,7 @@ app.post("/api/payments/square", async (req, res) => {
     const calculatedTotal = await calculateOrderTotal(orderDetails.items);
     const amountInCents = BigInt(Math.round(calculatedTotal * 100));
 
-    console.log("Square payment received", {
+    logOrder("Square payment received", {
       hasItems: !!orderDetails?.items?.length,
       amount: calculatedTotal,
     });
@@ -1029,7 +1070,7 @@ app.post("/api/payments/square", async (req, res) => {
         });
       }
 
-      console.log("✅ S3 verified:", item.imageKey);
+      logOrder("✅ S3 verified:", item.imageKey);
     }
 
     const paymentResponse = await squareClient.payments.create({
@@ -1043,27 +1084,8 @@ app.post("/api/payments/square", async (req, res) => {
       autocomplete: false,
     });
 
-    console.log(
-      "SQUARE CREATE RESPONSE:",
-      JSON.stringify(
-        paymentResponse,
-        (_, value) => (typeof value === "bigint" ? value.toString() : value),
-        2,
-      ),
-    );
-
     const payment =
       paymentResponse.result?.payment || paymentResponse.payment || null;
-
-    console.log(
-      "SQUARE PAYMENT OBJECT:",
-      JSON.stringify(
-        payment,
-        (_, value) => (typeof value === "bigint" ? value.toString() : value),
-        2,
-      ),
-    );
-    console.log("SQUARE PAYMENT ID:", String(payment?.id || ""));
 
     if (!payment?.id) {
       throw new Error(
@@ -1083,7 +1105,7 @@ app.post("/api/payments/square", async (req, res) => {
       });
     }
 
-    console.log(
+    logOrder(
       "items received by server =",
       JSON.stringify(orderDetails.items || [], null, 2),
     );
@@ -1112,19 +1134,16 @@ app.post("/api/payments/square", async (req, res) => {
     const items = orderDetails.items || orderDetails.selections || [];
     const estimatedWhccCosts = await estimateWhccCostsFromItems(items);
 
-    console.log("ORDER DB PAYLOAD:", {
-      squarePaymentId,
-      squareOrderId,
-      customerName,
-      customerEmail,
-      customerPhone,
-      customerAddress,
-      customerCity,
-      customerState,
-      customerZip,
+    logOrder("[PAYMENT CREATED]", {
+      paymentId: payment?.id || null,
+      orderId: payment?.orderId || null,
+      status: payment?.status || null,
+    });
+
+    logOrder("[ORDER SUMMARY]", {
+      paymentId: squarePaymentId,
       orderTotal,
-      currency,
-      items,
+      itemCount: items.length,
     });
 
     try {
@@ -1173,7 +1192,7 @@ app.post("/api/payments/square", async (req, res) => {
         ],
       );
 
-      console.log("✅ Order saved to database");
+      logOrder("✅ Order saved to database");
     } catch (dbError) {
       console.error("❌ Failed to save order to DB:", dbError);
       return res.status(500).json({
@@ -1187,8 +1206,8 @@ app.post("/api/payments/square", async (req, res) => {
     let paymentCaptured = false;
 
     try {
-      console.log("[WHCC] starting fulfillment");
-      console.log("[WHCC IMPORT] calling fulfillOrderWithWhcc");
+      logWhcc("[WHCC] starting fulfillment");
+      logWhcc("[WHCC IMPORT] calling fulfillOrderWithWhcc");
 
       whccResult = await fulfillOrderWithWhcc({
         orderId: squarePaymentId,
@@ -1215,19 +1234,19 @@ app.post("/api/payments/square", async (req, res) => {
         })),
       });
 
-      console.log("[WHCC SUCCESS]");
-      console.log("[WHCC RESULT]:", JSON.stringify(whccResult, null, 2));
-      console.log("[WHCC CONFIRMATION ID]:", whccResult?.confirmationId);
+      logWhcc("[WHCC SUCCESS]");
+      debugLog("[WHCC RESULT]:", JSON.stringify(whccResult, null, 2));
+      logWhcc("[WHCC CONFIRMATION ID]:", whccResult?.confirmationId);
 
       if (squarePaymentId) {
         await completeSquarePayment(squarePaymentId);
         paymentCaptured = true;
-        console.log("[SQUARE CAPTURED]:", squarePaymentId);
+        logOrder("[SQUARE CAPTURED]:", squarePaymentId);
       }
 
       const whccCosts = extractWhccCosts(whccResult);
-      console.log("[WHCC COSTS PARSED]:", JSON.stringify(whccCosts, null, 2));
-      console.log(
+      logWhcc("[WHCC COSTS PARSED]:", JSON.stringify(whccCosts, null, 2));
+      debugLog(
         "[WHCC IMPORT RESPONSE ORDERS]:",
         JSON.stringify(whccResult?.importResponse?.Orders || null, null, 2),
       );
@@ -1264,7 +1283,11 @@ app.post("/api/payments/square", async (req, res) => {
       );
     } catch (whccError) {
       whccErrorMessage = whccError.message || "Unknown WHCC error";
-      console.error("[ORDER FLOW FAILED]:", whccErrorMessage);
+      console.error("[ORDER FLOW FAILED]:", {
+        error: whccErrorMessage,
+        paymentId: squarePaymentId,
+        items,
+      });
 
       if (squarePaymentId && !paymentCaptured) {
         try {
@@ -1293,7 +1316,7 @@ app.post("/api/payments/square", async (req, res) => {
       });
     }
 
-    console.log("[EMAIL] attempting to send order emails");
+    logEmail("[EMAIL] attempting to send order emails");
 
     try {
       await sendOrderNotification({
@@ -1305,13 +1328,16 @@ app.post("/api/payments/square", async (req, res) => {
         notes: orderDetails.notes || "",
       });
 
-      console.log("[EMAIL] SUCCESS");
+      logEmail("[EMAIL] SUCCESS");
     } catch (emailError) {
-      console.error("[EMAIL FAILED]:", emailError.message);
+      console.error("[EMAIL FAILED]:", {
+        error: emailError.message,
+        paymentId: payment?.id,
+      });
     }
 
-    console.log("[ORDER END]");
-    console.log("====================================");
+    logOrder("[ORDER END]");
+    logOrder("====================================");
 
     return res.status(200).json({
       success: true,
