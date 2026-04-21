@@ -2,6 +2,15 @@
 // Node 18+ recommended (uses built-in fetch)
 console.log("WHCC_NOTIFICATION_EMAIL =", process.env.WHCC_NOTIFICATION_EMAIL);
 
+const IS_PRODUCTION =
+  String(process.env.NODE_ENV || "").toLowerCase() === "production";
+
+function debugLog(...args) {
+  if (!IS_PRODUCTION) {
+    console.log(...args);
+  }
+}
+
 const {
   S3Client,
   HeadObjectCommand,
