@@ -583,7 +583,7 @@ function formatSelectionsForHtml(selections) {
       const price = formatMoney(Number(item.price || 0));
 
       // ✅ THIS IS THE NEW PART (thumbnail URL)
-      const imageUrl = `https://localhost:3000/images/email_thumbnails/${item.imageKey}`;
+      const imageUrl = `https://danbourretphotos.com/images/email_thumbnails/${item.imageKey.replace(/\.[^.]+$/, "_email_thumbnails.jpg")}`;
 
       return `
         <div style="padding:18px;border:1px solid #eadfca;border-radius:16px;background:#ffffff;margin-bottom:18px;">
