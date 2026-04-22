@@ -1,0 +1,608 @@
+{"timestamp":"2026-04-19T13:36:11.321Z","level":"LOG","message":"WHCC_NOTIFICATION_EMAIL = dan@danbourretphotos.com"}
+{"timestamp":"2026-04-19T13:36:11.454Z","level":"LOG","message":"DB_HOST = 127.0.0.1"}
+{"timestamp":"2026-04-19T13:36:11.454Z","level":"LOG","message":"DB_USER = u703738212_dbourret"}
+{"timestamp":"2026-04-19T13:36:11.454Z","level":"LOG","message":"DB_PASSWORD exists = true"}
+{"timestamp":"2026-04-19T13:36:11.454Z","level":"LOG","message":"DB_NAME = u703738212_danbourret_pho"}
+{"timestamp":"2026-04-19T13:36:11.454Z","level":"LOG","message":"SMTP_HOST = smtp.hostinger.com"}
+{"timestamp":"2026-04-19T13:36:11.454Z","level":"LOG","message":"SMTP_PORT = 465"}
+{"timestamp":"2026-04-19T13:36:11.454Z","level":"LOG","message":"SMTP_USER = dan@danbourretphotos.com"}
+{"timestamp":"2026-04-19T13:36:11.455Z","level":"LOG","message":"SMTP_PASS exists = true"}
+{"timestamp":"2026-04-19T13:36:12.782Z","level":"LOG","message":"__dirname = /home/u703738212/domains/danbourretphotos.com/nodejs"}
+{"timestamp":"2026-04-19T13:36:12.782Z","level":"LOG","message":"publicDir = /home/u703738212/domains/danbourretphotos.com/nodejs/public"}
+{"timestamp":"2026-04-19T13:36:12.787Z","level":"WARN","message":"(node:899244) Warning: NodeDeprecationWarning: The AWS SDK for JavaScript (v3) will\nno longer support Node.js v18.20.8 in January 2026.\n\nTo continue receiving updates to AWS services, bug fixes, and security\nupdates please upgrade to a supported Node.js LTS version.\n\nMore information can be found at: https://a.co/c895JFp\n(Use `node --trace-warnings ...` to show where the warning was created)"}
+{"timestamp":"2026-04-19T13:36:12.788Z","level":"LOG","message":"Server running at http://localhost:3000"}
+{"timestamp":"2026-04-19T13:36:12.808Z","level":"LOG","message":"✅ MySQL connected successfully"}
+{"timestamp":"2026-04-19T13:36:13.215Z","level":"LOG","message":"REQUEST: GET /api/config/square"}
+{"timestamp":"2026-04-19T13:36:13.314Z","level":"LOG","message":"SMTP server is ready"}
+{"timestamp":"2026-04-19T13:36:13.382Z","level":"LOG","message":"REQUEST: GET /api/public-pricing"}
+{"timestamp":"2026-04-19T13:52:01.390Z","level":"LOG","message":"WHCC_NOTIFICATION_EMAIL = dan@danbourretphotos.com"}
+{"timestamp":"2026-04-19T13:52:01.521Z","level":"LOG","message":"DB_HOST = 127.0.0.1"}
+{"timestamp":"2026-04-19T13:52:01.521Z","level":"LOG","message":"DB_USER = u703738212_dbourret"}
+{"timestamp":"2026-04-19T13:52:01.521Z","level":"LOG","message":"DB_PASSWORD exists = true"}
+{"timestamp":"2026-04-19T13:52:01.521Z","level":"LOG","message":"DB_NAME = u703738212_danbourret_pho"}
+{"timestamp":"2026-04-19T13:52:01.521Z","level":"LOG","message":"SMTP_HOST = smtp.hostinger.com"}
+{"timestamp":"2026-04-19T13:52:01.521Z","level":"LOG","message":"SMTP_PORT = 465"}
+{"timestamp":"2026-04-19T13:52:01.521Z","level":"LOG","message":"SMTP_USER = dan@danbourretphotos.com"}
+{"timestamp":"2026-04-19T13:52:01.521Z","level":"LOG","message":"SMTP_PASS exists = true"}
+{"timestamp":"2026-04-19T13:52:02.884Z","level":"LOG","message":"__dirname = /home/u703738212/domains/danbourretphotos.com/nodejs"}
+{"timestamp":"2026-04-19T13:52:02.884Z","level":"LOG","message":"publicDir = /home/u703738212/domains/danbourretphotos.com/nodejs/public"}
+{"timestamp":"2026-04-19T13:52:02.889Z","level":"WARN","message":"(node:1727307) Warning: NodeDeprecationWarning: The AWS SDK for JavaScript (v3) will\nno longer support Node.js v18.20.8 in January 2026.\n\nTo continue receiving updates to AWS services, bug fixes, and security\nupdates please upgrade to a supported Node.js LTS version.\n\nMore information can be found at: https://a.co/c895JFp\n(Use `node --trace-warnings ...` to show where the warning was created)"}
+{"timestamp":"2026-04-19T13:52:02.890Z","level":"LOG","message":"Server running at http://localhost:3000"}
+{"timestamp":"2026-04-19T13:52:02.909Z","level":"LOG","message":"✅ MySQL connected successfully"}
+{"timestamp":"2026-04-19T13:52:03.432Z","level":"LOG","message":"WHCC_NOTIFICATION_EMAIL = dan@danbourretphotos.com"}
+{"timestamp":"2026-04-19T13:52:03.559Z","level":"LOG","message":"DB_HOST = 127.0.0.1"}
+{"timestamp":"2026-04-19T13:52:03.559Z","level":"LOG","message":"DB_USER = u703738212_dbourret"}
+{"timestamp":"2026-04-19T13:52:03.559Z","level":"LOG","message":"DB_PASSWORD exists = true"}
+{"timestamp":"2026-04-19T13:52:03.559Z","level":"LOG","message":"DB_NAME = u703738212_danbourret_pho"}
+{"timestamp":"2026-04-19T13:52:03.559Z","level":"LOG","message":"SMTP_HOST = smtp.hostinger.com"}
+{"timestamp":"2026-04-19T13:52:03.559Z","level":"LOG","message":"SMTP_PORT = 465"}
+{"timestamp":"2026-04-19T13:52:03.559Z","level":"LOG","message":"SMTP_USER = dan@danbourretphotos.com"}
+{"timestamp":"2026-04-19T13:52:03.559Z","level":"LOG","message":"SMTP_PASS exists = true"}
+{"timestamp":"2026-04-19T13:52:04.838Z","level":"LOG","message":"__dirname = /home/u703738212/domains/danbourretphotos.com/nodejs"}
+{"timestamp":"2026-04-19T13:52:04.839Z","level":"LOG","message":"publicDir = /home/u703738212/domains/danbourretphotos.com/nodejs/public"}
+{"timestamp":"2026-04-19T13:52:04.844Z","level":"WARN","message":"(node:1731847) Warning: NodeDeprecationWarning: The AWS SDK for JavaScript (v3) will\nno longer support Node.js v18.20.8 in January 2026.\n\nTo continue receiving updates to AWS services, bug fixes, and security\nupdates please upgrade to a supported Node.js LTS version.\n\nMore information can be found at: https://a.co/c895JFp\n(Use `node --trace-warnings ...` to show where the warning was created)"}
+{"timestamp":"2026-04-19T13:52:04.845Z","level":"LOG","message":"Server running at http://localhost:3000"}
+{"timestamp":"2026-04-19T13:52:04.860Z","level":"LOG","message":"REQUEST: GET /api/config/square"}
+{"timestamp":"2026-04-19T13:52:04.861Z","level":"LOG","message":"REQUEST: GET /api/public-pricing"}
+{"timestamp":"2026-04-19T13:52:04.863Z","level":"LOG","message":"✅ MySQL connected successfully"}
+{"timestamp":"2026-04-19T13:52:13.607Z","level":"LOG","message":"WHCC_NOTIFICATION_EMAIL = dan@danbourretphotos.com"}
+{"timestamp":"2026-04-19T13:52:13.736Z","level":"LOG","message":"DB_HOST = 127.0.0.1"}
+{"timestamp":"2026-04-19T13:52:13.736Z","level":"LOG","message":"DB_USER = u703738212_dbourret"}
+{"timestamp":"2026-04-19T13:52:13.736Z","level":"LOG","message":"DB_PASSWORD exists = true"}
+{"timestamp":"2026-04-19T13:52:13.736Z","level":"LOG","message":"DB_NAME = u703738212_danbourret_pho"}
+{"timestamp":"2026-04-19T13:52:13.736Z","level":"LOG","message":"SMTP_HOST = smtp.hostinger.com"}
+{"timestamp":"2026-04-19T13:52:13.736Z","level":"LOG","message":"SMTP_PORT = 465"}
+{"timestamp":"2026-04-19T13:52:13.736Z","level":"LOG","message":"SMTP_USER = dan@danbourretphotos.com"}
+{"timestamp":"2026-04-19T13:52:13.736Z","level":"LOG","message":"SMTP_PASS exists = true"}
+{"timestamp":"2026-04-19T13:52:15.093Z","level":"LOG","message":"__dirname = /home/u703738212/domains/danbourretphotos.com/nodejs"}
+{"timestamp":"2026-04-19T13:52:15.093Z","level":"LOG","message":"publicDir = /home/u703738212/domains/danbourretphotos.com/nodejs/public"}
+{"timestamp":"2026-04-19T13:52:15.098Z","level":"WARN","message":"(node:1751345) Warning: NodeDeprecationWarning: The AWS SDK for JavaScript (v3) will\nno longer support Node.js v18.20.8 in January 2026.\n\nTo continue receiving updates to AWS services, bug fixes, and security\nupdates please upgrade to a supported Node.js LTS version.\n\nMore information can be found at: https://a.co/c895JFp\n(Use `node --trace-warnings ...` to show where the warning was created)"}
+{"timestamp":"2026-04-19T13:52:15.099Z","level":"LOG","message":"Server running at http://localhost:3000"}
+{"timestamp":"2026-04-19T13:52:15.120Z","level":"LOG","message":"✅ MySQL connected successfully"}
+{"timestamp":"2026-04-19T13:52:15.606Z","level":"LOG","message":"SMTP server is ready"}
+{"timestamp":"2026-04-19T13:52:15.765Z","level":"LOG","message":"REQUEST: GET /api/config/square"}
+{"timestamp":"2026-04-19T13:52:15.833Z","level":"LOG","message":"REQUEST: GET /api/config/square"}
+{"timestamp":"2026-04-19T13:52:16.335Z","level":"LOG","message":"REQUEST: GET /api/public-pricing"}
+{"timestamp":"2026-04-19T13:52:16.394Z","level":"LOG","message":"REQUEST: GET /api/public-pricing"}
+{"timestamp":"2026-04-19T13:56:43.379Z","level":"LOG","message":"REQUEST: GET /"}
+{"timestamp":"2026-04-19T13:56:43.704Z","level":"LOG","message":"REQUEST: GET /api/config/square"}
+{"timestamp":"2026-04-19T13:56:43.779Z","level":"LOG","message":"REQUEST: GET /api/public-pricing"}
+{"timestamp":"2026-04-19T13:56:52.851Z","level":"LOG","message":"REQUEST: GET /api/config/square"}
+{"timestamp":"2026-04-19T13:56:54.039Z","level":"LOG","message":"REQUEST: GET /api/public-pricing"}
+{"timestamp":"2026-04-19T13:57:06.447Z","level":"LOG","message":"REQUEST: GET /"}
+{"timestamp":"2026-04-19T13:57:06.646Z","level":"LOG","message":"REQUEST: GET /api/config/square"}
+{"timestamp":"2026-04-19T13:57:06.714Z","level":"LOG","message":"REQUEST: GET /api/public-pricing"}
+{"timestamp":"2026-04-19T13:57:08.671Z","level":"LOG","message":"REQUEST: GET /"}
+{"timestamp":"2026-04-19T13:57:09.069Z","level":"LOG","message":"REQUEST: GET /api/config/square"}
+{"timestamp":"2026-04-19T13:57:09.305Z","level":"LOG","message":"REQUEST: GET /api/public-pricing"}
+{"timestamp":"2026-04-19T13:57:12.654Z","level":"LOG","message":"REQUEST: GET /api/config/square"}
+{"timestamp":"2026-04-19T13:57:27.834Z","level":"LOG","message":"REQUEST: POST /api/payments/square"}
+{"timestamp":"2026-04-19T13:57:27.835Z","level":"LOG","message":"===================================="}
+{"timestamp":"2026-04-19T13:57:27.835Z","level":"LOG","message":"[ORDER START]"}
+{"timestamp":"2026-04-19T13:57:27.835Z","level":"LOG","message":"internalOrderId: order-1776607047835"}
+{"timestamp":"2026-04-19T13:57:27.835Z","level":"LOG","message":"checkoutAttemptId: 3eab7eec-2c36-41fd-8561-73e21bf0fc41"}
+{"timestamp":"2026-04-19T13:57:27.835Z","level":"LOG","message":"submitEnabled: true"}
+{"timestamp":"2026-04-19T13:57:27.835Z","level":"LOG","message":"items: [\n  {\n    \"title\": \"Monarch Butterfly 2\",\n    \"image\": \"images/misc/monarch_butterfly_2.jpg\",\n    \"imageKey\": \"monarch_butterfly_2.jpg\",\n    \"size\": \"8x10\",\n    \"material\": \"Metal\",\n    \"finish\": \"glossy\",\n    \"price\": 119\n  }\n]"}
+{"timestamp":"2026-04-19T13:57:27.836Z","level":"LOG","message":"Square payment received {\"hasItems\":true,\"amount\":119}"}
+{"timestamp":"2026-04-19T13:57:28.020Z","level":"LOG","message":"✅ S3 verified: monarch_butterfly_2.jpg"}
+{"timestamp":"2026-04-19T13:57:28.944Z","level":"ERROR","message":"Square payment error: Error: Status code: 400\nBody: {\n  \"errors\": [\n    {\n      \"code\": \"GENERIC_DECLINE\",\n      \"detail\": \"Authorization error: 'GENERIC_DECLINE'\",\n      \"category\": \"PAYMENT_METHOD_ERROR\"\n    }\n  ],\n  \"payment\": {\n    \"id\": \"nN1AgNcDbgPZlsWvm0MJGhBgPePZY\",\n    \"created_at\": \"2026-04-19T13:57:28.786Z\",\n    \"updated_at\": \"2026-04-19T13:57:28.819Z\",\n    \"amount_money\": {\n      \"amount\": 11900,\n      \"currency\": \"USD\"\n    },\n    \"status\": \"FAILED\",\n    \"delay_duration\": \"PT168H\",\n    \"source_type\": \"CARD\",\n    \"card_details\": {\n      \"status\": \"FAILED\",\n      \"card\": {\n        \"card_brand\": \"VISA\",\n        \"last_4\": \"1111\",\n        \"exp_month\": 11,\n        \"exp_year\": 2028,\n        \"fingerprint\": \"sq-1-KahGfLvE7hQ9CGhWoQXYskZLq031eEN5C1Fv4ejaEdpfTw_Yp6qEr1wJr41DqA5hWw\",\n        \"card_type\": \"CREDIT\",\n        \"prepaid_type\": \"NOT_PREPAID\",\n        \"bin\": \"411111\"\n      },\n      \"entry_method\": \"KEYED\",\n      \"errors\": [\n        {\n          \"code\": \"GENERIC_DECLINE\",\n          \"detail\": \"Authorization error: 'GENERIC_DECLINE'\",\n          \"category\": \"PAYMENT_METHOD_ERROR\"\n        }\n      ],\n      \"card_payment_timeline\": {\n        \"authorized_at\": \"2026-04-19T13:57:28.819Z\"\n      }\n    },\n    \"location_id\": \"9YQJP1MYDPAJB\",\n    \"order_id\": \"0gUdISoROFcQq9JxNL7tkTTUDHPZY\",\n    \"total_money\": {\n      \"amount\": 11900,\n      \"currency\": \"USD\"\n    },\n    \"approved_money\": {\n      \"amount\": 0,\n      \"currency\": \"USD\"\n    },\n    \"delay_action\": \"CANCEL\",\n    \"delayed_until\": \"2026-04-26T13:57:28.786Z\",\n    \"application_details\": {\n      \"square_product\": \"ECOMMERCE_API\",\n      \"application_id\": \"sq0idp-RsFsjftYiV_FCBJOYlx3Qg\"\n    },\n    \"version_token\": \"CRWIRBWzcbIgAw68OfSOLQ8Dd6AEwn3MBOPAFATRf135o\"\n  }\n}\n    at PaymentsClient.<anonymous> (/home/u703738212/domains/danbourretphotos.com/nodejs/node_modules/square/api/resources/payments/client/Client.js:242:23)\n    at Generator.next (<anonymous>)\n    at fulfilled (/home/u703738212/domains/danbourretphotos.com/nodejs/node_modules/square/api/resources/payments/client/Client.js:39:58)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)"}
+{"timestamp":"2026-04-19T13:59:52.156Z","level":"LOG","message":"REQUEST: GET /"}
+{"timestamp":"2026-04-19T13:59:52.488Z","level":"LOG","message":"REQUEST: GET /api/config/square"}
+{"timestamp":"2026-04-19T13:59:52.556Z","level":"LOG","message":"REQUEST: GET /api/public-pricing"}
+{"timestamp":"2026-04-19T13:59:56.555Z","level":"LOG","message":"REQUEST: GET /api/config/square"}
+{"timestamp":"2026-04-19T14:00:10.528Z","level":"LOG","message":"REQUEST: POST /api/payments/square"}
+{"timestamp":"2026-04-19T14:00:10.528Z","level":"LOG","message":"===================================="}
+{"timestamp":"2026-04-19T14:00:10.529Z","level":"LOG","message":"[ORDER START]"}
+{"timestamp":"2026-04-19T14:00:10.529Z","level":"LOG","message":"internalOrderId: order-1776607210529"}
+{"timestamp":"2026-04-19T14:00:10.529Z","level":"LOG","message":"checkoutAttemptId: 3920d78b-765c-4edc-a9f4-78150062c0f4"}
+{"timestamp":"2026-04-19T14:00:10.529Z","level":"LOG","message":"submitEnabled: true"}
+{"timestamp":"2026-04-19T14:00:10.529Z","level":"LOG","message":"items: [\n  {\n    \"title\": \"Monarch Butterfly 2\",\n    \"image\": \"images/misc/monarch_butterfly_2.jpg\",\n    \"imageKey\": \"monarch_butterfly_2.jpg\",\n    \"size\": \"8x10\",\n    \"material\": \"Metal\",\n    \"finish\": \"glossy\",\n    \"price\": 119\n  }\n]"}
+{"timestamp":"2026-04-19T14:00:10.530Z","level":"LOG","message":"Square payment received {\"hasItems\":true,\"amount\":119}"}
+{"timestamp":"2026-04-19T14:00:10.654Z","level":"LOG","message":"✅ S3 verified: monarch_butterfly_2.jpg"}
+{"timestamp":"2026-04-19T14:00:11.233Z","level":"ERROR","message":"Square payment error: Error: Status code: 400\nBody: {\n  \"errors\": [\n    {\n      \"code\": \"GENERIC_DECLINE\",\n      \"detail\": \"Authorization error: 'GENERIC_DECLINE'\",\n      \"category\": \"PAYMENT_METHOD_ERROR\"\n    }\n  ],\n  \"payment\": {\n    \"id\": \"LJwRLPLMna698yPl8U0uonkEJPTZY\",\n    \"created_at\": \"2026-04-19T14:00:11.086Z\",\n    \"updated_at\": \"2026-04-19T14:00:11.120Z\",\n    \"amount_money\": {\n      \"amount\": 11900,\n      \"currency\": \"USD\"\n    },\n    \"status\": \"FAILED\",\n    \"delay_duration\": \"PT168H\",\n    \"source_type\": \"CARD\",\n    \"card_details\": {\n      \"status\": \"FAILED\",\n      \"card\": {\n        \"card_brand\": \"VISA\",\n        \"last_4\": \"1111\",\n        \"exp_month\": 11,\n        \"exp_year\": 2028,\n        \"fingerprint\": \"sq-1-KahGfLvE7hQ9CGhWoQXYskZLq031eEN5C1Fv4ejaEdpfTw_Yp6qEr1wJr41DqA5hWw\",\n        \"card_type\": \"CREDIT\",\n        \"prepaid_type\": \"NOT_PREPAID\",\n        \"bin\": \"411111\"\n      },\n      \"entry_method\": \"KEYED\",\n      \"errors\": [\n        {\n          \"code\": \"GENERIC_DECLINE\",\n          \"detail\": \"Authorization error: 'GENERIC_DECLINE'\",\n          \"category\": \"PAYMENT_METHOD_ERROR\"\n        }\n      ],\n      \"card_payment_timeline\": {\n        \"authorized_at\": \"2026-04-19T14:00:11.120Z\"\n      }\n    },\n    \"location_id\": \"9YQJP1MYDPAJB\",\n    \"order_id\": \"KTEjuhRjq1Qhi1lwRf8b5psVGIRZY\",\n    \"total_money\": {\n      \"amount\": 11900,\n      \"currency\": \"USD\"\n    },\n    \"approved_money\": {\n      \"amount\": 0,\n      \"currency\": \"USD\"\n    },\n    \"delay_action\": \"CANCEL\",\n    \"delayed_until\": \"2026-04-26T14:00:11.086Z\",\n    \"application_details\": {\n      \"square_product\": \"ECOMMERCE_API\",\n      \"application_id\": \"sq0idp-RsFsjftYiV_FCBJOYlx3Qg\"\n    },\n    \"version_token\": \"EtADxPTRrgm2eVerFiuxQeg6F38QVdOA7wofvDqSBkr6o\"\n  }\n}\n    at PaymentsClient.<anonymous> (/home/u703738212/domains/danbourretphotos.com/nodejs/node_modules/square/api/resources/payments/client/Client.js:242:23)\n    at Generator.next (<anonymous>)\n    at fulfilled (/home/u703738212/domains/danbourretphotos.com/nodejs/node_modules/square/api/resources/payments/client/Client.js:39:58)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)"}
+{"timestamp":"2026-04-19T14:42:04.451Z","level":"LOG","message":"REQUEST: GET /api/config/square"}
+{"timestamp":"2026-04-19T14:42:04.504Z","level":"LOG","message":"REQUEST: GET /api/public-pricing"}
+{"timestamp":"2026-04-19T14:45:22.224Z","level":"LOG","message":"REQUEST: GET /"}
+{"timestamp":"2026-04-19T15:16:19.908Z","level":"LOG","message":"WHCC_NOTIFICATION_EMAIL = dan@danbourretphotos.com"}
+{"timestamp":"2026-04-19T15:16:20.045Z","level":"LOG","message":"DB_HOST = 127.0.0.1"}
+{"timestamp":"2026-04-19T15:16:20.045Z","level":"LOG","message":"DB_USER = u703738212_dbourret"}
+{"timestamp":"2026-04-19T15:16:20.045Z","level":"LOG","message":"DB_PASSWORD exists = true"}
+{"timestamp":"2026-04-19T15:16:20.045Z","level":"LOG","message":"DB_NAME = u703738212_danbourret_pho"}
+{"timestamp":"2026-04-19T15:16:20.045Z","level":"LOG","message":"SMTP_HOST = smtp.hostinger.com"}
+{"timestamp":"2026-04-19T15:16:20.045Z","level":"LOG","message":"SMTP_PORT = 465"}
+{"timestamp":"2026-04-19T15:16:20.045Z","level":"LOG","message":"SMTP_USER = dan@danbourretphotos.com"}
+{"timestamp":"2026-04-19T15:16:20.045Z","level":"LOG","message":"SMTP_PASS exists = true"}
+{"timestamp":"2026-04-19T15:16:21.339Z","level":"LOG","message":"__dirname = /home/u703738212/domains/danbourretphotos.com/nodejs"}
+{"timestamp":"2026-04-19T15:16:21.339Z","level":"LOG","message":"publicDir = /home/u703738212/domains/danbourretphotos.com/nodejs/public"}
+{"timestamp":"2026-04-19T15:16:21.344Z","level":"WARN","message":"(node:2181483) Warning: NodeDeprecationWarning: The AWS SDK for JavaScript (v3) will\nno longer support Node.js v18.20.8 in January 2026.\n\nTo continue receiving updates to AWS services, bug fixes, and security\nupdates please upgrade to a supported Node.js LTS version.\n\nMore information can be found at: https://a.co/c895JFp\n(Use `node --trace-warnings ...` to show where the warning was created)"}
+{"timestamp":"2026-04-19T15:16:21.345Z","level":"LOG","message":"Server running at http://localhost:3000"}
+{"timestamp":"2026-04-19T15:16:21.363Z","level":"LOG","message":"✅ MySQL connected successfully"}
+{"timestamp":"2026-04-19T15:16:21.846Z","level":"LOG","message":"SMTP server is ready"}
+{"timestamp":"2026-04-19T16:23:21.908Z","level":"LOG","message":"WHCC_NOTIFICATION_EMAIL = dan@danbourretphotos.com"}
+{"timestamp":"2026-04-19T16:23:22.069Z","level":"LOG","message":"DB_HOST = 127.0.0.1"}
+{"timestamp":"2026-04-19T16:23:22.069Z","level":"LOG","message":"DB_USER = u703738212_dbourret"}
+{"timestamp":"2026-04-19T16:23:22.069Z","level":"LOG","message":"DB_PASSWORD exists = true"}
+{"timestamp":"2026-04-19T16:23:22.069Z","level":"LOG","message":"DB_NAME = u703738212_danbourret_pho"}
+{"timestamp":"2026-04-19T16:23:22.069Z","level":"LOG","message":"SMTP_HOST = smtp.hostinger.com"}
+{"timestamp":"2026-04-19T16:23:22.069Z","level":"LOG","message":"SMTP_PORT = 465"}
+{"timestamp":"2026-04-19T16:23:22.069Z","level":"LOG","message":"SMTP_USER = dan@danbourretphotos.com"}
+{"timestamp":"2026-04-19T16:23:22.069Z","level":"LOG","message":"SMTP_PASS exists = true"}
+{"timestamp":"2026-04-19T16:23:23.436Z","level":"LOG","message":"__dirname = /home/u703738212/domains/danbourretphotos.com/nodejs"}
+{"timestamp":"2026-04-19T16:23:23.436Z","level":"LOG","message":"publicDir = /home/u703738212/domains/danbourretphotos.com/nodejs/public"}
+{"timestamp":"2026-04-19T16:23:23.440Z","level":"WARN","message":"(node:2001652) Warning: NodeDeprecationWarning: The AWS SDK for JavaScript (v3) will\nno longer support Node.js v18.20.8 in January 2026.\n\nTo continue receiving updates to AWS services, bug fixes, and security\nupdates please upgrade to a supported Node.js LTS version.\n\nMore information can be found at: https://a.co/c895JFp\n(Use `node --trace-warnings ...` to show where the warning was created)"}
+{"timestamp":"2026-04-19T16:23:23.441Z","level":"LOG","message":"Server running at http://localhost:3000"}
+{"timestamp":"2026-04-19T16:23:23.456Z","level":"LOG","message":"REQUEST: GET /"}
+{"timestamp":"2026-04-19T16:23:23.458Z","level":"LOG","message":"REQUEST: GET /"}
+{"timestamp":"2026-04-19T16:23:23.458Z","level":"LOG","message":"REQUEST: GET /"}
+{"timestamp":"2026-04-19T16:23:23.461Z","level":"LOG","message":"✅ MySQL connected successfully"}
+{"timestamp":"2026-04-19T16:23:23.961Z","level":"LOG","message":"SMTP server is ready"}
+{"timestamp":"2026-04-19T16:23:24.064Z","level":"LOG","message":"REQUEST: GET /"}
+{"timestamp":"2026-04-19T16:32:10.112Z","level":"LOG","message":"WHCC_NOTIFICATION_EMAIL = dan@danbourretphotos.com"}
+{"timestamp":"2026-04-19T16:32:10.253Z","level":"LOG","message":"DB_HOST = 127.0.0.1"}
+{"timestamp":"2026-04-19T16:32:10.253Z","level":"LOG","message":"DB_USER = u703738212_dbourret"}
+{"timestamp":"2026-04-19T16:32:10.253Z","level":"LOG","message":"DB_PASSWORD exists = true"}
+{"timestamp":"2026-04-19T16:32:10.253Z","level":"LOG","message":"DB_NAME = u703738212_danbourret_pho"}
+{"timestamp":"2026-04-19T16:32:10.253Z","level":"LOG","message":"SMTP_HOST = smtp.hostinger.com"}
+{"timestamp":"2026-04-19T16:32:10.253Z","level":"LOG","message":"SMTP_PORT = 465"}
+{"timestamp":"2026-04-19T16:32:10.253Z","level":"LOG","message":"SMTP_USER = dan@danbourretphotos.com"}
+{"timestamp":"2026-04-19T16:32:10.253Z","level":"LOG","message":"SMTP_PASS exists = true"}
+{"timestamp":"2026-04-19T16:32:11.514Z","level":"LOG","message":"__dirname = /home/u703738212/domains/danbourretphotos.com/nodejs"}
+{"timestamp":"2026-04-19T16:32:11.514Z","level":"LOG","message":"publicDir = /home/u703738212/domains/danbourretphotos.com/nodejs/public"}
+{"timestamp":"2026-04-19T16:32:11.519Z","level":"WARN","message":"(node:2539478) Warning: NodeDeprecationWarning: The AWS SDK for JavaScript (v3) will\nno longer support Node.js v18.20.8 in January 2026.\n\nTo continue receiving updates to AWS services, bug fixes, and security\nupdates please upgrade to a supported Node.js LTS version.\n\nMore information can be found at: https://a.co/c895JFp\n(Use `node --trace-warnings ...` to show where the warning was created)"}
+{"timestamp":"2026-04-19T16:32:11.520Z","level":"LOG","message":"Server running at http://localhost:3000"}
+{"timestamp":"2026-04-19T16:32:11.540Z","level":"LOG","message":"✅ MySQL connected successfully"}
+{"timestamp":"2026-04-19T16:32:14.505Z","level":"LOG","message":"SMTP server is ready"}
+{"timestamp":"2026-04-19T18:56:48.366Z","level":"LOG","message":"WHCC_NOTIFICATION_EMAIL = dan@danbourretphotos.com"}
+{"timestamp":"2026-04-19T18:56:48.509Z","level":"LOG","message":"DB_HOST = 127.0.0.1"}
+{"timestamp":"2026-04-19T18:56:48.509Z","level":"LOG","message":"DB_USER = u703738212_dbourret"}
+{"timestamp":"2026-04-19T18:56:48.509Z","level":"LOG","message":"DB_PASSWORD exists = true"}
+{"timestamp":"2026-04-19T18:56:48.509Z","level":"LOG","message":"DB_NAME = u703738212_danbourret_pho"}
+{"timestamp":"2026-04-19T18:56:48.509Z","level":"LOG","message":"SMTP_HOST = smtp.hostinger.com"}
+{"timestamp":"2026-04-19T18:56:48.509Z","level":"LOG","message":"SMTP_PORT = 465"}
+{"timestamp":"2026-04-19T18:56:48.509Z","level":"LOG","message":"SMTP_USER = dan@danbourretphotos.com"}
+{"timestamp":"2026-04-19T18:56:48.509Z","level":"LOG","message":"SMTP_PASS exists = true"}
+{"timestamp":"2026-04-19T18:56:49.904Z","level":"LOG","message":"__dirname = /home/u703738212/domains/danbourretphotos.com/nodejs"}
+{"timestamp":"2026-04-19T18:56:49.904Z","level":"LOG","message":"publicDir = /home/u703738212/domains/danbourretphotos.com/nodejs/public"}
+{"timestamp":"2026-04-19T18:56:49.910Z","level":"WARN","message":"(node:2401211) Warning: NodeDeprecationWarning: The AWS SDK for JavaScript (v3) will\nno longer support Node.js v18.20.8 in January 2026.\n\nTo continue receiving updates to AWS services, bug fixes, and security\nupdates please upgrade to a supported Node.js LTS version.\n\nMore information can be found at: https://a.co/c895JFp\n(Use `node --trace-warnings ...` to show where the warning was created)"}
+{"timestamp":"2026-04-19T18:56:49.911Z","level":"LOG","message":"Server running at http://localhost:3000"}
+{"timestamp":"2026-04-19T18:56:49.930Z","level":"LOG","message":"✅ MySQL connected successfully"}
+{"timestamp":"2026-04-19T18:56:50.389Z","level":"LOG","message":"SMTP server is ready"}
+{"timestamp":"2026-04-19T18:58:00.046Z","level":"LOG","message":"WHCC_NOTIFICATION_EMAIL = dan@danbourretphotos.com"}
+{"timestamp":"2026-04-19T18:58:00.171Z","level":"LOG","message":"DB_HOST = 127.0.0.1"}
+{"timestamp":"2026-04-19T18:58:00.171Z","level":"LOG","message":"DB_USER = u703738212_dbourret"}
+{"timestamp":"2026-04-19T18:58:00.171Z","level":"LOG","message":"DB_PASSWORD exists = true"}
+{"timestamp":"2026-04-19T18:58:00.171Z","level":"LOG","message":"DB_NAME = u703738212_danbourret_pho"}
+{"timestamp":"2026-04-19T18:58:00.171Z","level":"LOG","message":"SMTP_HOST = smtp.hostinger.com"}
+{"timestamp":"2026-04-19T18:58:00.171Z","level":"LOG","message":"SMTP_PORT = 465"}
+{"timestamp":"2026-04-19T18:58:00.171Z","level":"LOG","message":"SMTP_USER = dan@danbourretphotos.com"}
+{"timestamp":"2026-04-19T18:58:00.171Z","level":"LOG","message":"SMTP_PASS exists = true"}
+{"timestamp":"2026-04-19T18:58:01.410Z","level":"LOG","message":"__dirname = /home/u703738212/domains/danbourretphotos.com/nodejs"}
+{"timestamp":"2026-04-19T18:58:01.410Z","level":"LOG","message":"publicDir = /home/u703738212/domains/danbourretphotos.com/nodejs/public"}
+{"timestamp":"2026-04-19T18:58:01.415Z","level":"WARN","message":"(node:2437511) Warning: NodeDeprecationWarning: The AWS SDK for JavaScript (v3) will\nno longer support Node.js v18.20.8 in January 2026.\n\nTo continue receiving updates to AWS services, bug fixes, and security\nupdates please upgrade to a supported Node.js LTS version.\n\nMore information can be found at: https://a.co/c895JFp\n(Use `node --trace-warnings ...` to show where the warning was created)"}
+{"timestamp":"2026-04-19T18:58:01.416Z","level":"LOG","message":"Server running at http://localhost:3000"}
+{"timestamp":"2026-04-19T18:58:01.434Z","level":"LOG","message":"✅ MySQL connected successfully"}
+{"timestamp":"2026-04-19T18:58:01.875Z","level":"LOG","message":"SMTP server is ready"}
+{"timestamp":"2026-04-19T19:01:47.934Z","level":"LOG","message":"REQUEST: GET /"}
+{"timestamp":"2026-04-19T19:01:49.643Z","level":"LOG","message":"REQUEST: GET /"}
+{"timestamp":"2026-04-19T19:01:50.357Z","level":"LOG","message":"REQUEST: GET /api/config/square"}
+{"timestamp":"2026-04-19T19:01:50.508Z","level":"LOG","message":"REQUEST: GET /api/public-pricing"}
+{"timestamp":"2026-04-19T19:19:10.457Z","level":"LOG","message":"REQUEST: GET /api/config/square"}
+{"timestamp":"2026-04-19T19:19:10.492Z","level":"LOG","message":"REQUEST: GET /api/public-pricing"}
+{"timestamp":"2026-04-19T19:30:30.410Z","level":"LOG","message":"REQUEST: GET /"}
+{"timestamp":"2026-04-19T19:34:48.845Z","level":"LOG","message":"REQUEST: GET /"}
+{"timestamp":"2026-04-19T20:16:16.805Z","level":"LOG","message":"WHCC_NOTIFICATION_EMAIL = dan@danbourretphotos.com"}
+{"timestamp":"2026-04-19T20:16:16.947Z","level":"LOG","message":"DB_HOST = 127.0.0.1"}
+{"timestamp":"2026-04-19T20:16:16.947Z","level":"LOG","message":"DB_USER = u703738212_dbourret"}
+{"timestamp":"2026-04-19T20:16:16.947Z","level":"LOG","message":"DB_PASSWORD exists = true"}
+{"timestamp":"2026-04-19T20:16:16.947Z","level":"LOG","message":"DB_NAME = u703738212_danbourret_pho"}
+{"timestamp":"2026-04-19T20:16:16.947Z","level":"LOG","message":"SMTP_HOST = smtp.hostinger.com"}
+{"timestamp":"2026-04-19T20:16:16.947Z","level":"LOG","message":"SMTP_PORT = 465"}
+{"timestamp":"2026-04-19T20:16:16.947Z","level":"LOG","message":"SMTP_USER = dan@danbourretphotos.com"}
+{"timestamp":"2026-04-19T20:16:16.947Z","level":"LOG","message":"SMTP_PASS exists = true"}
+{"timestamp":"2026-04-19T20:16:18.350Z","level":"LOG","message":"__dirname = /home/u703738212/domains/danbourretphotos.com/nodejs"}
+{"timestamp":"2026-04-19T20:16:18.350Z","level":"LOG","message":"publicDir = /home/u703738212/domains/danbourretphotos.com/nodejs/public"}
+{"timestamp":"2026-04-19T20:16:18.356Z","level":"WARN","message":"(node:2624122) Warning: NodeDeprecationWarning: The AWS SDK for JavaScript (v3) will\nno longer support Node.js v18.20.8 in January 2026.\n\nTo continue receiving updates to AWS services, bug fixes, and security\nupdates please upgrade to a supported Node.js LTS version.\n\nMore information can be found at: https://a.co/c895JFp\n(Use `node --trace-warnings ...` to show where the warning was created)"}
+{"timestamp":"2026-04-19T20:16:18.357Z","level":"LOG","message":"Server running at http://localhost:3000"}
+{"timestamp":"2026-04-19T20:16:18.376Z","level":"LOG","message":"✅ MySQL connected successfully"}
+{"timestamp":"2026-04-19T20:16:18.892Z","level":"LOG","message":"SMTP server is ready"}
+{"timestamp":"2026-04-19T20:34:33.825Z","level":"LOG","message":"REQUEST: GET /"}
+{"timestamp":"2026-04-19T20:42:23.199Z","level":"LOG","message":"REQUEST: GET /"}
+{"timestamp":"2026-04-19T22:06:10.323Z","level":"LOG","message":"WHCC_NOTIFICATION_EMAIL = dan@danbourretphotos.com"}
+{"timestamp":"2026-04-19T22:06:10.467Z","level":"LOG","message":"DB_HOST = 127.0.0.1"}
+{"timestamp":"2026-04-19T22:06:10.467Z","level":"LOG","message":"DB_USER = u703738212_dbourret"}
+{"timestamp":"2026-04-19T22:06:10.467Z","level":"LOG","message":"DB_PASSWORD exists = true"}
+{"timestamp":"2026-04-19T22:06:10.467Z","level":"LOG","message":"DB_NAME = u703738212_danbourret_pho"}
+{"timestamp":"2026-04-19T22:06:10.467Z","level":"LOG","message":"SMTP_HOST = smtp.hostinger.com"}
+{"timestamp":"2026-04-19T22:06:10.467Z","level":"LOG","message":"SMTP_PORT = 465"}
+{"timestamp":"2026-04-19T22:06:10.467Z","level":"LOG","message":"SMTP_USER = dan@danbourretphotos.com"}
+{"timestamp":"2026-04-19T22:06:10.467Z","level":"LOG","message":"SMTP_PASS exists = true"}
+{"timestamp":"2026-04-19T22:06:11.802Z","level":"LOG","message":"__dirname = /home/u703738212/domains/danbourretphotos.com/nodejs"}
+{"timestamp":"2026-04-19T22:06:11.802Z","level":"LOG","message":"publicDir = /home/u703738212/domains/danbourretphotos.com/nodejs/public"}
+{"timestamp":"2026-04-19T22:06:11.809Z","level":"WARN","message":"(node:4157369) Warning: NodeDeprecationWarning: The AWS SDK for JavaScript (v3) will\nno longer support Node.js v18.20.8 in January 2026.\n\nTo continue receiving updates to AWS services, bug fixes, and security\nupdates please upgrade to a supported Node.js LTS version.\n\nMore information can be found at: https://a.co/c895JFp\n(Use `node --trace-warnings ...` to show where the warning was created)"}
+{"timestamp":"2026-04-19T22:06:11.810Z","level":"LOG","message":"Server running at http://localhost:3000"}
+{"timestamp":"2026-04-19T22:06:11.832Z","level":"LOG","message":"REQUEST: GET /"}
+{"timestamp":"2026-04-19T22:06:11.836Z","level":"LOG","message":"✅ MySQL connected successfully"}
+{"timestamp":"2026-04-19T22:06:12.333Z","level":"LOG","message":"SMTP server is ready"}
+{"timestamp":"2026-04-19T22:54:25.171Z","level":"LOG","message":"REQUEST: GET /"}
+{"timestamp":"2026-04-19T22:54:58.276Z","level":"LOG","message":"REQUEST: GET /"}
+{"timestamp":"2026-04-19T22:54:58.531Z","level":"LOG","message":"REQUEST: GET /api/config/square"}
+{"timestamp":"2026-04-19T22:54:58.561Z","level":"LOG","message":"REQUEST: GET /api/public-pricing"}
+{"timestamp":"2026-04-19T22:58:23.348Z","level":"LOG","message":"REQUEST: GET /"}
+{"timestamp":"2026-04-19T23:23:46.983Z","level":"LOG","message":"WHCC_NOTIFICATION_EMAIL = dan@danbourretphotos.com"}
+{"timestamp":"2026-04-19T23:23:47.120Z","level":"LOG","message":"DB_HOST = 127.0.0.1"}
+{"timestamp":"2026-04-19T23:23:47.120Z","level":"LOG","message":"DB_USER = u703738212_dbourret"}
+{"timestamp":"2026-04-19T23:23:47.121Z","level":"LOG","message":"DB_PASSWORD exists = true"}
+{"timestamp":"2026-04-19T23:23:47.121Z","level":"LOG","message":"DB_NAME = u703738212_danbourret_pho"}
+{"timestamp":"2026-04-19T23:23:47.121Z","level":"LOG","message":"SMTP_HOST = smtp.hostinger.com"}
+{"timestamp":"2026-04-19T23:23:47.121Z","level":"LOG","message":"SMTP_PORT = 465"}
+{"timestamp":"2026-04-19T23:23:47.121Z","level":"LOG","message":"SMTP_USER = dan@danbourretphotos.com"}
+{"timestamp":"2026-04-19T23:23:47.121Z","level":"LOG","message":"SMTP_PASS exists = true"}
+{"timestamp":"2026-04-19T23:23:48.456Z","level":"LOG","message":"__dirname = /home/u703738212/domains/danbourretphotos.com/nodejs"}
+{"timestamp":"2026-04-19T23:23:48.456Z","level":"LOG","message":"publicDir = /home/u703738212/domains/danbourretphotos.com/nodejs/public"}
+{"timestamp":"2026-04-19T23:23:48.460Z","level":"WARN","message":"(node:3898988) Warning: NodeDeprecationWarning: The AWS SDK for JavaScript (v3) will\nno longer support Node.js v18.20.8 in January 2026.\n\nTo continue receiving updates to AWS services, bug fixes, and security\nupdates please upgrade to a supported Node.js LTS version.\n\nMore information can be found at: https://a.co/c895JFp\n(Use `node --trace-warnings ...` to show where the warning was created)"}
+{"timestamp":"2026-04-19T23:23:48.461Z","level":"LOG","message":"Server running at http://localhost:3000"}
+{"timestamp":"2026-04-19T23:23:48.480Z","level":"LOG","message":"✅ MySQL connected successfully"}
+{"timestamp":"2026-04-19T23:23:49.151Z","level":"LOG","message":"REQUEST: GET /api/config/square"}
+{"timestamp":"2026-04-19T23:23:49.610Z","level":"LOG","message":"SMTP server is ready"}
+{"timestamp":"2026-04-19T23:23:49.763Z","level":"LOG","message":"REQUEST: GET /api/public-pricing"}
+{"timestamp":"2026-04-20T00:28:26.150Z","level":"LOG","message":"WHCC_NOTIFICATION_EMAIL = dan@danbourretphotos.com"}
+{"timestamp":"2026-04-20T00:28:26.275Z","level":"LOG","message":"DB_HOST = 127.0.0.1"}
+{"timestamp":"2026-04-20T00:28:26.275Z","level":"LOG","message":"DB_USER = u703738212_dbourret"}
+{"timestamp":"2026-04-20T00:28:26.275Z","level":"LOG","message":"DB_PASSWORD exists = true"}
+{"timestamp":"2026-04-20T00:28:26.275Z","level":"LOG","message":"DB_NAME = u703738212_danbourret_pho"}
+{"timestamp":"2026-04-20T00:28:26.275Z","level":"LOG","message":"SMTP_HOST = smtp.hostinger.com"}
+{"timestamp":"2026-04-20T00:28:26.275Z","level":"LOG","message":"SMTP_PORT = 465"}
+{"timestamp":"2026-04-20T00:28:26.275Z","level":"LOG","message":"SMTP_USER = dan@danbourretphotos.com"}
+{"timestamp":"2026-04-20T00:28:26.275Z","level":"LOG","message":"SMTP_PASS exists = true"}
+{"timestamp":"2026-04-20T00:28:27.529Z","level":"LOG","message":"__dirname = /home/u703738212/domains/danbourretphotos.com/nodejs"}
+{"timestamp":"2026-04-20T00:28:27.529Z","level":"LOG","message":"publicDir = /home/u703738212/domains/danbourretphotos.com/nodejs/public"}
+{"timestamp":"2026-04-20T00:28:27.534Z","level":"WARN","message":"(node:2934835) Warning: NodeDeprecationWarning: The AWS SDK for JavaScript (v3) will\nno longer support Node.js v18.20.8 in January 2026.\n\nTo continue receiving updates to AWS services, bug fixes, and security\nupdates please upgrade to a supported Node.js LTS version.\n\nMore information can be found at: https://a.co/c895JFp\n(Use `node --trace-warnings ...` to show where the warning was created)"}
+{"timestamp":"2026-04-20T00:28:27.535Z","level":"LOG","message":"Server running at http://localhost:3000"}
+{"timestamp":"2026-04-20T00:28:27.549Z","level":"LOG","message":"REQUEST: GET /"}
+{"timestamp":"2026-04-20T00:28:27.552Z","level":"LOG","message":"✅ MySQL connected successfully"}
+{"timestamp":"2026-04-20T00:28:28.012Z","level":"LOG","message":"SMTP server is ready"}
+{"timestamp":"2026-04-20T03:41:05.998Z","level":"LOG","message":"WHCC_NOTIFICATION_EMAIL = dan@danbourretphotos.com"}
+{"timestamp":"2026-04-20T03:41:06.156Z","level":"LOG","message":"DB_HOST = 127.0.0.1"}
+{"timestamp":"2026-04-20T03:41:06.156Z","level":"LOG","message":"DB_USER = u703738212_dbourret"}
+{"timestamp":"2026-04-20T03:41:06.156Z","level":"LOG","message":"DB_PASSWORD exists = true"}
+{"timestamp":"2026-04-20T03:41:06.156Z","level":"LOG","message":"DB_NAME = u703738212_danbourret_pho"}
+{"timestamp":"2026-04-20T03:41:06.156Z","level":"LOG","message":"SMTP_HOST = smtp.hostinger.com"}
+{"timestamp":"2026-04-20T03:41:06.156Z","level":"LOG","message":"SMTP_PORT = 465"}
+{"timestamp":"2026-04-20T03:41:06.156Z","level":"LOG","message":"SMTP_USER = dan@danbourretphotos.com"}
+{"timestamp":"2026-04-20T03:41:06.156Z","level":"LOG","message":"SMTP_PASS exists = true"}
+{"timestamp":"2026-04-20T03:41:07.547Z","level":"LOG","message":"__dirname = /home/u703738212/domains/danbourretphotos.com/nodejs"}
+{"timestamp":"2026-04-20T03:41:07.547Z","level":"LOG","message":"publicDir = /home/u703738212/domains/danbourretphotos.com/nodejs/public"}
+{"timestamp":"2026-04-20T03:41:07.552Z","level":"WARN","message":"(node:4190051) Warning: NodeDeprecationWarning: The AWS SDK for JavaScript (v3) will\nno longer support Node.js v18.20.8 in January 2026.\n\nTo continue receiving updates to AWS services, bug fixes, and security\nupdates please upgrade to a supported Node.js LTS version.\n\nMore information can be found at: https://a.co/c895JFp\n(Use `node --trace-warnings ...` to show where the warning was created)"}
+{"timestamp":"2026-04-20T03:41:07.553Z","level":"LOG","message":"Server running at http://localhost:3000"}
+{"timestamp":"2026-04-20T03:41:07.571Z","level":"LOG","message":"✅ MySQL connected successfully"}
+{"timestamp":"2026-04-20T03:41:08.089Z","level":"LOG","message":"SMTP server is ready"}
+{"timestamp":"2026-04-20T04:21:16.957Z","level":"LOG","message":"REQUEST: GET /"}
+{"timestamp":"2026-04-20T04:48:37.457Z","level":"LOG","message":"WHCC_NOTIFICATION_EMAIL = dan@danbourretphotos.com"}
+{"timestamp":"2026-04-20T04:48:37.584Z","level":"LOG","message":"DB_HOST = 127.0.0.1"}
+{"timestamp":"2026-04-20T04:48:37.584Z","level":"LOG","message":"DB_USER = u703738212_dbourret"}
+{"timestamp":"2026-04-20T04:48:37.584Z","level":"LOG","message":"DB_PASSWORD exists = true"}
+{"timestamp":"2026-04-20T04:48:37.584Z","level":"LOG","message":"DB_NAME = u703738212_danbourret_pho"}
+{"timestamp":"2026-04-20T04:48:37.584Z","level":"LOG","message":"SMTP_HOST = smtp.hostinger.com"}
+{"timestamp":"2026-04-20T04:48:37.584Z","level":"LOG","message":"SMTP_PORT = 465"}
+{"timestamp":"2026-04-20T04:48:37.584Z","level":"LOG","message":"SMTP_USER = dan@danbourretphotos.com"}
+{"timestamp":"2026-04-20T04:48:37.584Z","level":"LOG","message":"SMTP_PASS exists = true"}
+{"timestamp":"2026-04-20T04:48:38.832Z","level":"LOG","message":"__dirname = /home/u703738212/domains/danbourretphotos.com/nodejs"}
+{"timestamp":"2026-04-20T04:48:38.832Z","level":"LOG","message":"publicDir = /home/u703738212/domains/danbourretphotos.com/nodejs/public"}
+{"timestamp":"2026-04-20T04:48:38.837Z","level":"WARN","message":"(node:3563028) Warning: NodeDeprecationWarning: The AWS SDK for JavaScript (v3) will\nno longer support Node.js v18.20.8 in January 2026.\n\nTo continue receiving updates to AWS services, bug fixes, and security\nupdates please upgrade to a supported Node.js LTS version.\n\nMore information can be found at: https://a.co/c895JFp\n(Use `node --trace-warnings ...` to show where the warning was created)"}
+{"timestamp":"2026-04-20T04:48:38.838Z","level":"LOG","message":"Server running at http://localhost:3000"}
+{"timestamp":"2026-04-20T04:48:38.853Z","level":"LOG","message":"REQUEST: POST /"}
+{"timestamp":"2026-04-20T04:48:38.865Z","level":"LOG","message":"✅ MySQL connected successfully"}
+{"timestamp":"2026-04-20T04:48:39.368Z","level":"LOG","message":"SMTP server is ready"}
+{"timestamp":"2026-04-20T09:33:42.091Z","level":"LOG","message":"WHCC_NOTIFICATION_EMAIL = dan@danbourretphotos.com"}
+{"timestamp":"2026-04-20T09:33:42.250Z","level":"LOG","message":"DB_HOST = 127.0.0.1"}
+{"timestamp":"2026-04-20T09:33:42.250Z","level":"LOG","message":"DB_USER = u703738212_dbourret"}
+{"timestamp":"2026-04-20T09:33:42.250Z","level":"LOG","message":"DB_PASSWORD exists = true"}
+{"timestamp":"2026-04-20T09:33:42.250Z","level":"LOG","message":"DB_NAME = u703738212_danbourret_pho"}
+{"timestamp":"2026-04-20T09:33:42.250Z","level":"LOG","message":"SMTP_HOST = smtp.hostinger.com"}
+{"timestamp":"2026-04-20T09:33:42.250Z","level":"LOG","message":"SMTP_PORT = 465"}
+{"timestamp":"2026-04-20T09:33:42.250Z","level":"LOG","message":"SMTP_USER = dan@danbourretphotos.com"}
+{"timestamp":"2026-04-20T09:33:42.250Z","level":"LOG","message":"SMTP_PASS exists = true"}
+{"timestamp":"2026-04-20T09:33:43.947Z","level":"LOG","message":"__dirname = /home/u703738212/domains/danbourretphotos.com/nodejs"}
+{"timestamp":"2026-04-20T09:33:43.947Z","level":"LOG","message":"publicDir = /home/u703738212/domains/danbourretphotos.com/nodejs/public"}
+{"timestamp":"2026-04-20T09:33:43.952Z","level":"WARN","message":"(node:1363299) Warning: NodeDeprecationWarning: The AWS SDK for JavaScript (v3) will\nno longer support Node.js v18.20.8 in January 2026.\n\nTo continue receiving updates to AWS services, bug fixes, and security\nupdates please upgrade to a supported Node.js LTS version.\n\nMore information can be found at: https://a.co/c895JFp\n(Use `node --trace-warnings ...` to show where the warning was created)"}
+{"timestamp":"2026-04-20T09:33:43.952Z","level":"LOG","message":"Server running at http://localhost:3000"}
+{"timestamp":"2026-04-20T09:33:43.968Z","level":"LOG","message":"REQUEST: GET /"}
+{"timestamp":"2026-04-20T09:33:43.972Z","level":"LOG","message":"✅ MySQL connected successfully"}
+{"timestamp":"2026-04-20T09:33:44.434Z","level":"LOG","message":"SMTP server is ready"}
+{"timestamp":"2026-04-20T09:33:45.217Z","level":"LOG","message":"REQUEST: GET /"}
+{"timestamp":"2026-04-20T10:24:29.204Z","level":"LOG","message":"REQUEST: GET /"}
+{"timestamp":"2026-04-20T10:24:29.892Z","level":"LOG","message":"REQUEST: GET /"}
+{"timestamp":"2026-04-20T11:35:52.999Z","level":"LOG","message":"WHCC_NOTIFICATION_EMAIL = dan@danbourretphotos.com"}
+{"timestamp":"2026-04-20T11:35:53.162Z","level":"LOG","message":"DB_HOST = 127.0.0.1"}
+{"timestamp":"2026-04-20T11:35:53.163Z","level":"LOG","message":"DB_USER = u703738212_dbourret"}
+{"timestamp":"2026-04-20T11:35:53.163Z","level":"LOG","message":"DB_PASSWORD exists = true"}
+{"timestamp":"2026-04-20T11:35:53.163Z","level":"LOG","message":"DB_NAME = u703738212_danbourret_pho"}
+{"timestamp":"2026-04-20T11:35:53.163Z","level":"LOG","message":"SMTP_HOST = smtp.hostinger.com"}
+{"timestamp":"2026-04-20T11:35:53.163Z","level":"LOG","message":"SMTP_PORT = 465"}
+{"timestamp":"2026-04-20T11:35:53.163Z","level":"LOG","message":"SMTP_USER = dan@danbourretphotos.com"}
+{"timestamp":"2026-04-20T11:35:53.163Z","level":"LOG","message":"SMTP_PASS exists = true"}
+{"timestamp":"2026-04-20T11:35:54.915Z","level":"LOG","message":"__dirname = /home/u703738212/domains/danbourretphotos.com/nodejs"}
+{"timestamp":"2026-04-20T11:35:54.915Z","level":"LOG","message":"publicDir = /home/u703738212/domains/danbourretphotos.com/nodejs/public"}
+{"timestamp":"2026-04-20T11:35:54.922Z","level":"WARN","message":"(node:3941044) Warning: NodeDeprecationWarning: The AWS SDK for JavaScript (v3) will\nno longer support Node.js v18.20.8 in January 2026.\n\nTo continue receiving updates to AWS services, bug fixes, and security\nupdates please upgrade to a supported Node.js LTS version.\n\nMore information can be found at: https://a.co/c895JFp\n(Use `node --trace-warnings ...` to show where the warning was created)"}
+{"timestamp":"2026-04-20T11:35:54.923Z","level":"LOG","message":"Server running at http://localhost:3000"}
+{"timestamp":"2026-04-20T11:35:54.944Z","level":"LOG","message":"✅ MySQL connected successfully"}
+{"timestamp":"2026-04-20T11:35:55.380Z","level":"LOG","message":"SMTP server is ready"}
+{"timestamp":"2026-04-20T12:07:25.316Z","level":"LOG","message":"WHCC_NOTIFICATION_EMAIL = dan@danbourretphotos.com"}
+{"timestamp":"2026-04-20T12:07:25.442Z","level":"LOG","message":"DB_HOST = 127.0.0.1"}
+{"timestamp":"2026-04-20T12:07:25.442Z","level":"LOG","message":"DB_USER = u703738212_dbourret"}
+{"timestamp":"2026-04-20T12:07:25.442Z","level":"LOG","message":"DB_PASSWORD exists = true"}
+{"timestamp":"2026-04-20T12:07:25.442Z","level":"LOG","message":"DB_NAME = u703738212_danbourret_pho"}
+{"timestamp":"2026-04-20T12:07:25.442Z","level":"LOG","message":"SMTP_HOST = smtp.hostinger.com"}
+{"timestamp":"2026-04-20T12:07:25.442Z","level":"LOG","message":"SMTP_PORT = 465"}
+{"timestamp":"2026-04-20T12:07:25.442Z","level":"LOG","message":"SMTP_USER = dan@danbourretphotos.com"}
+{"timestamp":"2026-04-20T12:07:25.442Z","level":"LOG","message":"SMTP_PASS exists = true"}
+{"timestamp":"2026-04-20T12:07:26.706Z","level":"LOG","message":"__dirname = /home/u703738212/domains/danbourretphotos.com/nodejs"}
+{"timestamp":"2026-04-20T12:07:26.706Z","level":"LOG","message":"publicDir = /home/u703738212/domains/danbourretphotos.com/nodejs/public"}
+{"timestamp":"2026-04-20T12:07:26.710Z","level":"WARN","message":"(node:1494343) Warning: NodeDeprecationWarning: The AWS SDK for JavaScript (v3) will\nno longer support Node.js v18.20.8 in January 2026.\n\nTo continue receiving updates to AWS services, bug fixes, and security\nupdates please upgrade to a supported Node.js LTS version.\n\nMore information can be found at: https://a.co/c895JFp\n(Use `node --trace-warnings ...` to show where the warning was created)"}
+{"timestamp":"2026-04-20T12:07:26.711Z","level":"LOG","message":"Server running at http://localhost:3000"}
+{"timestamp":"2026-04-20T12:07:26.729Z","level":"LOG","message":"✅ MySQL connected successfully"}
+{"timestamp":"2026-04-20T12:07:27.175Z","level":"LOG","message":"SMTP server is ready"}
+{"timestamp":"2026-04-20T13:29:24.178Z","level":"LOG","message":"WHCC_NOTIFICATION_EMAIL = dan@danbourretphotos.com"}
+{"timestamp":"2026-04-20T13:29:24.331Z","level":"LOG","message":"DB_HOST = 127.0.0.1"}
+{"timestamp":"2026-04-20T13:29:24.331Z","level":"LOG","message":"DB_USER = u703738212_dbourret"}
+{"timestamp":"2026-04-20T13:29:24.331Z","level":"LOG","message":"DB_PASSWORD exists = true"}
+{"timestamp":"2026-04-20T13:29:24.331Z","level":"LOG","message":"DB_NAME = u703738212_danbourret_pho"}
+{"timestamp":"2026-04-20T13:29:24.331Z","level":"LOG","message":"SMTP_HOST = smtp.hostinger.com"}
+{"timestamp":"2026-04-20T13:29:24.331Z","level":"LOG","message":"SMTP_PORT = 465"}
+{"timestamp":"2026-04-20T13:29:24.331Z","level":"LOG","message":"SMTP_USER = dan@danbourretphotos.com"}
+{"timestamp":"2026-04-20T13:29:24.331Z","level":"LOG","message":"SMTP_PASS exists = true"}
+{"timestamp":"2026-04-20T13:29:26.152Z","level":"LOG","message":"__dirname = /home/u703738212/domains/danbourretphotos.com/nodejs"}
+{"timestamp":"2026-04-20T13:29:26.153Z","level":"LOG","message":"publicDir = /home/u703738212/domains/danbourretphotos.com/nodejs/public"}
+{"timestamp":"2026-04-20T13:29:26.157Z","level":"WARN","message":"(node:2006331) Warning: NodeDeprecationWarning: The AWS SDK for JavaScript (v3) will\nno longer support Node.js v18.20.8 in January 2026.\n\nTo continue receiving updates to AWS services, bug fixes, and security\nupdates please upgrade to a supported Node.js LTS version.\n\nMore information can be found at: https://a.co/c895JFp\n(Use `node --trace-warnings ...` to show where the warning was created)"}
+{"timestamp":"2026-04-20T13:29:26.158Z","level":"LOG","message":"Server running at http://localhost:3000"}
+{"timestamp":"2026-04-20T13:29:26.175Z","level":"LOG","message":"REQUEST: GET /"}
+{"timestamp":"2026-04-20T13:29:26.176Z","level":"LOG","message":"REQUEST: GET /"}
+{"timestamp":"2026-04-20T13:29:26.179Z","level":"LOG","message":"✅ MySQL connected successfully"}
+{"timestamp":"2026-04-20T13:29:26.611Z","level":"LOG","message":"SMTP server is ready"}
+{"timestamp":"2026-04-20T14:15:12.474Z","level":"LOG","message":"REQUEST: GET /"}
+{"timestamp":"2026-04-20T14:15:20.552Z","level":"LOG","message":"REQUEST: GET /"}
+{"timestamp":"2026-04-20T14:37:56.479Z","level":"LOG","message":"WHCC_NOTIFICATION_EMAIL = dan@danbourretphotos.com"}
+{"timestamp":"2026-04-20T14:37:56.626Z","level":"LOG","message":"DB_HOST = 127.0.0.1"}
+{"timestamp":"2026-04-20T14:37:56.626Z","level":"LOG","message":"DB_USER = u703738212_dbourret"}
+{"timestamp":"2026-04-20T14:37:56.626Z","level":"LOG","message":"DB_PASSWORD exists = true"}
+{"timestamp":"2026-04-20T14:37:56.626Z","level":"LOG","message":"DB_NAME = u703738212_danbourret_pho"}
+{"timestamp":"2026-04-20T14:37:56.626Z","level":"LOG","message":"SMTP_HOST = smtp.hostinger.com"}
+{"timestamp":"2026-04-20T14:37:56.626Z","level":"LOG","message":"SMTP_PORT = 465"}
+{"timestamp":"2026-04-20T14:37:56.626Z","level":"LOG","message":"SMTP_USER = dan@danbourretphotos.com"}
+{"timestamp":"2026-04-20T14:37:56.626Z","level":"LOG","message":"SMTP_PASS exists = true"}
+{"timestamp":"2026-04-20T14:37:58.279Z","level":"LOG","message":"__dirname = /home/u703738212/domains/danbourretphotos.com/nodejs"}
+{"timestamp":"2026-04-20T14:37:58.279Z","level":"LOG","message":"publicDir = /home/u703738212/domains/danbourretphotos.com/nodejs/public"}
+{"timestamp":"2026-04-20T14:37:58.285Z","level":"WARN","message":"(node:2122321) Warning: NodeDeprecationWarning: The AWS SDK for JavaScript (v3) will\nno longer support Node.js v18.20.8 in January 2026.\n\nTo continue receiving updates to AWS services, bug fixes, and security\nupdates please upgrade to a supported Node.js LTS version.\n\nMore information can be found at: https://a.co/c895JFp\n(Use `node --trace-warnings ...` to show where the warning was created)"}
+{"timestamp":"2026-04-20T14:37:58.286Z","level":"LOG","message":"Server running at http://localhost:3000"}
+{"timestamp":"2026-04-20T14:37:58.306Z","level":"LOG","message":"✅ MySQL connected successfully"}
+{"timestamp":"2026-04-20T14:37:58.482Z","level":"LOG","message":"REQUEST: GET /api/config/square"}
+{"timestamp":"2026-04-20T14:37:58.536Z","level":"LOG","message":"REQUEST: GET /api/public-pricing"}
+{"timestamp":"2026-04-20T14:37:58.778Z","level":"LOG","message":"SMTP server is ready"}
+{"timestamp":"2026-04-20T14:39:27.579Z","level":"LOG","message":"REQUEST: GET /api/public-pricing"}
+{"timestamp":"2026-04-20T14:39:38.012Z","level":"LOG","message":"REQUEST: GET /api/public-pricing"}
+{"timestamp":"2026-04-20T16:56:13.554Z","level":"LOG","message":"WHCC_NOTIFICATION_EMAIL = dan@danbourretphotos.com"}
+{"timestamp":"2026-04-20T16:56:13.701Z","level":"LOG","message":"DB_HOST = 127.0.0.1"}
+{"timestamp":"2026-04-20T16:56:13.701Z","level":"LOG","message":"DB_USER = u703738212_dbourret"}
+{"timestamp":"2026-04-20T16:56:13.701Z","level":"LOG","message":"DB_PASSWORD exists = true"}
+{"timestamp":"2026-04-20T16:56:13.701Z","level":"LOG","message":"DB_NAME = u703738212_danbourret_pho"}
+{"timestamp":"2026-04-20T16:56:13.701Z","level":"LOG","message":"SMTP_HOST = smtp.hostinger.com"}
+{"timestamp":"2026-04-20T16:56:13.701Z","level":"LOG","message":"SMTP_PORT = 465"}
+{"timestamp":"2026-04-20T16:56:13.701Z","level":"LOG","message":"SMTP_USER = dan@danbourretphotos.com"}
+{"timestamp":"2026-04-20T16:56:13.701Z","level":"LOG","message":"SMTP_PASS exists = true"}
+{"timestamp":"2026-04-20T16:56:15.420Z","level":"LOG","message":"__dirname = /home/u703738212/domains/danbourretphotos.com/nodejs"}
+{"timestamp":"2026-04-20T16:56:15.420Z","level":"LOG","message":"publicDir = /home/u703738212/domains/danbourretphotos.com/nodejs/public"}
+{"timestamp":"2026-04-20T16:56:15.425Z","level":"WARN","message":"(node:2357241) Warning: NodeDeprecationWarning: The AWS SDK for JavaScript (v3) will\nno longer support Node.js v18.20.8 in January 2026.\n\nTo continue receiving updates to AWS services, bug fixes, and security\nupdates please upgrade to a supported Node.js LTS version.\n\nMore information can be found at: https://a.co/c895JFp\n(Use `node --trace-warnings ...` to show where the warning was created)"}
+{"timestamp":"2026-04-20T16:56:15.426Z","level":"LOG","message":"Server running at http://localhost:3000"}
+{"timestamp":"2026-04-20T16:56:15.444Z","level":"LOG","message":"✅ MySQL connected successfully"}
+{"timestamp":"2026-04-20T16:56:15.929Z","level":"LOG","message":"SMTP server is ready"}
+{"timestamp":"2026-04-20T16:57:57.161Z","level":"LOG","message":"WHCC_NOTIFICATION_EMAIL = dan@danbourretphotos.com"}
+{"timestamp":"2026-04-20T16:57:57.280Z","level":"LOG","message":"DB_HOST = 127.0.0.1"}
+{"timestamp":"2026-04-20T16:57:57.280Z","level":"LOG","message":"DB_USER = u703738212_dbourret"}
+{"timestamp":"2026-04-20T16:57:57.280Z","level":"LOG","message":"DB_PASSWORD exists = true"}
+{"timestamp":"2026-04-20T16:57:57.280Z","level":"LOG","message":"DB_NAME = u703738212_danbourret_pho"}
+{"timestamp":"2026-04-20T16:57:57.280Z","level":"LOG","message":"SMTP_HOST = smtp.hostinger.com"}
+{"timestamp":"2026-04-20T16:57:57.280Z","level":"LOG","message":"SMTP_PORT = 465"}
+{"timestamp":"2026-04-20T16:57:57.280Z","level":"LOG","message":"SMTP_USER = dan@danbourretphotos.com"}
+{"timestamp":"2026-04-20T16:57:57.280Z","level":"LOG","message":"SMTP_PASS exists = true"}
+{"timestamp":"2026-04-20T16:57:58.523Z","level":"LOG","message":"__dirname = /home/u703738212/domains/danbourretphotos.com/nodejs"}
+{"timestamp":"2026-04-20T16:57:58.523Z","level":"LOG","message":"publicDir = /home/u703738212/domains/danbourretphotos.com/nodejs/public"}
+{"timestamp":"2026-04-20T16:57:58.527Z","level":"WARN","message":"(node:2444711) Warning: NodeDeprecationWarning: The AWS SDK for JavaScript (v3) will\nno longer support Node.js v18.20.8 in January 2026.\n\nTo continue receiving updates to AWS services, bug fixes, and security\nupdates please upgrade to a supported Node.js LTS version.\n\nMore information can be found at: https://a.co/c895JFp\n(Use `node --trace-warnings ...` to show where the warning was created)"}
+{"timestamp":"2026-04-20T16:57:58.528Z","level":"LOG","message":"Server running at http://localhost:3000"}
+{"timestamp":"2026-04-20T16:57:58.546Z","level":"LOG","message":"✅ MySQL connected successfully"}
+{"timestamp":"2026-04-20T16:57:58.979Z","level":"LOG","message":"SMTP server is ready"}
+{"timestamp":"2026-04-20T17:10:20.574Z","level":"LOG","message":"REQUEST: GET /"}
+{"timestamp":"2026-04-20T17:10:23.007Z","level":"LOG","message":"REQUEST: GET /"}
+{"timestamp":"2026-04-20T17:10:23.947Z","level":"LOG","message":"REQUEST: GET /api/config/square"}
+{"timestamp":"2026-04-20T17:10:24.233Z","level":"LOG","message":"REQUEST: GET /api/public-pricing"}
+{"timestamp":"2026-04-20T18:15:37.201Z","level":"LOG","message":"WHCC_NOTIFICATION_EMAIL = dan@danbourretphotos.com"}
+{"timestamp":"2026-04-20T18:15:37.329Z","level":"LOG","message":"DB_HOST = 127.0.0.1"}
+{"timestamp":"2026-04-20T18:15:37.329Z","level":"LOG","message":"DB_USER = u703738212_dbourret"}
+{"timestamp":"2026-04-20T18:15:37.329Z","level":"LOG","message":"DB_PASSWORD exists = true"}
+{"timestamp":"2026-04-20T18:15:37.329Z","level":"LOG","message":"DB_NAME = u703738212_danbourret_pho"}
+{"timestamp":"2026-04-20T18:15:37.329Z","level":"LOG","message":"SMTP_HOST = smtp.hostinger.com"}
+{"timestamp":"2026-04-20T18:15:37.329Z","level":"LOG","message":"SMTP_PORT = 465"}
+{"timestamp":"2026-04-20T18:15:37.329Z","level":"LOG","message":"SMTP_USER = dan@danbourretphotos.com"}
+{"timestamp":"2026-04-20T18:15:37.329Z","level":"LOG","message":"SMTP_PASS exists = true"}
+{"timestamp":"2026-04-20T18:15:38.585Z","level":"LOG","message":"__dirname = /home/u703738212/domains/danbourretphotos.com/nodejs"}
+{"timestamp":"2026-04-20T18:15:38.586Z","level":"LOG","message":"publicDir = /home/u703738212/domains/danbourretphotos.com/nodejs/public"}
+{"timestamp":"2026-04-20T18:15:38.591Z","level":"WARN","message":"(node:2689760) Warning: NodeDeprecationWarning: The AWS SDK for JavaScript (v3) will\nno longer support Node.js v18.20.8 in January 2026.\n\nTo continue receiving updates to AWS services, bug fixes, and security\nupdates please upgrade to a supported Node.js LTS version.\n\nMore information can be found at: https://a.co/c895JFp\n(Use `node --trace-warnings ...` to show where the warning was created)"}
+{"timestamp":"2026-04-20T18:15:38.591Z","level":"LOG","message":"Server running at http://localhost:3000"}
+{"timestamp":"2026-04-20T18:15:38.607Z","level":"LOG","message":"REQUEST: GET /"}
+{"timestamp":"2026-04-20T18:15:38.609Z","level":"LOG","message":"REQUEST: GET /"}
+{"timestamp":"2026-04-20T18:15:38.613Z","level":"LOG","message":"✅ MySQL connected successfully"}
+{"timestamp":"2026-04-20T18:15:39.050Z","level":"LOG","message":"SMTP server is ready"}
+{"timestamp":"2026-04-20T20:03:45.974Z","level":"LOG","message":"WHCC_NOTIFICATION_EMAIL = dan@danbourretphotos.com"}
+{"timestamp":"2026-04-20T20:03:46.124Z","level":"LOG","message":"DB_HOST = 127.0.0.1"}
+{"timestamp":"2026-04-20T20:03:46.124Z","level":"LOG","message":"DB_USER = u703738212_dbourret"}
+{"timestamp":"2026-04-20T20:03:46.124Z","level":"LOG","message":"DB_PASSWORD exists = true"}
+{"timestamp":"2026-04-20T20:03:46.124Z","level":"LOG","message":"DB_NAME = u703738212_danbourret_pho"}
+{"timestamp":"2026-04-20T20:03:46.124Z","level":"LOG","message":"SMTP_HOST = smtp.hostinger.com"}
+{"timestamp":"2026-04-20T20:03:46.124Z","level":"LOG","message":"SMTP_PORT = 465"}
+{"timestamp":"2026-04-20T20:03:46.124Z","level":"LOG","message":"SMTP_USER = dan@danbourretphotos.com"}
+{"timestamp":"2026-04-20T20:03:46.124Z","level":"LOG","message":"SMTP_PASS exists = true"}
+{"timestamp":"2026-04-20T20:03:47.539Z","level":"LOG","message":"__dirname = /home/u703738212/domains/danbourretphotos.com/nodejs"}
+{"timestamp":"2026-04-20T20:03:47.539Z","level":"LOG","message":"publicDir = /home/u703738212/domains/danbourretphotos.com/nodejs/public"}
+{"timestamp":"2026-04-20T20:03:47.544Z","level":"WARN","message":"(node:513442) Warning: NodeDeprecationWarning: The AWS SDK for JavaScript (v3) will\nno longer support Node.js v18.20.8 in January 2026.\n\nTo continue receiving updates to AWS services, bug fixes, and security\nupdates please upgrade to a supported Node.js LTS version.\n\nMore information can be found at: https://a.co/c895JFp\n(Use `node --trace-warnings ...` to show where the warning was created)"}
+{"timestamp":"2026-04-20T20:03:47.545Z","level":"LOG","message":"Server running at http://localhost:3000"}
+{"timestamp":"2026-04-20T20:03:47.562Z","level":"LOG","message":"✅ MySQL connected successfully"}
+{"timestamp":"2026-04-20T20:03:48.029Z","level":"LOG","message":"SMTP server is ready"}
+{"timestamp":"2026-04-20T20:03:58.071Z","level":"LOG","message":"REQUEST: GET /"}
+{"timestamp":"2026-04-20T20:03:58.280Z","level":"LOG","message":"REQUEST: GET /"}
+{"timestamp":"2026-04-20T20:04:12.395Z","level":"LOG","message":"REQUEST: GET /api/config/square"}
+{"timestamp":"2026-04-20T20:04:13.996Z","level":"LOG","message":"REQUEST: GET /api/public-pricing"}
+{"timestamp":"2026-04-20T20:04:14.471Z","level":"LOG","message":"REQUEST: GET /api/config/square"}
+{"timestamp":"2026-04-20T20:04:15.020Z","level":"LOG","message":"REQUEST: GET /api/public-pricing"}
+{"timestamp":"2026-04-20T20:17:29.130Z","level":"LOG","message":"REQUEST: GET /"}
+{"timestamp":"2026-04-20T20:54:04.264Z","level":"LOG","message":"REQUEST: GET /api/config/square"}
+{"timestamp":"2026-04-20T20:54:04.849Z","level":"LOG","message":"REQUEST: GET /api/public-pricing"}
+{"timestamp":"2026-04-20T21:35:05.075Z","level":"LOG","message":"WHCC_NOTIFICATION_EMAIL = dan@danbourretphotos.com"}
+{"timestamp":"2026-04-20T21:35:05.235Z","level":"LOG","message":"DB_HOST = 127.0.0.1"}
+{"timestamp":"2026-04-20T21:35:05.236Z","level":"LOG","message":"DB_USER = u703738212_dbourret"}
+{"timestamp":"2026-04-20T21:35:05.236Z","level":"LOG","message":"DB_PASSWORD exists = true"}
+{"timestamp":"2026-04-20T21:35:05.236Z","level":"LOG","message":"DB_NAME = u703738212_danbourret_pho"}
+{"timestamp":"2026-04-20T21:35:05.236Z","level":"LOG","message":"SMTP_HOST = smtp.hostinger.com"}
+{"timestamp":"2026-04-20T21:35:05.236Z","level":"LOG","message":"SMTP_PORT = 465"}
+{"timestamp":"2026-04-20T21:35:05.236Z","level":"LOG","message":"SMTP_USER = dan@danbourretphotos.com"}
+{"timestamp":"2026-04-20T21:35:05.236Z","level":"LOG","message":"SMTP_PASS exists = true"}
+{"timestamp":"2026-04-20T21:35:06.990Z","level":"LOG","message":"__dirname = /home/u703738212/domains/danbourretphotos.com/nodejs"}
+{"timestamp":"2026-04-20T21:35:06.990Z","level":"LOG","message":"publicDir = /home/u703738212/domains/danbourretphotos.com/nodejs/public"}
+{"timestamp":"2026-04-20T21:35:06.995Z","level":"WARN","message":"(node:1600990) Warning: NodeDeprecationWarning: The AWS SDK for JavaScript (v3) will\nno longer support Node.js v18.20.8 in January 2026.\n\nTo continue receiving updates to AWS services, bug fixes, and security\nupdates please upgrade to a supported Node.js LTS version.\n\nMore information can be found at: https://a.co/c895JFp\n(Use `node --trace-warnings ...` to show where the warning was created)"}
+{"timestamp":"2026-04-20T21:35:06.996Z","level":"LOG","message":"Server running at http://localhost:3000"}
+{"timestamp":"2026-04-20T21:35:07.015Z","level":"LOG","message":"✅ MySQL connected successfully"}
+{"timestamp":"2026-04-20T21:35:07.481Z","level":"LOG","message":"SMTP server is ready"}
+{"timestamp":"2026-04-20T22:38:25.485Z","level":"LOG","message":"WHCC_NOTIFICATION_EMAIL = dan@danbourretphotos.com"}
+{"timestamp":"2026-04-20T22:38:25.614Z","level":"LOG","message":"DB_HOST = 127.0.0.1"}
+{"timestamp":"2026-04-20T22:38:25.614Z","level":"LOG","message":"DB_USER = u703738212_dbourret"}
+{"timestamp":"2026-04-20T22:38:25.614Z","level":"LOG","message":"DB_PASSWORD exists = true"}
+{"timestamp":"2026-04-20T22:38:25.614Z","level":"LOG","message":"DB_NAME = u703738212_danbourret_pho"}
+{"timestamp":"2026-04-20T22:38:25.614Z","level":"LOG","message":"SMTP_HOST = smtp.hostinger.com"}
+{"timestamp":"2026-04-20T22:38:25.614Z","level":"LOG","message":"SMTP_PORT = 465"}
+{"timestamp":"2026-04-20T22:38:25.614Z","level":"LOG","message":"SMTP_USER = dan@danbourretphotos.com"}
+{"timestamp":"2026-04-20T22:38:25.614Z","level":"LOG","message":"SMTP_PASS exists = true"}
+{"timestamp":"2026-04-20T22:38:26.929Z","level":"LOG","message":"__dirname = /home/u703738212/domains/danbourretphotos.com/nodejs"}
+{"timestamp":"2026-04-20T22:38:26.929Z","level":"LOG","message":"publicDir = /home/u703738212/domains/danbourretphotos.com/nodejs/public"}
+{"timestamp":"2026-04-20T22:38:26.933Z","level":"WARN","message":"(node:905422) Warning: NodeDeprecationWarning: The AWS SDK for JavaScript (v3) will\nno longer support Node.js v18.20.8 in January 2026.\n\nTo continue receiving updates to AWS services, bug fixes, and security\nupdates please upgrade to a supported Node.js LTS version.\n\nMore information can be found at: https://a.co/c895JFp\n(Use `node --trace-warnings ...` to show where the warning was created)"}
+{"timestamp":"2026-04-20T22:38:26.934Z","level":"LOG","message":"Server running at http://localhost:3000"}
+{"timestamp":"2026-04-20T22:38:26.950Z","level":"LOG","message":"REQUEST: GET /"}
+{"timestamp":"2026-04-20T22:38:26.951Z","level":"LOG","message":"REQUEST: GET /"}
+{"timestamp":"2026-04-20T22:38:26.954Z","level":"LOG","message":"✅ MySQL connected successfully"}
+{"timestamp":"2026-04-20T22:38:27.110Z","level":"LOG","message":"REQUEST: GET /"}
+{"timestamp":"2026-04-20T22:38:27.400Z","level":"LOG","message":"SMTP server is ready"}
+{"timestamp":"2026-04-20T22:55:21.623Z","level":"LOG","message":"REQUEST: GET /api/config/square"}
+{"timestamp":"2026-04-20T22:55:21.697Z","level":"LOG","message":"REQUEST: GET /api/public-pricing"}
+{"timestamp":"2026-04-20T22:55:36.467Z","level":"LOG","message":"REQUEST: GET /"}
+{"timestamp":"2026-04-20T23:31:40.701Z","level":"LOG","message":"REQUEST: GET /"}
+{"timestamp":"2026-04-21T00:14:30.993Z","level":"LOG","message":"WHCC_NOTIFICATION_EMAIL = dan@danbourretphotos.com"}
+{"timestamp":"2026-04-21T00:14:31.137Z","level":"LOG","message":"DB_HOST = 127.0.0.1"}
+{"timestamp":"2026-04-21T00:14:31.137Z","level":"LOG","message":"DB_USER = u703738212_dbourret"}
+{"timestamp":"2026-04-21T00:14:31.137Z","level":"LOG","message":"DB_PASSWORD exists = true"}
+{"timestamp":"2026-04-21T00:14:31.137Z","level":"LOG","message":"DB_NAME = u703738212_danbourret_pho"}
+{"timestamp":"2026-04-21T00:14:31.137Z","level":"LOG","message":"SMTP_HOST = smtp.hostinger.com"}
+{"timestamp":"2026-04-21T00:14:31.137Z","level":"LOG","message":"SMTP_PORT = 465"}
+{"timestamp":"2026-04-21T00:14:31.137Z","level":"LOG","message":"SMTP_USER = dan@danbourretphotos.com"}
+{"timestamp":"2026-04-21T00:14:31.137Z","level":"LOG","message":"SMTP_PASS exists = true"}
+{"timestamp":"2026-04-21T00:14:32.818Z","level":"LOG","message":"__dirname = /home/u703738212/domains/danbourretphotos.com/nodejs"}
+{"timestamp":"2026-04-21T00:14:32.818Z","level":"LOG","message":"publicDir = /home/u703738212/domains/danbourretphotos.com/nodejs/public"}
+{"timestamp":"2026-04-21T00:14:32.823Z","level":"WARN","message":"(node:1731556) Warning: NodeDeprecationWarning: The AWS SDK for JavaScript (v3) will\nno longer support Node.js v18.20.8 in January 2026.\n\nTo continue receiving updates to AWS services, bug fixes, and security\nupdates please upgrade to a supported Node.js LTS version.\n\nMore information can be found at: https://a.co/c895JFp\n(Use `node --trace-warnings ...` to show where the warning was created)"}
+{"timestamp":"2026-04-21T00:14:32.823Z","level":"LOG","message":"Server running at http://localhost:3000"}
+{"timestamp":"2026-04-21T00:14:32.839Z","level":"LOG","message":"REQUEST: GET /"}
+{"timestamp":"2026-04-21T00:14:32.842Z","level":"LOG","message":"✅ MySQL connected successfully"}
+{"timestamp":"2026-04-21T00:14:33.275Z","level":"LOG","message":"SMTP server is ready"}
+{"timestamp":"2026-04-21T01:37:22.900Z","level":"LOG","message":"WHCC_NOTIFICATION_EMAIL = dan@danbourretphotos.com"}
+{"timestamp":"2026-04-21T01:37:23.030Z","level":"LOG","message":"DB_HOST = 127.0.0.1"}
+{"timestamp":"2026-04-21T01:37:23.030Z","level":"LOG","message":"DB_USER = u703738212_dbourret"}
+{"timestamp":"2026-04-21T01:37:23.030Z","level":"LOG","message":"DB_PASSWORD exists = true"}
+{"timestamp":"2026-04-21T01:37:23.030Z","level":"LOG","message":"DB_NAME = u703738212_danbourret_pho"}
+{"timestamp":"2026-04-21T01:37:23.030Z","level":"LOG","message":"SMTP_HOST = smtp.hostinger.com"}
+{"timestamp":"2026-04-21T01:37:23.030Z","level":"LOG","message":"SMTP_PORT = 465"}
+{"timestamp":"2026-04-21T01:37:23.030Z","level":"LOG","message":"SMTP_USER = dan@danbourretphotos.com"}
+{"timestamp":"2026-04-21T01:37:23.030Z","level":"LOG","message":"SMTP_PASS exists = true"}
+{"timestamp":"2026-04-21T01:37:24.302Z","level":"LOG","message":"__dirname = /home/u703738212/domains/danbourretphotos.com/nodejs"}
+{"timestamp":"2026-04-21T01:37:24.302Z","level":"LOG","message":"publicDir = /home/u703738212/domains/danbourretphotos.com/nodejs/public"}
+{"timestamp":"2026-04-21T01:37:24.307Z","level":"WARN","message":"(node:1759416) Warning: NodeDeprecationWarning: The AWS SDK for JavaScript (v3) will\nno longer support Node.js v18.20.8 in January 2026.\n\nTo continue receiving updates to AWS services, bug fixes, and security\nupdates please upgrade to a supported Node.js LTS version.\n\nMore information can be found at: https://a.co/c895JFp\n(Use `node --trace-warnings ...` to show where the warning was created)"}
+{"timestamp":"2026-04-21T01:37:24.308Z","level":"LOG","message":"Server running at http://localhost:3000"}
+{"timestamp":"2026-04-21T01:37:24.324Z","level":"LOG","message":"REQUEST: GET /"}
+{"timestamp":"2026-04-21T01:37:24.328Z","level":"LOG","message":"✅ MySQL connected successfully"}
+{"timestamp":"2026-04-21T01:37:24.791Z","level":"LOG","message":"SMTP server is ready"}
+{"timestamp":"2026-04-21T01:37:26.393Z","level":"LOG","message":"REQUEST: GET /api/config/square"}
+{"timestamp":"2026-04-21T01:37:26.401Z","level":"LOG","message":"REQUEST: GET /api/public-pricing"}
+{"timestamp":"2026-04-21T01:37:46.453Z","level":"LOG","message":"REQUEST: GET /api/public-pricing"}
+{"timestamp":"2026-04-21T01:38:02.117Z","level":"LOG","message":"REQUEST: GET /api/config/square"}
+{"timestamp":"2026-04-21T01:38:48.019Z","level":"LOG","message":"REQUEST: POST /api/payments/square"}
+{"timestamp":"2026-04-21T01:38:48.020Z","level":"LOG","message":"===================================="}
+{"timestamp":"2026-04-21T01:38:48.020Z","level":"LOG","message":"[ORDER START]"}
+{"timestamp":"2026-04-21T01:38:48.020Z","level":"LOG","message":"internalOrderId: order-1776735528020"}
+{"timestamp":"2026-04-21T01:38:48.020Z","level":"LOG","message":"checkoutAttemptId: 3553e071-c90b-47a4-90a0-fdfe5aa1f1fd"}
+{"timestamp":"2026-04-21T01:38:48.020Z","level":"LOG","message":"submitEnabled: true"}
+{"timestamp":"2026-04-21T01:38:48.020Z","level":"LOG","message":"items: [\n  {\n    \"title\": \"Sunset with Boat\",\n    \"image\": \"images/misc/sunset_boat.png\",\n    \"imageKey\": \"sunset_boat.png\",\n    \"size\": \"12x12\",\n    \"material\": \"Metal\",\n    \"finish\": \"semi-gloss\",\n    \"price\": 154\n  }\n]"}
+{"timestamp":"2026-04-21T01:38:48.024Z","level":"LOG","message":"Square payment received {\"hasItems\":true,\"amount\":154}"}
+{"timestamp":"2026-04-21T01:38:48.196Z","level":"LOG","message":"✅ S3 verified: sunset_boat.png"}
+{"timestamp":"2026-04-21T01:38:49.344Z","level":"LOG","message":"items received by server = [\n  {\n    \"title\": \"Sunset with Boat\",\n    \"image\": \"images/misc/sunset_boat.png\",\n    \"imageKey\": \"sunset_boat.png\",\n    \"size\": \"12x12\",\n    \"material\": \"Metal\",\n    \"finish\": \"semi-gloss\",\n    \"price\": 154\n  }\n]"}
+{"timestamp":"2026-04-21T01:38:49.345Z","level":"LOG","message":"[PAYMENT CREATED] {\"paymentId\":\"jLHrpT9CKuTutQcRJ91stsWV1NBZY\",\"orderId\":\"U0GN2FmboLtKjsj0sWWGjpxR5rRZY\",\"status\":\"APPROVED\"}"}
+{"timestamp":"2026-04-21T01:38:49.345Z","level":"LOG","message":"[ORDER SUMMARY] {\"paymentId\":\"jLHrpT9CKuTutQcRJ91stsWV1NBZY\",\"orderTotal\":154,\"itemCount\":1}"}
+{"timestamp":"2026-04-21T01:38:49.347Z","level":"LOG","message":"✅ Order saved to database"}
+{"timestamp":"2026-04-21T01:38:49.347Z","level":"LOG","message":"[WHCC] starting fulfillment"}
+{"timestamp":"2026-04-21T01:38:49.347Z","level":"LOG","message":"[WHCC IMPORT] calling fulfillOrderWithWhcc"}
+{"timestamp":"2026-04-21T01:38:49.353Z","level":"LOG","message":"SIGNED URL DEBUG: {\"key\":\"sunset_boat.png\",\"bucket\":\"danbourret-photos\",\"expiresInSeconds\":259200,\"url\":\"https://danbourret-photos.s3.us-east-2.amazonaws.com/sunset_boat.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIA6H2FLWQE537HF7OH%2F20260421%2Fus-east-2%2Fs3%2Faws4_request&X-Amz-Date=20260421T013849Z&X-Amz-Expires=259200&X-Amz-Signature=093a1225b32f2d44c2c388969019d3902cb347df5044c646aa94a750c22353d2&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject\"}"}
+{"timestamp":"2026-04-21T01:38:49.353Z","level":"LOG","message":"SIGNED URL DEBUG: {\"key\":\"sunset_boat.png\",\"expiresInSeconds\":259200,\"urlGenerated\":true}"}
+{"timestamp":"2026-04-21T01:38:49.606Z","level":"LOG","message":"WHCC key: metal|12x12|semi-gloss"}
+{"timestamp":"2026-04-21T01:38:49.609Z","level":"LOG","message":"WHCC auth target: https://apps.whcc.com"}
+{"timestamp":"2026-04-21T01:38:49.609Z","level":"LOG","message":"WHCC credentials loaded: {\"keyPresent\":true,\"secretPresent\":true}"}
+{"timestamp":"2026-04-21T01:38:50.640Z","level":"LOG","message":"[WHCC SUCCESS]"}
+{"timestamp":"2026-04-21T01:38:50.640Z","level":"ERROR","message":"[ORDER FLOW FAILED]: {\"error\":\"IS_PRODUCTION is not defined\",\"paymentId\":\"jLHrpT9CKuTutQcRJ91stsWV1NBZY\",\"items\":[{\"title\":\"Sunset with Boat\",\"image\":\"images/misc/sunset_boat.png\",\"imageKey\":\"sunset_boat.png\",\"size\":\"12x12\",\"material\":\"Metal\",\"finish\":\"semi-gloss\",\"price\":154}]}"}
+{"timestamp":"2026-04-21T01:38:50.778Z","level":"LOG","message":"[SQUARE CANCELED]: jLHrpT9CKuTutQcRJ91stsWV1NBZY"}
+{"timestamp":"2026-04-21T01:39:47.403Z","level":"LOG","message":"REQUEST: GET /"}
+{"timestamp":"2026-04-21T01:39:47.507Z","level":"LOG","message":"REQUEST: GET /api/config/square"}
+{"timestamp":"2026-04-21T01:39:47.566Z","level":"LOG","message":"REQUEST: GET /api/public-pricing"}
+{"timestamp":"2026-04-21T01:40:10.010Z","level":"LOG","message":"REQUEST: GET /"}
+{"timestamp":"2026-04-21T01:40:10.182Z","level":"LOG","message":"REQUEST: GET /api/public-pricing"}
+{"timestamp":"2026-04-21T01:40:10.241Z","level":"LOG","message":"REQUEST: GET /api/config/square"}
+{"timestamp":"2026-04-21T01:40:17.217Z","level":"LOG","message":"REQUEST: GET /api/config/square"}
+{"timestamp":"2026-04-21T01:40:55.284Z","level":"LOG","message":"REQUEST: POST /api/payments/square"}
+{"timestamp":"2026-04-21T01:40:55.284Z","level":"LOG","message":"===================================="}
+{"timestamp":"2026-04-21T01:40:55.284Z","level":"LOG","message":"[ORDER START]"}
+{"timestamp":"2026-04-21T01:40:55.284Z","level":"LOG","message":"internalOrderId: order-1776735655284"}
+{"timestamp":"2026-04-21T01:40:55.284Z","level":"LOG","message":"checkoutAttemptId: a5b9ec42-3610-4540-b74e-802919b9f5ef"}
+{"timestamp":"2026-04-21T01:40:55.284Z","level":"LOG","message":"submitEnabled: true"}
+{"timestamp":"2026-04-21T01:40:55.285Z","level":"LOG","message":"items: [\n  {\n    \"title\": \"Sunset with Boat\",\n    \"image\": \"images/misc/sunset_boat.png\",\n    \"imageKey\": \"sunset_boat.png\",\n    \"size\": \"12x12\",\n    \"material\": \"Metal\",\n    \"finish\": \"semi-gloss\",\n    \"price\": 154\n  }\n]"}
+{"timestamp":"2026-04-21T01:40:55.288Z","level":"LOG","message":"Square payment received {\"hasItems\":true,\"amount\":154}"}
+{"timestamp":"2026-04-21T01:40:55.403Z","level":"LOG","message":"✅ S3 verified: sunset_boat.png"}
+{"timestamp":"2026-04-21T01:40:56.409Z","level":"LOG","message":"items received by server = [\n  {\n    \"title\": \"Sunset with Boat\",\n    \"image\": \"images/misc/sunset_boat.png\",\n    \"imageKey\": \"sunset_boat.png\",\n    \"size\": \"12x12\",\n    \"material\": \"Metal\",\n    \"finish\": \"semi-gloss\",\n    \"price\": 154\n  }\n]"}
+{"timestamp":"2026-04-21T01:40:56.410Z","level":"LOG","message":"[PAYMENT CREATED] {\"paymentId\":\"fzsLpF5mv9aEDQJhyWyHQUsUdK6YY\",\"orderId\":\"WzJvilU5doQUQFA3f3g22QuzEqDZY\",\"status\":\"APPROVED\"}"}
+{"timestamp":"2026-04-21T01:40:56.410Z","level":"LOG","message":"[ORDER SUMMARY] {\"paymentId\":\"fzsLpF5mv9aEDQJhyWyHQUsUdK6YY\",\"orderTotal\":154,\"itemCount\":1}"}
+{"timestamp":"2026-04-21T01:40:56.411Z","level":"LOG","message":"✅ Order saved to database"}
+{"timestamp":"2026-04-21T01:40:56.411Z","level":"LOG","message":"[WHCC] starting fulfillment"}
+{"timestamp":"2026-04-21T01:40:56.411Z","level":"LOG","message":"[WHCC IMPORT] calling fulfillOrderWithWhcc"}
+{"timestamp":"2026-04-21T01:40:56.413Z","level":"LOG","message":"SIGNED URL DEBUG: {\"key\":\"sunset_boat.png\",\"bucket\":\"danbourret-photos\",\"expiresInSeconds\":259200,\"url\":\"https://danbourret-photos.s3.us-east-2.amazonaws.com/sunset_boat.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIA6H2FLWQE537HF7OH%2F20260421%2Fus-east-2%2Fs3%2Faws4_request&X-Amz-Date=20260421T014056Z&X-Amz-Expires=259200&X-Amz-Signature=8d00ed9aeec7c46eb9757b73dd2ad9d1985e2189c274bc990ec2b0c7f3b928c8&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject\"}"}
+{"timestamp":"2026-04-21T01:40:56.413Z","level":"LOG","message":"SIGNED URL DEBUG: {\"key\":\"sunset_boat.png\",\"expiresInSeconds\":259200,\"urlGenerated\":true}"}
+{"timestamp":"2026-04-21T01:40:56.651Z","level":"LOG","message":"WHCC key: metal|12x12|semi-gloss"}
+{"timestamp":"2026-04-21T01:40:56.652Z","level":"LOG","message":"WHCC auth target: https://apps.whcc.com"}
+{"timestamp":"2026-04-21T01:40:56.652Z","level":"LOG","message":"WHCC credentials loaded: {\"keyPresent\":true,\"secretPresent\":true}"}
+{"timestamp":"2026-04-21T01:40:57.982Z","level":"LOG","message":"[WHCC SUCCESS]"}
+{"timestamp":"2026-04-21T01:40:57.983Z","level":"ERROR","message":"[ORDER FLOW FAILED]: {\"error\":\"IS_PRODUCTION is not defined\",\"paymentId\":\"fzsLpF5mv9aEDQJhyWyHQUsUdK6YY\",\"items\":[{\"title\":\"Sunset with Boat\",\"image\":\"images/misc/sunset_boat.png\",\"imageKey\":\"sunset_boat.png\",\"size\":\"12x12\",\"material\":\"Metal\",\"finish\":\"semi-gloss\",\"price\":154}]}"}
+{"timestamp":"2026-04-21T01:40:58.133Z","level":"LOG","message":"[SQUARE CANCELED]: fzsLpF5mv9aEDQJhyWyHQUsUdK6YY"}
+{"timestamp":"2026-04-21T01:41:56.579Z","level":"LOG","message":"REQUEST: POST /api/payments/square"}
+{"timestamp":"2026-04-21T01:41:56.579Z","level":"LOG","message":"===================================="}
+{"timestamp":"2026-04-21T01:41:56.579Z","level":"LOG","message":"[ORDER START]"}
+{"timestamp":"2026-04-21T01:41:56.579Z","level":"LOG","message":"internalOrderId: order-1776735716579"}
+{"timestamp":"2026-04-21T01:41:56.579Z","level":"LOG","message":"checkoutAttemptId: 86fd8288-cfe7-4020-85c2-1d91fb2ea49c"}
+{"timestamp":"2026-04-21T01:41:56.580Z","level":"LOG","message":"submitEnabled: true"}
+{"timestamp":"2026-04-21T01:41:56.580Z","level":"LOG","message":"items: [\n  {\n    \"title\": \"Sunset with Boat\",\n    \"image\": \"images/misc/sunset_boat.png\",\n    \"imageKey\": \"sunset_boat.png\",\n    \"size\": \"12x12\",\n    \"material\": \"Metal\",\n    \"finish\": \"semi-gloss\",\n    \"price\": 154\n  }\n]"}
+{"timestamp":"2026-04-21T01:41:56.584Z","level":"LOG","message":"Square payment received {\"hasItems\":true,\"amount\":154}"}
+{"timestamp":"2026-04-21T01:41:56.710Z","level":"LOG","message":"✅ S3 verified: sunset_boat.png"}
+{"timestamp":"2026-04-21T01:41:57.956Z","level":"LOG","message":"items received by server = [\n  {\n    \"title\": \"Sunset with Boat\",\n    \"image\": \"images/misc/sunset_boat.png\",\n    \"imageKey\": \"sunset_boat.png\",\n    \"size\": \"12x12\",\n    \"material\": \"Metal\",\n    \"finish\": \"semi-gloss\",\n    \"price\": 154\n  }\n]"}
+{"timestamp":"2026-04-21T01:41:57.957Z","level":"LOG","message":"[PAYMENT CREATED] {\"paymentId\":\"BubiIyJeRmsFavAF1rLdxjkxEGUZY\",\"orderId\":\"UowBgrmLyzA2njL5G1YSMFhMhUFZY\",\"status\":\"APPROVED\"}"}
+{"timestamp":"2026-04-21T01:41:57.957Z","level":"LOG","message":"[ORDER SUMMARY] {\"paymentId\":\"BubiIyJeRmsFavAF1rLdxjkxEGUZY\",\"orderTotal\":154,\"itemCount\":1}"}
+{"timestamp":"2026-04-21T01:41:57.958Z","level":"LOG","message":"✅ Order saved to database"}
+{"timestamp":"2026-04-21T01:41:57.958Z","level":"LOG","message":"[WHCC] starting fulfillment"}
+{"timestamp":"2026-04-21T01:41:57.958Z","level":"LOG","message":"[WHCC IMPORT] calling fulfillOrderWithWhcc"}
+{"timestamp":"2026-04-21T01:41:57.960Z","level":"LOG","message":"SIGNED URL DEBUG: {\"key\":\"sunset_boat.png\",\"bucket\":\"danbourret-photos\",\"expiresInSeconds\":259200,\"url\":\"https://danbourret-photos.s3.us-east-2.amazonaws.com/sunset_boat.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIA6H2FLWQE537HF7OH%2F20260421%2Fus-east-2%2Fs3%2Faws4_request&X-Amz-Date=20260421T014157Z&X-Amz-Expires=259200&X-Amz-Signature=40bd4eef64be5695e9dea8a551c52b6976110f4595a28344ffd890357871d8bd&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject\"}"}
+{"timestamp":"2026-04-21T01:41:57.960Z","level":"LOG","message":"SIGNED URL DEBUG: {\"key\":\"sunset_boat.png\",\"expiresInSeconds\":259200,\"urlGenerated\":true}"}
+{"timestamp":"2026-04-21T01:41:58.231Z","level":"LOG","message":"WHCC key: metal|12x12|semi-gloss"}
+{"timestamp":"2026-04-21T01:41:58.232Z","level":"LOG","message":"WHCC auth target: https://apps.whcc.com"}
+{"timestamp":"2026-04-21T01:41:58.232Z","level":"LOG","message":"WHCC credentials loaded: {\"keyPresent\":true,\"secretPresent\":true}"}
+{"timestamp":"2026-04-21T01:41:59.726Z","level":"LOG","message":"[WHCC SUCCESS]"}
+{"timestamp":"2026-04-21T01:41:59.726Z","level":"ERROR","message":"[ORDER FLOW FAILED]: {\"error\":\"IS_PRODUCTION is not defined\",\"paymentId\":\"BubiIyJeRmsFavAF1rLdxjkxEGUZY\",\"items\":[{\"title\":\"Sunset with Boat\",\"image\":\"images/misc/sunset_boat.png\",\"imageKey\":\"sunset_boat.png\",\"size\":\"12x12\",\"material\":\"Metal\",\"finish\":\"semi-gloss\",\"price\":154}]}"}
+{"timestamp":"2026-04-21T01:41:59.865Z","level":"LOG","message":"[SQUARE CANCELED]: BubiIyJeRmsFavAF1rLdxjkxEGUZY"}
+{"timestamp":"2026-04-21T01:42:50.873Z","level":"LOG","message":"REQUEST: GET /"}
+{"timestamp":"2026-04-21T02:36:57.633Z","level":"LOG","message":"REQUEST: GET /"}

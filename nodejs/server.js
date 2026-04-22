@@ -16,6 +16,23 @@ console.log("SMTP_HOST =", process.env.SMTP_HOST);
 console.log("SMTP_PORT =", process.env.SMTP_PORT);
 console.log("SMTP_USER =", process.env.SMTP_USER);
 console.log("SMTP_PASS exists =", !!process.env.SMTP_PASS);
+console.log("[SQUARE CONFIG CHECK]", {
+  squareEnvironment: process.env.SQUARE_ENVIRONMENT,
+  appIdPrefix: process.env.SQUARE_APP_ID?.slice(0, 12) || null,
+  locationId: process.env.SQUARE_LOCATION_ID || null,
+});
+console.log("[ENV CHECK]", {
+  nodeEnv: process.env.NODE_ENV || null,
+  squareEnvironment: process.env.SQUARE_ENVIRONMENT || null,
+  hasSquareAppId: !!process.env.SQUARE_APP_ID,
+  hasSquareLocationId: !!process.env.SQUARE_LOCATION_ID,
+  hasSquareAccessToken: !!process.env.SQUARE_ACCESS_TOKEN,
+  hasWhccConsumerKey: !!process.env.WHCC_CONSUMER_KEY,
+  hasWhccConsumerSecret: !!process.env.WHCC_CONSUMER_SECRET,
+  hasDbHost: !!process.env.DB_HOST,
+  hasDbUser: !!process.env.DB_USER,
+  hasDbName: !!process.env.DB_NAME,
+});
 
 const MATERIAL_DB_MAP = {
   poster: "Poster",
@@ -296,6 +313,8 @@ app.get("/api/pricing", checkAdmin, async (req, res) => {
 });
 
 app.get("/api/public-pricing", async (req, res) => {
+  console.log("[HIT] /api/public-pricing");
+
   try {
     const [rows] = await db.execute(`
       SELECT material, size, finish, price
@@ -304,10 +323,11 @@ app.get("/api/public-pricing", async (req, res) => {
       ORDER BY material, size, finish
     `);
 
-    res.json(rows);
+    console.log("[OK] /api/public-pricing rowCount =", rows.length);
+    return res.json(rows);
   } catch (err) {
-    console.error("Failed to load public pricing:", err);
-    res.status(500).json({ error: "Failed to load public pricing." });
+    console.error("[FAIL] /api/public-pricing:", err);
+    return res.status(500).json({ error: "Failed to load public pricing." });
   }
 });
 
@@ -1003,13 +1023,22 @@ const squareClient = new SquareClient({
 ============================= */
 
 app.get("/api/config/square", (req, res) => {
+  console.log("[HIT] /api/config/square");
+
   const appId = process.env.SQUARE_APP_ID;
   const locationId = process.env.SQUARE_LOCATION_ID;
   const environment = String(
     process.env.SQUARE_ENVIRONMENT || "sandbox",
   ).toLowerCase();
 
+  console.log("[SQUARE CONFIG CHECK]", {
+    hasAppId: !!appId,
+    hasLocationId: !!locationId,
+    environment,
+  });
+
   if (!appId || !locationId) {
+    console.error("[FAIL] /api/config/square missing env");
     return res.status(500).json({
       error:
         "Missing Square configuration. Check SQUARE_APP_ID and SQUARE_LOCATION_ID.",
@@ -1337,16 +1366,35 @@ INSERT INTO orders (
 
       await db.execute(
         `
+UPDATE orders
+SET
+  status = ?,
+  whcc_status = ?,
+  whcc_confirmation_id = ?,
+  whcc_error = ?
+WHERE square_payment_id = ?
+`,
+        [
+          whccSucceeded ? "paid" : "cancelled",
+          whccSucceeded ? JSON.stringify(whccResult) : null,
+          whccSucceeded ? whccResult?.confirmationId || null : null,
+          whccErrorMessage,
+          squarePaymentId,
+        ],
+      );
+
+      if (whccSucceeded) {
+        await db.execute(
+          `
     UPDATE orders
     SET
-      status = ?,
-      whcc_status = ?,
-      whcc_confirmation_id = ?,
-      whcc_error = ?
+      needs_manual_review = 1,
+      manual_review_reason = ?
     WHERE square_payment_id = ?
     `,
-        ["cancelled", null, null, whccErrorMessage, squarePaymentId],
-      );
+          ["WHCC succeeded but a later step failed", squarePaymentId],
+        );
+      }
 
       return res.status(500).json({
         error: `Order could not be completed: ${whccErrorMessage}`,
@@ -1572,6 +1620,63 @@ ORDER BY created_at DESC
   } catch (err) {
     console.error("Error loading orders:", err);
     res.status(500).json({ error: "Failed to load orders" });
+  }
+});
+
+app.get("/api/admin/schema-check", checkAdmin, async (req, res) => {
+  try {
+    const [rows] = await db.execute(`
+      SELECT COLUMN_NAME
+      FROM INFORMATION_SCHEMA.COLUMNS
+      WHERE TABLE_SCHEMA = DATABASE()
+        AND TABLE_NAME = 'orders'
+    `);
+
+    const actualColumns = new Set(rows.map((r) => r.COLUMN_NAME));
+
+    const requiredColumns = [
+      "square_payment_id",
+      "square_order_id",
+      "customer_name",
+      "customer_email",
+      "customer_phone",
+      "customer_address",
+      "customer_city",
+      "customer_state",
+      "customer_zip",
+      "order_total",
+      "currency",
+      "items_json",
+      "status",
+      "estimated_whcc_subtotal",
+      "estimated_whcc_tax",
+      "estimated_whcc_total",
+      "estimated_whcc_product_cost",
+      "estimated_whcc_shipping_cost",
+      "estimated_profit",
+      "estimated_profit_margin",
+      "whcc_status",
+      "whcc_confirmation_id",
+      "whcc_error",
+      "whcc_subtotal",
+      "whcc_tax",
+      "whcc_total",
+      "whcc_product_cost",
+      "whcc_shipping_cost",
+      "actual_profit",
+      "actual_profit_margin",
+      "whcc_cost_json",
+    ];
+
+    const missing = requiredColumns.filter((col) => !actualColumns.has(col));
+
+    return res.json({
+      ok: missing.length === 0,
+      missing,
+    });
+  } catch (err) {
+    console.error("Schema check failed:", err);
+    return res.status(500).json({ error: "Schema check failed" });
   }
 });
 

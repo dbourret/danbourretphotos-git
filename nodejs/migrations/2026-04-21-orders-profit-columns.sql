@@ -1,0 +1,5 @@
+ALTER TABLE orders
+ADD COLUMN actual_profit DECIMAL(10,2) DEFAULT NULL,
+ADD COLUMN actual_profit_margin DECIMAL(6,2) DEFAULT NULL,
+ADD COLUMN estimated_profit DECIMAL(10,2) DEFAULT NULL,
+ADD COLUMN estimated_profit_margin DECIMAL(6,2) DEFAULT NULL;

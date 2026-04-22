@@ -59,12 +59,16 @@ let pricingLoaded = false;
 async function loadPricing() {
   try {
     const res = await fetch("/api/public-pricing");
+    const text = await res.text();
+
+    console.log("/api/public-pricing status =", res.status);
+    console.log("/api/public-pricing raw body =", text);
 
     if (!res.ok) {
-      throw new Error(`Failed to load pricing: ${res.status}`);
+      throw new Error(`Failed to load pricing: ${res.status} ${text}`);
     }
 
-    const rows = await res.json();
+    const rows = text ? JSON.parse(text) : [];
 
     pricingData = Array.isArray(rows) ? rows : [];
     pricingLoaded = true;
@@ -2231,7 +2235,16 @@ async function initSquare() {
   squareInitPromise = (async () => {
     try {
       const res = await fetch("/api/config/square");
-      const config = await res.json();
+      const text = await res.text();
+
+      console.log("/api/config/square status =", res.status);
+      console.log("/api/config/square raw body =", text);
+
+      if (!res.ok) {
+        throw new Error(`Square config failed: ${res.status} ${text}`);
+      }
+
+      const config = text ? JSON.parse(text) : {};
 
       console.log("Square config:", config);
 

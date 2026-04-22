@@ -1,0 +1,3 @@
+ALTER TABLE orders
+ADD COLUMN needs_manual_review TINYINT(1) NOT NULL DEFAULT 0,
+ADD COLUMN manual_review_reason TEXT DEFAULT NULL;
