@@ -582,11 +582,28 @@ function formatSelectionsForHtml(selections) {
       const finish = escapeHtml(item.finish || "Not specified");
       const price = formatMoney(Number(item.price || 0));
 
+      // ✅ THIS IS THE NEW PART (thumbnail URL)
+      const imageUrl = `https://localhost:3000/images/email_thumbnails/${item.imageKey}`;
+
       return `
         <div style="padding:18px;border:1px solid #eadfca;border-radius:16px;background:#ffffff;margin-bottom:18px;">
+          
           <div style="font-size:16px;line-height:1.4;font-weight:700;color:#111827;margin:0 0 14px 0;">
             ${index + 1}. ${title}
           </div>
+
+          <!-- ✅ THUMBNAIL -->
+          <img
+            src="${imageUrl}"
+            alt="${title}"
+            style="
+              width:150px;
+              height:auto;
+              border-radius:6px;
+              display:block;
+              margin-bottom:12px;
+            "
+          />
 
           <div style="font-size:14px;line-height:1.8;color:#374151;">
             <div><strong>Size:</strong> ${size}</div>
