@@ -301,6 +301,107 @@
         color: #111;
         border-color: #d6b36a;
       }
+
+      .dashboard-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px;
+        margin-top: 18px;
+      }
+
+      .dashboard-card {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        padding: 20px;
+        border: 1px solid #2a2a2a;
+        border-radius: 16px;
+        background: linear-gradient(180deg, #1b1b1b 0%, #131313 100%);
+      }
+
+      .dashboard-card h3 {
+        margin: 0;
+        font-size: 20px;
+      }
+
+      .dashboard-card p {
+        margin: 0;
+        color: #cfcfcf;
+        line-height: 1.6;
+      }
+
+      .dashboard-card button {
+        margin-top: 8px;
+        align-self: flex-start;
+      }
+
+      .material-filter-bar {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin: 16px 0 20px;
+      }
+
+      .material-filter-btn {
+        padding: 10px 14px;
+        border: 1px solid #444;
+        border-radius: 999px;
+        background: #1a1a1a;
+        color: #fff;
+        font-weight: 600;
+      }
+
+      .material-filter-btn:hover {
+        background: #262626;
+      }
+
+      .material-filter-btn.active {
+        background: #d6b36a;
+        color: #111;
+        border-color: #d6b36a;
+      }
+
+      .table-cell-wrap {
+        max-width: 520px;
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+        line-height: 1.6;
+      }
+
+      .view-btn-cell {
+        text-align: center;
+      }
+
+      .view-btn-cell button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 110px;
+      }
+
+      .orders-pagination {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin: 18px 0 0;
+      }
+
+      .square-link {
+        color: #d6b36a;
+        text-decoration: none;
+        font-weight: 700;
+      }
+
+      .square-link:hover {
+        text-decoration: underline;
+      }
+
+      @media (max-width: 900px) {
+        .dashboard-grid {
+          grid-template-columns: 1fr;
+        }
+      }
     </style>
   </head>
   <body>
@@ -327,7 +428,8 @@
       </div>
 
       <div class="admin-tabs">
-        <button class="tab-btn active" data-tab="pricing-tab">Pricing</button>
+        <button class="tab-btn active" data-tab="dashboard-tab">Home</button>
+        <button class="tab-btn" data-tab="pricing-tab">Pricing</button>
         <button class="tab-btn" data-tab="orders-tab">Orders</button>
         <button class="tab-btn" data-tab="contacts-tab">
           Contact Submissions
@@ -336,7 +438,57 @@
 
       <div id="admin-status" class="status"></div>
 
-      <div id="pricing-tab" class="tab-section active">
+      <div id="dashboard-tab" class="tab-section active">
+        <h2>What would you like to do?</h2>
+
+        <div class="dashboard-grid">
+          <div class="dashboard-card">
+            <h3>Pricing</h3>
+            <p>Manage materials, sizes, finishes, and pricing.</p>
+            <button onclick="goToTab('pricing-tab')">Go to Pricing</button>
+          </div>
+
+          <div class="dashboard-card">
+            <h3>Orders</h3>
+            <p>View recent orders, status, and profit details.</p>
+            <button onclick="goToTab('orders-tab')">Go to Orders</button>
+          </div>
+
+          <div class="dashboard-card">
+            <h3>Contact Submissions</h3>
+            <p>Review incoming messages from your contact form.</p>
+            <button onclick="goToTab('contacts-tab')">
+              Go to Contact Submissions
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div id="dashboard-tab" class="tab-section active">
+        <h2>What would you like to do?</h2>
+
+        <div class="dashboard-grid">
+          <div class="dashboard-card">
+            <h3>Pricing</h3>
+            <p>Manage materials, sizes, finishes, and pricing.</p>
+            <button onclick="goToTab('pricing-tab')">Go to Pricing</button>
+          </div>
+
+          <div class="dashboard-card">
+            <h3>Orders</h3>
+            <p>View recent orders, profits, and fulfillment status.</p>
+            <button onclick="goToTab('orders-tab')">View Orders</button>
+          </div>
+
+          <div class="dashboard-card">
+            <h3>Contact Submissions</h3>
+            <p>Read customer inquiries and messages.</p>
+            <button onclick="goToTab('contacts-tab')">View Messages</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="pricing-tab" class="tab-section">
         <h2>Add New Price</h2>
 
         <div class="form-row">
@@ -345,6 +497,42 @@
           <input type="text" id="new-finish" placeholder="Finish" />
           <input type="number" id="new-price" placeholder="Price" step="0.01" />
           <button onclick="addPrice()">Add Price</button>
+        </div>
+
+        <div>
+          <h2 style="margin-bottom: 8px">Select your Material</h2>
+          <div class="material-filter-bar">
+            <button
+              class="material-filter-btn active"
+              onclick="setMaterialFilter('all', this)"
+            >
+              All
+            </button>
+            <button
+              class="material-filter-btn"
+              onclick="setMaterialFilter('Canvas', this)"
+            >
+              Canvas
+            </button>
+            <button
+              class="material-filter-btn"
+              onclick="setMaterialFilter('Metal', this)"
+            >
+              Metal
+            </button>
+            <button
+              class="material-filter-btn"
+              onclick="setMaterialFilter('Poster', this)"
+            >
+              Poster
+            </button>
+            <button
+              class="material-filter-btn"
+              onclick="setMaterialFilter('Wood', this)"
+            >
+              Wood
+            </button>
+          </div>
         </div>
 
         <div style="margin: 20px 0">
@@ -377,108 +565,113 @@
         <div style="margin: 12px 0 18px">
           <button onclick="loadOrders()">Refresh Orders</button>
         </div>
-      </div>
-      <div
-        id="orders-dashboard"
-        style="
-          display: grid;
-          grid-template-columns: repeat(6, minmax(0, 1fr));
-          gap: 14px;
-          margin: 0 0 18px;
-        "
-      >
-        <div class="metric-card">
-          <div class="metric-label">Total Orders</div>
-          <div class="metric-value" id="metric-total-orders">0</div>
-        </div>
-        <div class="metric-card">
-          <div class="metric-label">Revenue</div>
-          <div class="metric-value" id="metric-revenue">$0.00</div>
-        </div>
-        <div class="metric-card">
-          <div class="metric-label">Est Profit</div>
-          <div class="metric-value" id="metric-est-profit">$0.00</div>
-        </div>
-        <div class="metric-card">
-          <div class="metric-label">Avg Margin</div>
-          <div class="metric-value" id="metric-avg-margin">0.00%</div>
-        </div>
-        <div class="metric-card">
-          <div class="metric-label">Shipped</div>
-          <div class="metric-value" id="metric-shipped">0</div>
-        </div>
-        <div class="metric-card">
-          <div class="metric-label">Completed</div>
-          <div class="metric-value" id="metric-completed">0</div>
-        </div>
-      </div>
 
-      <div
-        id="order-filters"
-        style="display: flex; gap: 10px; flex-wrap: wrap; margin: 0 0 18px"
-      >
-        <button
-          class="order-filter-btn active"
-          data-status="all"
-          onclick="setOrderFilter('all', this)"
+        <div
+          id="orders-dashboard"
+          style="
+            display: grid;
+            grid-template-columns: repeat(6, minmax(0, 1fr));
+            gap: 14px;
+            margin: 0 0 18px;
+          "
         >
-          All
-        </button>
-        <button
-          class="order-filter-btn"
-          data-status="paid"
-          onclick="setOrderFilter('paid', this)"
-        >
-          Paid
-        </button>
-        <button
-          class="order-filter-btn"
-          data-status="processing"
-          onclick="setOrderFilter('processing', this)"
-        >
-          Processing
-        </button>
-        <button
-          class="order-filter-btn"
-          data-status="shipped"
-          onclick="setOrderFilter('shipped', this)"
-        >
-          Shipped
-        </button>
-        <button
-          class="order-filter-btn"
-          data-status="completed"
-          onclick="setOrderFilter('completed', this)"
-        >
-          Completed
-        </button>
-        <button
-          class="order-filter-btn"
-          data-status="cancelled"
-          onclick="setOrderFilter('cancelled', this)"
-        >
-          Cancelled
-        </button>
-      </div>
+          <div class="metric-card">
+            <div class="metric-label">Total Orders</div>
+            <div class="metric-value" id="metric-total-orders">0</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Revenue</div>
+            <div class="metric-value" id="metric-revenue">$0.00</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Est Profit</div>
+            <div class="metric-value" id="metric-est-profit">$0.00</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Avg Margin</div>
+            <div class="metric-value" id="metric-avg-margin">0.00%</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Shipped</div>
+            <div class="metric-value" id="metric-shipped">0</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Completed</div>
+            <div class="metric-value" id="metric-completed">0</div>
+          </div>
+        </div>
 
-      <table id="orders-table">
-        <thead>
-          <tr>
-            <th>Order ID</th>
-            <th>Customer</th>
-            <th>Email</th>
-            <th>Total</th>
-            <th>Date</th>
-            <th>Status</th>
-            <th>Details</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-    </div>
+        <div
+          id="order-filters"
+          style="display: flex; gap: 10px; flex-wrap: wrap; margin: 0 0 18px"
+        >
+          <button
+            class="order-filter-btn active"
+            data-status="all"
+            onclick="setOrderFilter('all', this)"
+          >
+            All
+          </button>
+          <button
+            class="order-filter-btn"
+            data-status="paid"
+            onclick="setOrderFilter('paid', this)"
+          >
+            Paid
+          </button>
+          <button
+            class="order-filter-btn"
+            data-status="processing"
+            onclick="setOrderFilter('processing', this)"
+          >
+            Processing
+          </button>
+          <button
+            class="order-filter-btn"
+            data-status="shipped"
+            onclick="setOrderFilter('shipped', this)"
+          >
+            Shipped
+          </button>
+          <button
+            class="order-filter-btn"
+            data-status="completed"
+            onclick="setOrderFilter('completed', this)"
+          >
+            Completed
+          </button>
+          <button
+            class="order-filter-btn"
+            data-status="cancelled"
+            onclick="setOrderFilter('cancelled', this)"
+          >
+            Cancelled
+          </button>
+        </div>
 
-    <div id="contacts-tab" class="tab-section">
-      <h2>Contact Submissions</h2>
+        <table id="orders-table">
+  <thead>
+    <tr>
+      <th>Order ID</th>
+      <th>Customer</th>
+      <th>Email</th>
+      <th>Total</th>
+      <th>Date</th>
+      <th>Status</th>
+      <th>Details</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+
+<div class="orders-pagination">
+  <button onclick="showMoreOrders()">Show next 5 rows</button>
+  <button onclick="showAllOrders()">Show all results</button>
+</div>
+</div>
+
+<div id="contacts-tab" class="tab-section">
+  <h2>Contact Submissions</h2>
 
       <div style="margin: 12px 0 18px">
         <button onclick="loadContactSubmissions()">
@@ -504,6 +697,71 @@
     <script>
       let adminPassword = "";
       let currentOrderFilter = "all";
+      let currentMaterialFilter = "all";
+      let ordersVisibleCount = 5;
+
+      function goToTab(tabId) {
+        document.querySelectorAll(".tab-btn").forEach((btn) => {
+          btn.classList.remove("active");
+          if (btn.dataset.tab === tabId) {
+            btn.classList.add("active");
+          }
+        });
+
+        document.querySelectorAll(".tab-section").forEach((section) => {
+          section.classList.remove("active");
+        });
+
+        const targetSection = document.getElementById(tabId);
+        if (targetSection) {
+          targetSection.classList.add("active");
+        }
+
+        if (tabId === "orders-tab") {
+          ordersVisibleCount = 5;
+          loadOrders();
+        }
+
+        if (tabId === "contacts-tab") {
+          loadContactSubmissions();
+        }
+
+        if (tabId === "pricing-tab") {
+          loadPricing();
+        }
+      }
+
+      function setMaterialFilter(material, btn) {
+        currentMaterialFilter = material;
+
+        document
+          .querySelectorAll(".material-filter-btn")
+          .forEach((b) => b.classList.remove("active"));
+
+        btn.classList.add("active");
+
+        loadPricing();
+      }
+
+      function goToTab(tabId) {
+        document.querySelectorAll(".tab-btn").forEach((b) => {
+          b.classList.remove("active");
+          if (b.dataset.tab === tabId) {
+            b.classList.add("active");
+          }
+        });
+
+        document.querySelectorAll(".tab-section").forEach((s) => {
+          s.classList.remove("active");
+        });
+
+        const section = document.getElementById(tabId);
+        if (section) section.classList.add("active");
+
+        if (tabId === "orders-tab") loadOrders();
+        if (tabId === "contacts-tab") loadContactSubmissions();
+        if (tabId === "pricing-tab") loadPricing();
+      }
 
       async function cycleOrderStatus(orderId, currentStatus) {
         const orderFlow = [
@@ -560,9 +818,9 @@
             }
 
             if (target === "orders-tab") {
+              ordersVisibleCount = 5;
               await loadOrders();
             }
-
             if (target === "contacts-tab") {
               await loadContactSubmissions();
             }
@@ -632,7 +890,7 @@
         setStatus("", false, "login-status");
         showAdminView();
         setStatus("Logged in successfully.");
-        loadPricing();
+        goToTab("dashboard-tab");
       }
 
       function logout() {
@@ -675,11 +933,16 @@
           const size = String(row.size || "").toLowerCase();
           const finish = String(row.finish || "").toLowerCase();
 
-          return (
+          const matchesSearch =
             material.includes(searchTerm) ||
             size.includes(searchTerm) ||
-            finish.includes(searchTerm)
-          );
+            finish.includes(searchTerm);
+
+          const matchesMaterial =
+            currentMaterialFilter === "all" ||
+            material === currentMaterialFilter.toLowerCase();
+
+          return matchesSearch && matchesMaterial;
         });
 
         const tbody = document.querySelector("#pricing-table tbody");
@@ -749,7 +1012,7 @@
       <td>${submission.email || ""}</td>
       <td>${submission.subject || ""}</td>
       <td>${formatDate(submission.created_at)}</td>
-      <td style="max-width: 320px; white-space: pre-wrap;">${submission.message || ""}</td>
+      <td class="table-cell-wrap">${submission.message || ""}</td>
     `;
 
           tbody.appendChild(tr);
@@ -786,7 +1049,7 @@
 
         tbody.innerHTML = "";
 
-        filteredOrders.forEach((order) => {
+        filteredOrders.slice(0, ordersVisibleCount).forEach((order) => {
           console.log("order id/status =", order.id, order.status);
 
           const estimatedProfit = Number(order.estimated_profit || 0);
@@ -819,6 +1082,7 @@
     ${getStatusLabel(normalizedStatus)}
   </div>
 </td>
+<td class="view-btn-cell">
   <button onclick="toggleOrderDetails(${order.id}, this)">View</button>
 </td>
   `;
@@ -919,6 +1183,22 @@
   <div><strong>ZIP:</strong> ${order.customer_zip || ""}</div>
   <hr style="border:none; border-top:1px solid #2a2a2a; margin:14px 0;">
   <div><strong>Customer Total:</strong> $${Number(order.order_total || 0).toFixed(2)}</div>
+  <div>
+  <strong>Square Payment ID:</strong>
+  ${
+    order.square_payment_id
+      ? `<a class="square-link" href="https://app.squareup.com/login?lang_code=en-us" target="_blank" rel="noopener noreferrer">${order.square_payment_id}</a>`
+      : "Not available"
+  }
+</div>
+<div>
+  <strong>Square Receipt:</strong>
+  ${
+    order.receipt_url
+      ? `<a class="square-link" href="${order.receipt_url}" target="_blank" rel="noopener noreferrer">View Receipt</a>`
+      : "Not available"
+  }
+</div>
     ${(() => {
       const useActual = actualCost > 0;
 
@@ -1053,6 +1333,16 @@
         if (btn) {
           btn.textContent = isHidden ? "View Details" : "Hide Details";
         }
+      }
+
+      function showMoreOrders() {
+        ordersVisibleCount += 5;
+        loadOrders();
+      }
+
+      function showAllOrders() {
+        ordersVisibleCount = 9999;
+        loadOrders();
       }
 
       function setOrderFilter(status, btn) {
@@ -1207,7 +1497,7 @@
         if (savedPassword) {
           adminPassword = savedPassword;
           showAdminView();
-          loadPricing();
+          goToTab("dashboard-tab");
         } else {
           showLoginView();
         }

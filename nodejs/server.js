@@ -967,16 +967,28 @@ Dan Bourret Photos
         </p>
       </div>
 
-              <div style="padding:28px 32px;background:#faf7f1;">
-          <div style="padding:18px;border:1px solid #eadfca;border-radius:16px;background:#ffffff;margin-bottom:18px;">
-            <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8b7355;margin-bottom:10px;">
-              Order Summary
-            </div>
-            <div style="font-size:14px;line-height:1.8;color:#374151;">
-              <div><strong>Payment ID:</strong> ${escapeHtml(paymentId || "Not available")}</div>
-              <div><strong>Total:</strong> ${formatMoney(Number(amount || 0) / 100)}</div>
-            </div>
-          </div>
+              <div style="padding:18px;border:1px solid #eadfca;border-radius:16px;background:#ffffff;margin-bottom:18px;">
+  <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8b7355;margin-bottom:10px;">
+    Order Summary
+  </div>
+  <div style="font-size:14px;line-height:1.8;color:#374151;">
+    <div><strong>Payment ID:</strong> ${escapeHtml(paymentId || "Not available")}</div>
+    <div><strong>Total:</strong> ${formatMoney(Number(amount || 0) / 100)}</div>
+  </div>
+</div>
+
+<div style="padding:18px;border:1px solid #eadfca;border-radius:16px;background:#ffffff;margin-bottom:18px;">
+  <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8b7355;margin-bottom:10px;">
+    Receipt
+  </div>
+  <div style="font-size:14px;line-height:1.8;color:#374151;">
+    ${
+      receiptUrl
+        ? `<a href="${escapeHtml(receiptUrl)}" target="_blank" rel="noopener noreferrer" style="color:#9f7a2f;text-decoration:none;font-weight:700;">View your Square receipt</a>`
+        : "Receipt URL not available"
+    }
+  </div>
+</div>
 
           <div style="margin-bottom:18px;">
             <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8b7355;margin:0 0 10px 0;">
@@ -1038,6 +1050,14 @@ const squareClient = new SquareClient({
 /* =============================
    SQUARE CONFIG
 ============================= */
+
+async function getSquarePayment(paymentId) {
+  const paymentResponse = await squareClient.payments.get({
+    paymentId,
+  });
+
+  return paymentResponse.result?.payment || paymentResponse.payment || null;
+}
 
 app.get("/api/config/square", (req, res) => {
   console.log("[HIT] /api/config/square");
@@ -1176,6 +1196,7 @@ app.post("/api/payments/square", async (req, res) => {
 
     const squarePaymentId = payment?.id || null;
     const squareOrderId = payment?.orderId || null;
+    const receiptUrl = payment?.receiptUrl || null;
 
     if (!squarePaymentId) {
       throw new Error("Missing squarePaymentId before capture/cancel");
@@ -1219,6 +1240,7 @@ app.post("/api/payments/square", async (req, res) => {
 INSERT INTO orders (
   square_payment_id,
   square_order_id,
+  receipt_url,
   customer_name,
   customer_email,
   customer_phone,
@@ -1237,11 +1259,12 @@ INSERT INTO orders (
   estimated_whcc_shipping_cost,
   estimated_profit,
   estimated_profit_margin
-) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `,
         [
           squarePaymentId,
           squareOrderId,
+          receiptUrl,
           customerName,
           customerEmail,
           customerPhone,
@@ -1276,6 +1299,7 @@ INSERT INTO orders (
     let whccErrorMessage = null;
     let paymentCaptured = false;
     let whccSucceeded = false; // ✅ ADD THIS
+    let finalReceiptUrl = receiptUrl || null;
 
     try {
       logWhcc("[WHCC] starting fulfillment");
@@ -1315,6 +1339,28 @@ INSERT INTO orders (
         await completeSquarePayment(squarePaymentId);
         paymentCaptured = true;
         logOrder("[SQUARE CAPTURED]:", squarePaymentId);
+
+        let completedPayment = null;
+        let attempts = 0;
+
+        while (attempts < 5) {
+          completedPayment = await getSquarePayment(squarePaymentId);
+
+          const url =
+            completedPayment?.receiptUrl || completedPayment?.receipt_url;
+
+          if (url) {
+            finalReceiptUrl = url;
+            break;
+          }
+
+          await new Promise((r) => setTimeout(r, 500)); // wait 500ms
+          attempts++;
+        }
+
+        logOrder("[SQUARE RECEIPT URL]:", finalReceiptUrl || "not available");
+
+        logOrder("[SQUARE RECEIPT URL]:", finalReceiptUrl || "not available");
       }
 
       const whccCosts = extractWhccCosts(whccResult);
@@ -1332,24 +1378,26 @@ INSERT INTO orders (
 
       await db.execute(
         `
-    UPDATE orders
-    SET
-      status = ?,
-      whcc_status = ?,
-      whcc_confirmation_id = ?,
-      whcc_error = ?,
-      whcc_subtotal = ?,
-      whcc_tax = ?,
-      whcc_total = ?,
-      whcc_product_cost = ?,
-      whcc_shipping_cost = ?,
-      actual_profit = ?,
-      actual_profit_margin = ?,
-      whcc_cost_json = ?
-    WHERE square_payment_id = ?
-    `,
+UPDATE orders
+SET
+  status = ?,
+  receipt_url = ?,
+  whcc_status = ?,
+  whcc_confirmation_id = ?,
+  whcc_error = ?,
+  whcc_subtotal = ?,
+  whcc_tax = ?,
+  whcc_total = ?,
+  whcc_product_cost = ?,
+  whcc_shipping_cost = ?,
+  actual_profit = ?,
+  actual_profit_margin = ?,
+  whcc_cost_json = ?
+WHERE square_payment_id = ?
+`,
         [
           "paid",
+          finalReceiptUrl,
           JSON.stringify(whccResult),
           whccResult?.confirmationId || null,
           null,
@@ -1423,7 +1471,7 @@ WHERE square_payment_id = ?
     try {
       await sendOrderNotification({
         paymentId: payment?.id || null,
-        receiptUrl: payment?.receiptUrl || null,
+        receiptUrl: finalReceiptUrl,
         amount: Number(amountInCents),
         customer: orderDetails.customer || {},
         selections: orderDetails.items || orderDetails.selections || [],
@@ -1445,7 +1493,7 @@ WHERE square_payment_id = ?
       success: true,
       paymentId: payment?.id || null,
       status: "COMPLETED",
-      receiptUrl: payment?.receiptUrl || null,
+      receiptUrl: finalReceiptUrl,
       redirectUrl: `/success.html?paymentId=${encodeURIComponent(payment?.id || "")}`,
     });
   } catch (error) {
@@ -1603,6 +1651,9 @@ app.get("/api/orders", async (req, res) => {
     const [rows] = await db.query(`
   SELECT
   id,
+  square_payment_id,
+  square_order_id,
+  receipt_url,
   customer_name,
   customer_email,
   customer_phone,
