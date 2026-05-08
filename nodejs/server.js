@@ -1531,7 +1531,7 @@ app.get("/api/whcc/verify-webhook", async (req, res) => {
   try {
     const tokenData = await getWhccAccessToken();
 
-    const verifier = "bc7a541e-1fec-40de-928e-ccb011968d49";
+    const verifier = "74d8268a-1d9b-477b-969e-7edc2a19bbea";
 
     const response = await fetch(
       `${process.env.WHCC_BASE_URL}/api/callback/verify`,
