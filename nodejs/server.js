@@ -1527,6 +1527,48 @@ WHERE square_payment_id = ?
 /* =============================
    ROUTES
 ============================= */
+app.get("/api/whcc/verify-webhook", async (req, res) => {
+  try {
+    const tokenData = await getWhccAccessToken();
+
+    const verifier = "bc7a541e-1fec-40de-928e-ccb011968d49";
+
+    const response = await fetch(
+      `${process.env.WHCC_BASE_URL}/api/callback/verify`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${tokenData.Token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          verifier,
+        }),
+      },
+    );
+
+    const text = await response.text();
+
+    let data;
+    try {
+      data = JSON.parse(text);
+    } catch {
+      data = { raw: text };
+    }
+
+    console.log("WHCC VERIFY WEBHOOK RESPONSE:", data);
+
+    res.json({
+      success: response.ok,
+      status: response.status,
+      whccResponse: data,
+    });
+  } catch (err) {
+    console.error("VERIFY WEBHOOK ERROR:", err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
 app.get("/api/whcc/register-webhook", async (req, res) => {
   try {
     const tokenData = await getWhccAccessToken();
