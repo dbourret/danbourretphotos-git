@@ -1527,89 +1527,12 @@ WHERE square_payment_id = ?
 /* =============================
    ROUTES
 ============================= */
-app.get("/api/whcc/verify-webhook", async (req, res) => {
-  try {
-    const tokenData = await getWhccAccessToken();
-
-    const verifier = "74d8268a-1d9b-477b-969e-7edc2a19bbea";
-
-    const response = await fetch(
-      `${process.env.WHCC_BASE_URL}/api/callback/verify`,
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${tokenData.Token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          verifier,
-        }),
-      },
-    );
-
-    const text = await response.text();
-
-    let data;
-    try {
-      data = JSON.parse(text);
-    } catch {
-      data = { raw: text };
-    }
-
-    console.log("WHCC VERIFY WEBHOOK RESPONSE:", data);
-
-    res.json({
-      success: response.ok,
-      status: response.status,
-      whccResponse: data,
-    });
-  } catch (err) {
-    console.error("VERIFY WEBHOOK ERROR:", err);
-    res.status(500).json({ error: err.message });
-  }
-});
-
-app.get("/api/whcc/register-webhook", async (req, res) => {
-  try {
-    const tokenData = await getWhccAccessToken();
-
-    const webhookUrl = "https://danbourretphotos.com/api/whcc/webhook-test";
-
-    const response = await fetch(
-      `${process.env.WHCC_BASE_URL}/api/callback/create`,
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${tokenData.Token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          callbackUri: webhookUrl,
-        }),
-      },
-    );
-
-    const text = await response.text();
-
-    let data;
-    try {
-      data = JSON.parse(text);
-    } catch {
-      data = { raw: text };
-    }
-
-    console.log("WHCC REGISTER WEBHOOK RESPONSE:", data);
-
-    res.json({
-      success: true,
-      webhookUrl,
-      whccResponse: data,
-    });
-  } catch (err) {
-    console.error("REGISTER WEBHOOK ERROR:", err);
-    res.status(500).json({ error: err.message });
-  }
-});
+/* =============================
+   WHCC WEBHOOK REGISTRATION
+   Completed on 2026-05-08.
+   Webhook verified by WHCC.
+   Do not re-register unless changing webhook URL.
+============================= */
 
 app.get("/api/whcc/test-auth", async (req, res) => {
   try {
