@@ -129,7 +129,6 @@ function calculateProfitMetrics(orderTotal, whccTotal) {
 }
 
 const app = express();
-app.use(express.json());
 const PORT = Number(process.env.PORT) || 3000;
 const publicDir = path.join(__dirname, "public");
 
@@ -245,8 +244,18 @@ app.use((req, res, next) => {
    BODY PARSING
 ============================= */
 
-app.use(express.json({ limit: "1mb" }));
+app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true }));
+app.post("/api/whcc/webhook-test", async (req, res) => {
+  console.log("===== WHCC WEBHOOK TEST RECEIVED =====");
+  console.log("HEADERS:");
+  console.log(JSON.stringify(req.headers, null, 2));
+  console.log("BODY:");
+  console.log(JSON.stringify(req.body, null, 2));
+  console.log("======================================");
+
+  res.status(200).send("ok");
+});
 
 /* =============================
    SECURITY / CSP
@@ -860,17 +869,18 @@ ${notes || "None"}
           </div>
 
           <div style="padding:18px;border:1px solid #eadfca;border-radius:16px;background:#ffffff;margin-bottom:18px;">
-            <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8b7355;margin-bottom:10px;">
-              Receipt
-            </div>
-            <div style="font-size:14px;line-height:1.7;color:#374151;">
-              ${
-                receiptUrl
-                  ? `<a href="${escapeHtml(receiptUrl)}" target="_blank" rel="noopener noreferrer" style="color:#9f7a2f;text-decoration:none;font-weight:700;">Open Square receipt</a>`
-                  : "Receipt URL not available"
-              }
-            </div>
-          </div>
+  <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8b7355;margin-bottom:10px;">
+    Receipt
+  </div>
+  <div style="font-size:14px;line-height:1.8;color:#374151;">
+    ${
+      String(process.env.SQUARE_ENVIRONMENT || "").toLowerCase() ===
+        "production" && receiptUrl
+        ? `<a href="${escapeHtml(receiptUrl)}" target="_blank" rel="noopener noreferrer" style="color:#9f7a2f;text-decoration:none;font-weight:700;">View your Square receipt</a>`
+        : "Receipt not available in test mode"
+    }
+  </div>
+</div>
 
           <div style="padding:18px;border:1px solid #eadfca;border-radius:16px;background:#ffffff;margin-bottom:18px;">
             <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8b7355;margin-bottom:10px;">
@@ -967,52 +977,54 @@ Dan Bourret Photos
         </p>
       </div>
 
-              <div style="padding:18px;border:1px solid #eadfca;border-radius:16px;background:#ffffff;margin-bottom:18px;">
-  <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8b7355;margin-bottom:10px;">
-    Order Summary
-  </div>
-  <div style="font-size:14px;line-height:1.8;color:#374151;">
-    <div><strong>Payment ID:</strong> ${escapeHtml(paymentId || "Not available")}</div>
-    <div><strong>Total:</strong> ${formatMoney(Number(amount || 0) / 100)}</div>
-  </div>
-</div>
-
-<div style="padding:18px;border:1px solid #eadfca;border-radius:16px;background:#ffffff;margin-bottom:18px;">
-  <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8b7355;margin-bottom:10px;">
-    Receipt
-  </div>
-  <div style="font-size:14px;line-height:1.8;color:#374151;">
-    ${
-      receiptUrl
-        ? `<a href="${escapeHtml(receiptUrl)}" target="_blank" rel="noopener noreferrer" style="color:#9f7a2f;text-decoration:none;font-weight:700;">View your Square receipt</a>`
-        : "Receipt URL not available"
-    }
-  </div>
-</div>
-
-          <div style="margin-bottom:18px;">
-            <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8b7355;margin:0 0 10px 0;">
-              Ordered Items
-            </div>
-            ${formatSelectionsForHtml(selections)}
+      <div style="padding:28px 32px;background:#faf7f1;">
+        <div style="padding:18px;border:1px solid #eadfca;border-radius:16px;background:#ffffff;margin-bottom:18px;">
+          <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8b7355;margin-bottom:10px;">
+            Order Summary
           </div>
-
-          <div style="padding:18px;border:1px solid #eadfca;border-radius:16px;background:#ffffff;margin-bottom:18px;">
-            <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8b7355;margin-bottom:10px;">
-              Next Step
-            </div>
-            <div style="font-size:14px;line-height:1.8;color:#374151;">
-              We’ll notify you when your order ships.
-            </div>
-          </div>
-
-          <div style="padding:18px;border:1px solid #eadfca;border-radius:16px;background:#ffffff;">
-            <div style="font-size:14px;line-height:1.8;color:#374151;">
-              If you have any questions, just reply to this email.<br><br>
-              — Dan Bourret Photos
-            </div>
+          <div style="font-size:14px;line-height:1.8;color:#374151;">
+            <div><strong>Payment ID:</strong> ${escapeHtml(paymentId || "Not available")}</div>
+            <div><strong>Total:</strong> ${formatMoney(Number(amount || 0) / 100)}</div>
           </div>
         </div>
+
+        <div style="padding:18px;border:1px solid #eadfca;border-radius:16px;background:#ffffff;margin-bottom:18px;">
+          <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8b7355;margin-bottom:10px;">
+            Receipt
+          </div>
+          <div style="font-size:14px;line-height:1.7;color:#374151;">
+            ${
+              String(process.env.SQUARE_ENVIRONMENT || "").toLowerCase() ===
+                "production" && receiptUrl
+                ? `<a href="${escapeHtml(receiptUrl)}" target="_blank" rel="noopener noreferrer" style="color:#9f7a2f;text-decoration:none;font-weight:700;">View your Square receipt</a>`
+                : "Receipt not available in test mode"
+            }
+          </div>
+        </div>
+
+        <div style="margin-bottom:18px;">
+          <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8b7355;margin:0 0 10px 0;">
+            Ordered Items
+          </div>
+          ${formatSelectionsForHtml(selections)}
+        </div>
+
+        <div style="padding:18px;border:1px solid #eadfca;border-radius:16px;background:#ffffff;margin-bottom:18px;">
+          <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8b7355;margin-bottom:10px;">
+            Next Step
+          </div>
+          <div style="font-size:14px;line-height:1.8;color:#374151;">
+            We’ll notify you when your order ships.
+          </div>
+        </div>
+
+        <div style="padding:18px;border:1px solid #eadfca;border-radius:16px;background:#ffffff;">
+          <div style="font-size:14px;line-height:1.8;color:#374151;">
+            If you have any questions, just reply to this email.<br><br>
+            — Dan Bourret Photos
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 `;
@@ -1359,8 +1371,6 @@ INSERT INTO orders (
         }
 
         logOrder("[SQUARE RECEIPT URL]:", finalReceiptUrl || "not available");
-
-        logOrder("[SQUARE RECEIPT URL]:", finalReceiptUrl || "not available");
       }
 
       const whccCosts = extractWhccCosts(whccResult);
@@ -1567,6 +1577,28 @@ app.get("/api/whcc/catalog", async (req, res) => {
   }
 });
 
+app.put("/api/contact-submissions/:id/replied", async (req, res) => {
+  const adminPassword = req.headers.authorization?.split(" ")[1];
+
+  if (adminPassword !== process.env.ADMIN_PASSWORD) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+
+  const { id } = req.params;
+
+  try {
+    await db.execute(
+      "UPDATE contact_submissions SET replied = 1 WHERE id = ?",
+      [id],
+    );
+
+    res.json({ success: true });
+  } catch (err) {
+    console.error("Failed to mark contact submission as replied:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
 app.get("/api/contact-submissions", async (req, res) => {
   const authHeader = req.headers.authorization || "";
   const token = authHeader.replace("Bearer ", "").trim();
@@ -1577,15 +1609,9 @@ app.get("/api/contact-submissions", async (req, res) => {
 
   try {
     const [rows] = await db.query(`
-      SELECT
-        id,
-        name,
-        email,
-        subject,
-        message,
-        created_at
-      FROM contact_submissions
-      ORDER BY created_at DESC
+      SELECT id, name, email, subject, message, created_at, replied
+FROM contact_submissions
+ORDER BY created_at DESC
     `);
 
     res.json(rows);

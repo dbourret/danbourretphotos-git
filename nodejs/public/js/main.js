@@ -1672,7 +1672,7 @@ function showLightbox(index) {
     captionText.innerHTML = `
     ${baseCaption}
     <div style="font-size:0.8rem; color:#aaa; font-style:italic; margin-top:6px;">
-      Preview optimized for web — prints use full-resolution originals
+      Low-resolution preview — your print will be produced from a full-resolution image.
     </div>
   `;
   }
