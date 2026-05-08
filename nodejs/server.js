@@ -1542,7 +1542,7 @@ app.get("/api/whcc/register-webhook", async (req, res) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          Url: webhookUrl,
+          callbackUri: webhookUrl,
         }),
       },
     );
