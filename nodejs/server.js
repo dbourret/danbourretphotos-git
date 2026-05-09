@@ -1153,29 +1153,77 @@ async function sendShipmentEmail({ order, trackingNumber, trackingUrl }) {
 
   if (!customerEmail) return;
 
-  const subject = "Your order has shipped!";
+  const subject = "Your order has shipped — Dan Bourret Photos";
 
   const html = `
-    <div style="font-family: Arial; line-height: 1.6;">
-      <h2>Your order has shipped 🎉</h2>
-      <p>Hi ${customerName},</p>
-      <p>Your order is on the way!</p>
+  <div style="margin:0;padding:24px;background:#f5f5f5;font-family:Arial,Helvetica,sans-serif;color:#111827;">
+    <div style="max-width:720px;margin:0 auto;background:#0f0f10;border-radius:24px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.18);">
 
-      ${
-        trackingNumber
-          ? `<p><strong>Tracking Number:</strong> ${trackingNumber}</p>`
-          : ""
-      }
+      <!-- HEADER -->
+      <div style="padding:28px 32px;background:linear-gradient(180deg,#171717 0%,#101010 100%);border-bottom:1px solid rgba(255,255,255,0.08);">
+        <div style="font-size:12px;letter-spacing:0.22em;text-transform:uppercase;color:#d6b36a;margin-bottom:10px;">
+          Dan Bourret Photos
+        </div>
+        <h1 style="margin:0;font-size:28px;line-height:1.2;color:#ffffff;">
+          Your Order Has Shipped
+        </h1>
+        <p style="margin:10px 0 0;color:#d1d5db;font-size:15px;line-height:1.7;">
+          Your print is on the way and will be arriving soon.
+        </p>
+      </div>
 
-      ${
-        trackingUrl
-          ? `<p><a href="${trackingUrl}">Track your package</a></p>`
-          : ""
-      }
+      <!-- BODY -->
+      <div style="padding:28px 32px;background:#faf7f1;">
 
-      <p>Thank you for your order!</p>
-      <p>— Dan Bourret Photos</p>
+        <!-- SHIPPING INFO -->
+        <div style="padding:18px;border:1px solid #eadfca;border-radius:16px;background:#ffffff;margin-bottom:18px;">
+          <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8b7355;margin-bottom:10px;">
+            Shipping Details
+          </div>
+          <div style="font-size:14px;line-height:1.8;color:#374151;">
+            <div><strong>Name:</strong> ${customerName}</div>
+            ${
+              trackingNumber
+                ? `<div><strong>Tracking Number:</strong> ${trackingNumber}</div>`
+                : ""
+            }
+          </div>
+        </div>
+
+        <!-- TRACKING BUTTON -->
+        ${
+          trackingUrl
+            ? `
+        <div style="text-align:center;margin-bottom:18px;">
+          <a href="${trackingUrl}" target="_blank"
+            style="
+              display:inline-block;
+              padding:12px 20px;
+              background:#111827;
+              color:#ffffff;
+              text-decoration:none;
+              border-radius:8px;
+              font-weight:700;
+            ">
+            Track Your Shipment
+          </a>
+        </div>
+        `
+            : ""
+        }
+
+        <!-- MESSAGE -->
+        <div style="padding:18px;border:1px solid #eadfca;border-radius:16px;background:#ffffff;">
+          <div style="font-size:14px;line-height:1.8;color:#374151;">
+            Thank you again for your order.<br><br>
+            If you have any questions, just reply to this email.<br><br>
+            — Dan Bourret Photos
+          </div>
+        </div>
+
+      </div>
     </div>
+  </div>
   `;
 
   await transporter.sendMail({
