@@ -246,15 +246,117 @@ app.use((req, res, next) => {
 
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true }));
+
 app.post("/api/whcc/webhook-test", async (req, res) => {
   console.log("===== WHCC WEBHOOK TEST RECEIVED =====");
+
   console.log("HEADERS:");
   console.log(JSON.stringify(req.headers, null, 2));
+
+  // 👇 Normalize body (handles form + JSON)
+  const body = req.body;
+
   console.log("BODY:");
-  console.log(JSON.stringify(req.body, null, 2));
+  console.log(JSON.stringify(body, null, 2));
+
+  // 🚫 IMPORTANT: Do NOT process anything yet
+  // We are still in "observation mode"
+
   console.log("======================================");
 
   res.status(200).send("ok");
+});
+
+app.post("/api/whcc/webhook", async (req, res) => {
+  console.log("===== WHCC WEBHOOK RECEIVED =====");
+
+  const body = req.body;
+  console.log(JSON.stringify(body, null, 2));
+
+  try {
+    // ⚠️ These field names depend on WHCC payload
+    // We’ll log first, then adjust if needed
+    const confirmationId =
+      body?.confirmationId || body?.ConfirmationId || body?.orderId || null;
+
+    const trackingNumber = body?.trackingNumber || body?.TrackingNumber || null;
+
+    const trackingCarrier = body?.trackingCarrier || body?.Carrier || null;
+
+    const trackingUrl = body?.trackingUrl || body?.TrackingUrl || null;
+
+    if (!confirmationId) {
+      console.log("No confirmationId found in webhook");
+      return res.status(200).send("ok");
+    }
+
+    // 🔍 Find matching order
+    const [orders] = await db.query(
+      `
+      SELECT *
+      FROM orders
+      WHERE whcc_confirmation_id = ?
+      LIMIT 1
+      `,
+      [confirmationId],
+    );
+
+    if (!orders.length) {
+      console.log("No matching order for:", confirmationId);
+      return res.status(200).send("ok");
+    }
+
+    const order = orders[0];
+
+    console.log("Matched order:", order.id);
+
+    // 🚫 Prevent duplicate emails
+    if (order.shipped_email_sent === 1) {
+      console.log("Email already sent. Skipping.");
+      return res.status(200).send("ok");
+    }
+
+    // 📝 Update order with tracking info
+    await db.query(
+      `
+      UPDATE orders
+      SET
+        status = 'shipped',
+        tracking_number = ?,
+        tracking_carrier = ?,
+        tracking_url = ?,
+        shipped_at = NOW()
+      WHERE id = ?
+      `,
+      [trackingNumber, trackingCarrier, trackingUrl, order.id],
+    );
+
+    console.log("Order updated with tracking info");
+
+    // 📧 Send email
+    await sendShipmentEmail({
+      order,
+      trackingNumber,
+      trackingUrl,
+    });
+
+    // ✅ Mark email sent
+    await db.query(
+      `
+      UPDATE orders
+      SET shipped_email_sent = 1
+      WHERE id = ?
+      `,
+      [order.id],
+    );
+
+    console.log("Shipping email sent + recorded");
+
+    return res.status(200).send("ok");
+  } catch (err) {
+    console.error("WHCC webhook error:", err);
+    return res.status(500).send("error");
+  }
 });
 
 /* =============================
@@ -1043,6 +1145,45 @@ Dan Bourret Photos
   console.log("Email send result:", info);
   console.log("Sent to:", process.env.ORDER_NOTIFY_EMAIL);
   console.log("Sent from:", process.env.ORDER_FROM_EMAIL);
+}
+
+async function sendShipmentEmail({ order, trackingNumber, trackingUrl }) {
+  const customerEmail = order.customer_email;
+  const customerName = order.customer_name || "Customer";
+
+  if (!customerEmail) return;
+
+  const subject = "Your order has shipped!";
+
+  const html = `
+    <div style="font-family: Arial; line-height: 1.6;">
+      <h2>Your order has shipped 🎉</h2>
+      <p>Hi ${customerName},</p>
+      <p>Your order is on the way!</p>
+
+      ${
+        trackingNumber
+          ? `<p><strong>Tracking Number:</strong> ${trackingNumber}</p>`
+          : ""
+      }
+
+      ${
+        trackingUrl
+          ? `<p><a href="${trackingUrl}">Track your package</a></p>`
+          : ""
+      }
+
+      <p>Thank you for your order!</p>
+      <p>— Dan Bourret Photos</p>
+    </div>
+  `;
+
+  await transporter.sendMail({
+    from: `"Dan Bourret Photos" <${process.env.ORDER_FROM_EMAIL}>`,
+    to: customerEmail,
+    subject,
+    html,
+  });
 }
 
 /* =============================

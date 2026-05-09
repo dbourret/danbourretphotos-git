@@ -16,7 +16,7 @@
     "category": "misc"
   },
   {
-    "src": "images/flowers/magenta_speckled_orchid.jpg",
+    "src": "images/flowers/magenta_speckled_orchid.png",
     "title": "Magenta Speckled Orchid",
     "category": "flowers"
   },
@@ -26,22 +26,22 @@
     "category": "flowers"
   },
   {
-    "src": "images/flowers/phalaenopsis_orchid.jpg",
+    "src": "images/flowers/phalaenopsis_orchid.png",
     "title": "Moth Orchid",
     "category": "flowers"
   },
   {
-    "src": "images/flowers/purple_orchid.jpg",
+    "src": "images/flowers/purple_orchid.png",
     "title": "Purple Orchid",
     "category": "flowers"
   },
   {
-    "src": "images/flowers/white_cattleya_orchid.jpg",
+    "src": "images/flowers/white_cattleya_orchid.png",
     "title": "White Cattleya Orchid",
     "category": "flowers"
   },
   {
-    "src": "images/flowers/white_phalaenopsis_orchid.jpg",
+    "src": "images/flowers/white_phalaenopsis_orchid.png",
     "title": "White Phalaenopsis Orchid",
     "category": "flowers"
   },
@@ -56,7 +56,7 @@
     "category": "birds"
   },
   {
-    "src": "images/birds/american_white_ibis.jpg",
+    "src": "images/birds/american_white_ibis.png",
     "title": "American White Ibis",
     "category": "birds"
   },
@@ -86,12 +86,12 @@
     "category": "birds"
   },
   {
-    "src": "images/birds/flamingo.jpg",
+    "src": "images/birds/flamingo.png",
     "title": "Flamingo 1",
     "category": "birds"
   },
   {
-    "src": "images/birds/flamingo1.jpg",
+    "src": "images/birds/flamingo1.png",
     "title": "Flamingo 2",
     "category": "birds"
   },
@@ -101,7 +101,7 @@
     "category": "birds"
   },
   {
-    "src": "images/birds/grackle.jpg",
+    "src": "images/birds/grackle.png",
     "title": "Grackle",
     "category": "birds"
   },
@@ -112,7 +112,7 @@
     "description": "A graceful and dynamic moment frozen in time, showcasing the heron’s power and elegance against a natural backdrop—perfectly suited for a striking, large-format display."
   },
   {
-    "src": "images/birds/great_blue_heron_beach.jpg",
+    "src": "images/birds/great_blue_heron_beach.png",
     "title": "Great Blue Heron on the Beach",
     "category": "birds"
   },
@@ -122,7 +122,7 @@
     "category": "birds"
   },
   {
-    "src": "images/birds/mandarin_duck.jpg",
+    "src": "images/birds/mandarin_duck.png",
     "title": "Mandarin Duck",
     "category": "birds",
     "description": "Vibrant plumage and fine detail make this piece especially strong in metal and glossy finishes."
@@ -133,27 +133,27 @@
     "category": "birds"
   },
   {
-    "src": "images/birds/nanday_parakeet.jpg",
+    "src": "images/birds/nanday_parakeet.png",
     "title": "Nanday Parakeet",
     "category": "birds"
   },
   {
-    "src": "images/birds/nanday_parakeet_in_flight.jpg",
+    "src": "images/birds/nanday_parakeet_in_flight.png",
     "title": "Nanday Parakeet In Flight",
     "category": "birds"
   },
   {
-    "src": "images/birds/parrot1.jpg",
+    "src": "images/birds/parrot1.png",
     "title": "Parrot 1",
     "category": "birds"
   },
   {
-    "src": "images/birds/parrot2.jpg",
+    "src": "images/birds/parrot2.png",
     "title": "Parrot 2",
     "category": "birds"
   },
   {
-    "src": "images/birds/peacock.jpg",
+    "src": "images/birds/peacock.png",
     "title": "Peacock",
     "category": "birds"
   },
@@ -169,7 +169,7 @@
     "category": "birds"
   },
   {
-    "src": "images/birds/two_nanday_parakeets.jpg",
+    "src": "images/birds/two_nanday_parakeets.png",
     "title": "Two Nanday Parakeets",
     "category": "birds"
   },
@@ -194,7 +194,7 @@
     "category": "animals"
   },
   {
-    "src": "images/animals/bengal_tiger.jpg",
+    "src": "images/animals/bengal_tiger.png",
     "title": "Bengal Tiger",
     "category": "animals",
     "description": "A striking wildlife portrait with bold detail and rich color, ideal for statement wall art."
@@ -205,7 +205,7 @@
     "category": "animals"
   },
   {
-    "src": "images/animals/ring-tailed_lemur.jpg",
+    "src": "images/animals/ring-tailed_lemur.png",
     "title": "Ring-Tailed Lemur",
     "category": "animals"
   },
@@ -215,7 +215,7 @@
     "category": "animals"
   },
   {
-    "src": "images/misc/moonlit_monuments_tidal_basin.jpg",
+    "src": "images/misc/moonlit_monuments_tidal_basin.png",
     "title": "Moonlit Monuments Tidal Basin",
     "category": "misc"
   },
@@ -230,7 +230,7 @@
     "category": "misc"
   },
   {
-    "src": "images/misc/statue_of_liberty.jpg",
+    "src": "images/misc/statue_of_liberty.png",
     "title": "Statue Of Liberty",
     "category": "misc"
   },
@@ -240,22 +240,22 @@
     "category": "misc"
   },
   {
-    "src": "images/misc/sunset.jpg",
+    "src": "images/misc/sunset.png",
     "title": "Sunset 1",
     "category": "misc"
   },
   {
-    "src": "images/misc/sunset2.jpg",
+    "src": "images/misc/sunset2.png",
     "title": "Sunset 2",
     "category": "misc"
   },
   {
-    "src": "images/misc/us_capitol.jpg",
+    "src": "images/misc/us_capitol.png",
     "title": "US Capitol",
     "category": "misc"
   },
   {
-    "src": "images/misc/washington_monument_reflecting_pool.jpg",
+    "src": "images/misc/washington_monument_reflecting_pool.png",
     "title": "Washington Monument Reflecting Pool",
     "category": "misc",
     "description": "A dramatic scenic composition that works beautifully as a larger statement print."

@@ -68,18 +68,19 @@ function renderGallery() {
   }
 
   grid.innerHTML = filteredPhotos
-    .map((photo) => {
+    .map((photo, filteredIndex) => {
       const originalIndex = allPhotos.findIndex((p) => p.src === photo.src);
 
       return `
         <article class="image-card gallery-card">
           <img
-            src="${photo.src}"
-            alt="${photo.alt || photo.title || "Photo"}"
-            data-caption="${photo.description || ""}"
-            data-index="${originalIndex}"
-            loading="lazy"
-          />
+  src="${photo.src}"
+  alt="${photo.alt || photo.title || "Photo"}"
+  data-caption="${photo.description || ""}"
+  data-index="${filteredIndex}"
+  data-original-index="${originalIndex}"
+  loading="lazy"
+/>
 
           <div class="gallery-content">
             <span class="tag">${formatCategory(photo.category || "Gallery")}</span>
