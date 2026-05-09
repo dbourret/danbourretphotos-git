@@ -1682,6 +1682,23 @@ ${
 </div>`;
     })()}
   <div><strong>WHCC Confirmation ID:</strong> ${order.whcc_confirmation_id || ""}</div>
+
+  <hr style="border:none; border-top:1px solid #2a2a2a; margin:14px 0;">
+
+<div><strong>Tracking Number:</strong> ${order.tracking_number || "Not available"}</div>
+<div><strong>Carrier:</strong> ${order.tracking_carrier || "Not available"}</div>
+<div><strong>Shipped At:</strong> ${order.shipped_at ? formatDate(order.shipped_at) : "Not available"}</div>
+<div><strong>Shipping Email Sent:</strong> ${Number(order.shipped_email_sent || 0) === 1 ? "Yes" : "No"}</div>
+
+${
+  order.tracking_url
+    ? `<div style="margin-top:8px;">
+        <a class="square-link" href="${order.tracking_url}" target="_blank">
+          Track Package →
+        </a>
+      </div>`
+    : ""
+}
 </div>
         </div>
       </div>
@@ -1772,6 +1789,13 @@ ${
         if (btn) {
           btn.textContent = isHidden ? "View Details" : "Hide Details";
         }
+
+<div style="margin-top:12px;">
+  <button onclick="sendShippingEmail(${order.id})">
+    Send Shipping Email
+  </button>
+</div>
+
       }
 
       function showMoreOrders() {

@@ -277,13 +277,24 @@ app.post("/api/whcc/webhook", async (req, res) => {
     // ⚠️ These field names depend on WHCC payload
     // We’ll log first, then adjust if needed
     const confirmationId =
-      body?.confirmationId || body?.ConfirmationId || body?.orderId || null;
+      body?.confirmationId ||
+      body?.ConfirmationId ||
+      body?.confirmationID ||
+      body?.ConfirmationID ||
+      body?.orderId ||
+      body?.OrderID ||
+      body?.EntryID ||
+      body?.entryId ||
+      null;
 
     const trackingNumber = body?.trackingNumber || body?.TrackingNumber || null;
 
     const trackingCarrier = body?.trackingCarrier || body?.Carrier || null;
 
-    const trackingUrl = body?.trackingUrl || body?.TrackingUrl || null;
+    const providedTrackingUrl = body?.trackingUrl || body?.TrackingUrl || null;
+
+    const trackingUrl =
+      providedTrackingUrl || buildTrackingUrl(trackingCarrier, trackingNumber);
 
     if (!confirmationId) {
       console.log("No confirmationId found in webhook");
@@ -1147,6 +1158,29 @@ Dan Bourret Photos
   console.log("Sent from:", process.env.ORDER_FROM_EMAIL);
 }
 
+function buildTrackingUrl(carrier, trackingNumber) {
+  if (!trackingNumber) return null;
+
+  const normalizedCarrier = String(carrier || "")
+    .trim()
+    .toLowerCase();
+  const encodedTracking = encodeURIComponent(trackingNumber);
+
+  if (normalizedCarrier.includes("fedex")) {
+    return `https://www.fedex.com/fedextrack/?trknbr=${encodedTracking}`;
+  }
+
+  if (normalizedCarrier.includes("ups")) {
+    return `https://www.ups.com/track?tracknum=${encodedTracking}`;
+  }
+
+  if (normalizedCarrier.includes("usps")) {
+    return `https://tools.usps.com/go/TrackConfirmAction?tLabels=${encodedTracking}`;
+  }
+
+  return null;
+}
+
 async function sendShipmentEmail({ order, trackingNumber, trackingUrl }) {
   const customerEmail = order.customer_email;
   const customerName = order.customer_name || "Customer";
@@ -1155,11 +1189,66 @@ async function sendShipmentEmail({ order, trackingNumber, trackingUrl }) {
 
   const subject = "Your order has shipped — Dan Bourret Photos";
 
+  let itemsHtml = "";
+
+  try {
+    let items = order.items_json;
+
+    if (typeof items === "string") {
+      items = JSON.parse(items);
+    }
+
+    if (!Array.isArray(items)) {
+      items = [];
+    }
+
+    if (items.length) {
+      itemsHtml = items
+        .map((item) => {
+          const title = escapeHtml(item.title || "Photo Print");
+          const material = escapeHtml(item.material || "");
+          const size = escapeHtml(item.size || "");
+          const finish = escapeHtml(item.finish || "");
+          const imageKey = item.imageKey || "";
+
+          const thumbnailUrl = imageKey
+            ? `https://danbourretphotos.com/images/email_thumbnails/${imageKey.replace(/\.[^.]+$/, "_email_thumbnails.jpg")}`
+            : "";
+
+          return `
+            <div style="padding:18px;border:1px solid #eadfca;border-radius:16px;background:#ffffff;margin-bottom:18px;">
+              <div style="font-size:16px;line-height:1.4;font-weight:700;color:#111827;margin:0 0 14px 0;">
+                ${title}
+              </div>
+
+              ${
+                thumbnailUrl
+                  ? `<img
+                      src="${thumbnailUrl}"
+                      alt="${title}"
+                      style="width:150px;height:auto;border-radius:6px;display:block;margin-bottom:12px;"
+                    />`
+                  : ""
+              }
+
+              <div style="font-size:14px;line-height:1.8;color:#374151;">
+                <div><strong>Material:</strong> ${material}</div>
+                <div><strong>Size:</strong> ${size}</div>
+                <div><strong>Finish:</strong> ${finish}</div>
+              </div>
+            </div>
+          `;
+        })
+        .join("");
+    }
+  } catch (err) {
+    console.log("Shipping email item parse error:", err);
+  }
+
   const html = `
   <div style="margin:0;padding:24px;background:#f5f5f5;font-family:Arial,Helvetica,sans-serif;color:#111827;">
     <div style="max-width:720px;margin:0 auto;background:#0f0f10;border-radius:24px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.18);">
 
-      <!-- HEADER -->
       <div style="padding:28px 32px;background:linear-gradient(180deg,#171717 0%,#101010 100%);border-bottom:1px solid rgba(255,255,255,0.08);">
         <div style="font-size:12px;letter-spacing:0.22em;text-transform:uppercase;color:#d6b36a;margin-bottom:10px;">
           Dan Bourret Photos
@@ -1172,47 +1261,46 @@ async function sendShipmentEmail({ order, trackingNumber, trackingUrl }) {
         </p>
       </div>
 
-      <!-- BODY -->
       <div style="padding:28px 32px;background:#faf7f1;">
 
-        <!-- SHIPPING INFO -->
+        ${
+          itemsHtml
+            ? `
+              <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8b7355;margin:0 0 10px 0;">
+                Shipped Item
+              </div>
+              ${itemsHtml}
+            `
+            : ""
+        }
+
         <div style="padding:18px;border:1px solid #eadfca;border-radius:16px;background:#ffffff;margin-bottom:18px;">
           <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#8b7355;margin-bottom:10px;">
             Shipping Details
           </div>
           <div style="font-size:14px;line-height:1.8;color:#374151;">
-            <div><strong>Name:</strong> ${customerName}</div>
+            <div><strong>Name:</strong> ${escapeHtml(customerName)}</div>
             ${
               trackingNumber
-                ? `<div><strong>Tracking Number:</strong> ${trackingNumber}</div>`
+                ? `<div><strong>Tracking Number:</strong> ${escapeHtml(trackingNumber)}</div>`
                 : ""
             }
           </div>
         </div>
 
-        <!-- TRACKING BUTTON -->
         ${
           trackingUrl
             ? `
-        <div style="text-align:center;margin-bottom:18px;">
-          <a href="${trackingUrl}" target="_blank"
-            style="
-              display:inline-block;
-              padding:12px 20px;
-              background:#111827;
-              color:#ffffff;
-              text-decoration:none;
-              border-radius:8px;
-              font-weight:700;
-            ">
-            Track Your Shipment
-          </a>
-        </div>
-        `
+              <div style="text-align:center;margin-bottom:18px;">
+                <a href="${escapeHtml(trackingUrl)}" target="_blank" rel="noopener noreferrer"
+                  style="display:inline-block;padding:12px 20px;background:#111827;color:#ffffff;text-decoration:none;border-radius:8px;font-weight:700;">
+                  Track Your Shipment
+                </a>
+              </div>
+            `
             : ""
         }
 
-        <!-- MESSAGE -->
         <div style="padding:18px;border:1px solid #eadfca;border-radius:16px;background:#ffffff;">
           <div style="font-size:14px;line-height:1.8;color:#374151;">
             Thank you again for your order.<br><br>
@@ -1232,6 +1320,8 @@ async function sendShipmentEmail({ order, trackingNumber, trackingUrl }) {
     subject,
     html,
   });
+
+  console.log("Branded shipping email sent to:", customerEmail);
 }
 
 /* =============================
@@ -1898,6 +1988,11 @@ app.get("/api/orders", async (req, res) => {
   estimated_whcc_total,
   estimated_whcc_product_cost,
   estimated_whcc_shipping_cost,
+  tracking_number,
+tracking_carrier,
+tracking_url,
+shipped_at,
+shipped_email_sent,
   estimated_profit,
   estimated_profit_margin,
   actual_profit,
@@ -2128,4 +2223,40 @@ app.use((err, req, res, next) => {
 
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
+});
+
+app.post("/api/orders/:id/send-shipping-email", async (req, res) => {
+  try {
+    const orderId = req.params.id;
+
+    const [orders] = await db.query(
+      `SELECT * FROM orders WHERE id = ? LIMIT 1`,
+      [orderId],
+    );
+
+    if (!orders.length) {
+      return res.status(404).json({ error: "Order not found" });
+    }
+
+    const order = orders[0];
+
+    if (!order.tracking_number) {
+      return res.status(400).json({ error: "Tracking number required" });
+    }
+
+    await sendShipmentEmail({
+      order,
+      trackingNumber: order.tracking_number,
+      trackingUrl: order.tracking_url,
+    });
+
+    await db.query(`UPDATE orders SET shipped_email_sent = 1 WHERE id = ?`, [
+      orderId,
+    ]);
+
+    return res.json({ success: true });
+  } catch (err) {
+    console.error("Manual shipping email error:", err);
+    return res.status(500).json({ error: "Failed to send email" });
+  }
 });
