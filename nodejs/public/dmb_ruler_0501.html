@@ -1699,6 +1699,11 @@ ${
       </div>`
     : ""
 }
+    <div style="margin-top:12px;">
+  <button onclick="sendShippingEmail(${order.id})">
+    Send Shipping Email
+  </button>
+</div>
 </div>
         </div>
       </div>
@@ -1789,13 +1794,6 @@ ${
         if (btn) {
           btn.textContent = isHidden ? "View Details" : "Hide Details";
         }
-
-<div style="margin-top:12px;">
-  <button onclick="sendShippingEmail(${order.id})">
-    Send Shipping Email
-  </button>
-</div>
-
       }
 
       function showMoreOrders() {

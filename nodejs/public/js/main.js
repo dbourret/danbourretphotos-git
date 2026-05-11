@@ -54,6 +54,8 @@ function saveCart(cart) {
 }
 
 let pricingData = [];
+window.selectedPricingFinishByMaterial =
+  window.selectedPricingFinishByMaterial || {};
 let pricingLoaded = false;
 
 async function loadPricing() {
@@ -324,8 +326,16 @@ function getGroupedSizesForPricingCard(material) {
       };
     }
 
-    if (price < grouped[size].basePrice) {
+    const finishLower = String(row.finish || "").toLowerCase();
+
+    if (finishLower === "matte") {
+      grouped[size].basePrice = price; // ✅ force matte as default
+    } else if (!grouped[size].hasMatte && price < grouped[size].basePrice) {
       grouped[size].basePrice = price;
+    }
+
+    if (finishLower === "matte") {
+      grouped[size].hasMatte = true;
     }
 
     grouped[size].finishes.push({
@@ -596,7 +606,7 @@ const FINISH_OPTIONS = {
 const STOREFRONT_ALLOWED = {
   Metal: ["5x7", "8x10", "11x14", "12x12", "16x20", "20x24"],
   Canvas: ["8x10", "11x14", "12x12", "16x20", "20x30", "24x36"],
-  Poster: ["12x18", "16x20", "20x30", "24x36"],
+  Poster: ["11x14", "12x18", "16x20", "20x30", "24x36"],
   Wood: ["5x7", "8x10", "11x14", "12x12", "16x20", "20x30"],
 };
 
@@ -1080,6 +1090,7 @@ function ensureFormatModal() {
       <div style="
         font-size:0.88rem;
         color:#f4dfac;
+      
         font-weight:700;
         margin-bottom:12px;
       ">
@@ -2583,6 +2594,74 @@ window.handleUpsellClick = async function (material) {
   }, 200);
 };
 
+function getPricingFinishDropdownHtml(material, groupedSizes) {
+  const allFinishes = [
+    ...new Set(
+      groupedSizes
+        .flatMap((item) => item.finishes || [])
+        .map((f) =>
+          String(f.finish || "")
+            .trim()
+            .toLowerCase(),
+        )
+        .filter(Boolean),
+    ),
+  ];
+
+  if (allFinishes.length <= 1) return "";
+
+  const finishOrder = ["matte", "lustre", "semi-gloss", "glossy"];
+
+  const sortedFinishes = allFinishes.sort((a, b) => {
+    const aIndex = finishOrder.indexOf(a);
+    const bIndex = finishOrder.indexOf(b);
+    if (aIndex !== -1 && bIndex !== -1) return aIndex - bIndex;
+    if (aIndex !== -1) return -1;
+    if (bIndex !== -1) return 1;
+    return a.localeCompare(b);
+  });
+
+  const selectedFinish =
+    window.selectedPricingFinishByMaterial?.[material] || "matte";
+
+  return `
+    <select
+      class="pricing-card-finish-select"
+      data-material="${material}"
+      style="
+        color:#f4dfac;
+        background:transparent;
+        border:none;
+        padding:0;
+        margin:0;
+        font-size:0.72rem;
+        font-weight:700;
+        font-family:inherit;
+        line-height:1;
+        height:1em;
+        width:auto;
+        min-width:0;
+        outline:none;
+        cursor:pointer;
+      "
+    >
+      ${sortedFinishes
+        .map((finish) => {
+          const label =
+            finish === "semi-gloss"
+              ? "Semi-Gloss"
+              : finish.charAt(0).toUpperCase() + finish.slice(1);
+
+          const selected =
+            finish === String(selectedFinish).toLowerCase() ? "selected" : "";
+
+          return `<option value="${finish}" ${selected} style="color:#111111;background:#ffffff;">${label}</option>`;
+        })
+        .join("")}
+    </select>
+  `;
+}
+
 function renderPricingCards() {
   const container =
     document.getElementById("pricing-cards") ||
@@ -2610,36 +2689,55 @@ function renderPricingCards() {
 
   materials.forEach((material) => {
     const groupedSizes = getGroupedSizesForPricingCard(material);
-    const startingPrice = getStartingPriceForMaterial(material);
+    const visibleSizes = groupedSizes.slice(0, 6);
+
+    const selectedFinish =
+      window.selectedPricingFinishByMaterial?.[material] || "matte";
+
+    const pricesForSelectedFinish = groupedSizes
+      .map((item) => {
+        const match =
+          item.finishes.find(
+            (f) =>
+              String(f.finish || "").toLowerCase() ===
+              String(selectedFinish).toLowerCase(),
+          ) ||
+          item.finishes.find(
+            (f) => String(f.finish || "").toLowerCase() === "matte",
+          ) ||
+          item.finishes[0];
+
+        return Number(match?.price || item.basePrice || 0);
+      })
+      .filter((price) => price > 0);
+
+    const startingPrice = pricesForSelectedFinish.length
+      ? Math.min(...pricesForSelectedFinish)
+      : getStartingPriceForMaterial(material);
+
     const isMostPopularMaterial = material === MOST_POPULAR_MATERIAL;
     const mostPopularSize = MOST_POPULAR_SIZE_BY_MATERIAL[material] || "";
     const upsells = getUpsellsForMaterial(material);
     const displayMaterial = MATERIAL_DISPLAY_NAMES[material] || material;
 
-    const card = document.createElement("div");
-    card.className = "pricing-card";
-    card.style.display = "flex";
-    card.style.flexDirection = "column";
-    card.style.height = "100%";
-    card.style.background = isMostPopularMaterial
-      ? "linear-gradient(180deg, rgba(244,223,172,0.12) 0%, rgba(17,17,17,1) 18%)"
-      : "linear-gradient(180deg, rgba(255,255,255,0.04) 0%, rgba(17,17,17,1) 18%)";
-    card.style.border = isMostPopularMaterial
-      ? "1px solid rgba(244,223,172,0.38)"
-      : "1px solid rgba(255,255,255,0.10)";
-    card.style.borderRadius = "24px";
-    card.style.padding = "22px";
-    card.style.color = "#fff";
-    card.style.boxShadow = isMostPopularMaterial
-      ? "0 16px 40px rgba(0,0,0,0.28), 0 0 0 1px rgba(244,223,172,0.08) inset"
-      : "0 16px 40px rgba(0,0,0,0.20)";
-    card.style.overflow = "hidden";
-
-    const visibleSizes = groupedSizes.slice(0, 6);
-
     const sizeRows = visibleSizes
       .map((item) => {
         const isPopularSize = item.size === mostPopularSize;
+
+        const matchingFinish =
+          item.finishes.find(
+            (f) =>
+              String(f.finish || "").toLowerCase() ===
+              String(selectedFinish).toLowerCase(),
+          ) ||
+          item.finishes.find(
+            (f) => String(f.finish || "").toLowerCase() === "matte",
+          ) ||
+          item.finishes[0];
+
+        const displayPrice = matchingFinish
+          ? Number(matchingFinish.price || 0)
+          : Number(item.basePrice || 0);
 
         return `
           <div style="
@@ -2675,7 +2773,7 @@ function renderPricingCards() {
             </div>
 
             <strong style="color:#fff; white-space:nowrap;">
-              ${formatCurrency(item.basePrice)}
+              ${formatCurrency(displayPrice)}
             </strong>
           </div>
         `;
@@ -2758,7 +2856,11 @@ function renderPricingCards() {
               return `
                 <div style="
                   padding:${index === 0 ? "0 0 12px" : "12px 0 0"};
-                  ${index < upsells.length - 1 ? "border-bottom:1px solid rgba(255,255,255,0.08);" : ""}
+                  ${
+                    index < upsells.length - 1
+                      ? "border-bottom:1px solid rgba(255,255,255,0.08);"
+                      : ""
+                  }
                 ">
                   <div style="
                     display:flex;
@@ -2804,6 +2906,25 @@ function renderPricingCards() {
       `
       : "";
 
+    const card = document.createElement("div");
+    card.className = "pricing-card";
+    card.style.display = "flex";
+    card.style.flexDirection = "column";
+    card.style.height = "100%";
+    card.style.background = isMostPopularMaterial
+      ? "linear-gradient(180deg, rgba(244,223,172,0.12) 0%, rgba(17,17,17,1) 18%)"
+      : "linear-gradient(180deg, rgba(255,255,255,0.04) 0%, rgba(17,17,17,1) 18%)";
+    card.style.border = isMostPopularMaterial
+      ? "1px solid rgba(244,223,172,0.38)"
+      : "1px solid rgba(255,255,255,0.10)";
+    card.style.borderRadius = "24px";
+    card.style.padding = "22px";
+    card.style.color = "#fff";
+    card.style.boxShadow = isMostPopularMaterial
+      ? "0 16px 40px rgba(0,0,0,0.28), 0 0 0 1px rgba(244,223,172,0.08) inset"
+      : "0 16px 40px rgba(0,0,0,0.20)";
+    card.style.overflow = "hidden";
+
     card.innerHTML = `
       <div style="
         display:flex;
@@ -2846,16 +2967,33 @@ function renderPricingCards() {
         color:#c9c9c9;
         font-size:0.95rem;
         margin-bottom:14px;
+        display:flex;
+        align-items:center;
+        gap:8px;
+        flex-wrap:wrap;
       ">
-        Starting at
+        <span>Starting at</span>
+
         <span style="
           color:#f4dfac;
           font-size:1.1rem;
           font-weight:800;
-          margin-left:4px;
         ">
           ${formatCurrency(startingPrice)}
         </span>
+
+        <span style="
+  display:inline-flex;
+  align-items:baseline;
+  gap:4px;
+  margin-left:4px;
+  white-space:nowrap;
+  font-size:0.72rem;
+  line-height:1;
+">
+  <span style="color:#c9c9c9; opacity:0.75;">Finish</span>
+  ${getPricingFinishDropdownHtml(material, groupedSizes)}
+</span>
       </div>
 
       <div style="
@@ -2874,6 +3012,19 @@ function renderPricingCards() {
 
     container.appendChild(card);
   });
+
+  container
+    .querySelectorAll(".pricing-card-finish-select")
+    .forEach((select) => {
+      select.addEventListener("change", (e) => {
+        const material = e.target.dataset.material;
+        const finish = e.target.value;
+
+        window.selectedPricingFinishByMaterial[material] = finish;
+
+        renderPricingCards();
+      });
+    });
 }
 
 function initContactForm() {
