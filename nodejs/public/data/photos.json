@@ -16,7 +16,7 @@
     "category": "misc"
   },
   {
-    "src": "images/flowers/magenta_speckled_orchid.png",
+    "src": "images/flowers/magenta_speckled_orchid.jpg",
     "title": "Magenta Speckled Orchid",
     "category": "flowers"
   },
@@ -31,7 +31,7 @@
     "category": "flowers"
   },
   {
-    "src": "images/flowers/purple_orchid.png",
+    "src": "images/flowers/purple_orchid.jpg",
     "title": "Purple Orchid",
     "category": "flowers"
   },
@@ -41,7 +41,7 @@
     "category": "flowers"
   },
   {
-    "src": "images/flowers/white_phalaenopsis_orchid.png",
+    "src": "images/flowers/white_phalaenopsis_orchid.jpg",
     "title": "White Phalaenopsis Orchid",
     "category": "flowers"
   },
@@ -56,7 +56,7 @@
     "category": "birds"
   },
   {
-    "src": "images/birds/american_white_ibis.png",
+    "src": "images/birds/american_white_ibis.jpg",
     "title": "American White Ibis",
     "category": "birds"
   },
@@ -86,17 +86,17 @@
     "category": "birds"
   },
   {
-    "src": "images/birds/flamingo.png",
+    "src": "images/birds/flamingo1.jpg",
     "title": "Flamingo 1",
     "category": "birds"
   },
   {
-    "src": "images/birds/flamingo1.png",
+    "src": "images/birds/flamingo2.jpg",
     "title": "Flamingo 2",
     "category": "birds"
   },
   {
-    "src": "images/birds/flamingo2.jpg",
+    "src": "images/birds/flamingo3.jpg",
     "title": "Flamingo 3",
     "category": "birds"
   },
