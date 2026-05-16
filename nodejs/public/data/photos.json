@@ -2,262 +2,307 @@
   {
     "src": "images/animals/monarch_butterfly_1.jpg",
     "title": "Monarch Butterfly 1",
-    "category": "misc"
+    "category": "misc",
+    "description": "Delicate wings glowing in golden light"
   },
   {
     "src": "images/animals/monarch_butterfly_2.jpg",
     "title": "Monarch Butterfly 2",
     "category": "misc",
-    "description": "An intimate and richly detailed nature scene, where delicate textures and vivid color contrast come together to create a captivating statement piece ideal for larger presentation."
+    "description": "Nature’s stained glass drifting on the breeze"
   },
   {
     "src": "images/animals/monarch_butterfly_3.jpg",
     "title": "Monarch Butterfly 3",
-    "category": "misc"
+    "category": "misc",
+    "description": "A monarch paused in perfect elegance"
+  },
+  {
+    "src": "images/flowers/baldans_kaleidoscope_orchid.jpg",
+    "title": "Baldans Kaleidoscope",
+    "category": "flowers",
+    "description": "An explosion of color in delicate bloom"
   },
   {
     "src": "images/flowers/magenta_speckled_orchid.jpg",
     "title": "Magenta Speckled Orchid",
-    "category": "flowers"
+    "category": "flowers",
+    "description": "Rich magenta tones dusted with intricate detail"
   },
   {
     "src": "images/flowers/blooming_orchids.jpg",
     "title": "Moth and Purple Happiness Orchids",
-    "category": "flowers"
-  },
-  {
-    "src": "images/flowers/phalaenopsis_orchid.png",
-    "title": "Moth Orchid",
-    "category": "flowers"
+    "category": "flowers",
+    "description": "Layers of vibrant petals bursting with life"
   },
   {
     "src": "images/flowers/purple_orchid.jpg",
     "title": "Purple Orchid",
-    "category": "flowers"
+    "category": "flowers",
+    "description": "Velvet petals glowing in deep purple light"
   },
   {
     "src": "images/flowers/white_cattleya_orchid.jpg",
     "title": "White Cattleya Orchid",
-    "category": "flowers"
+    "category": "flowers",
+    "description": "Timeless elegance in pristine white bloom"
   },
   {
     "src": "images/flowers/white_phalaenopsis_orchid.jpg",
     "title": "White Phalaenopsis Orchid",
-    "category": "flowers"
+    "category": "flowers",
+    "description": "Soft petals flowing with graceful simplicity"
   },
   {
     "src": "images/birds/3parakeets.jpg",
     "title": "3 Parakeets",
-    "category": "birds"
+    "category": "birds",
+    "description": "A lively trio bursting with color and chatter"
   },
   {
     "src": "images/birds/7parakeets.jpg",
     "title": "7 Parakeets",
-    "category": "birds"
+    "category": "birds",
+    "description": "A vibrant gathering of feathered personalities"
   },
   {
     "src": "images/birds/american_white_ibis.jpg",
     "title": "American White Ibis",
-    "category": "birds"
+    "category": "birds",
+    "description": "Coastal grace reflected in every step"
   },
   {
     "src": "images/birds/cardinal.jpg",
     "title": "Cardinal",
-    "category": "birds"
+    "category": "birds",
+    "description": "A brilliant flash of crimson against nature’s canvas"
   },
   {
     "src": "images/birds/caribbean_flamingo.jpg",
     "title": "Caribbean Flamingo",
-    "category": "birds"
+    "category": "birds",
+    "description": "Tropical elegance painted in shades of pink"
   },
   {
     "src": "images/birds/catalina_macaw.jpg",
     "title": "Catalina Macaw 1",
-    "category": "birds"
+    "category": "birds",
+    "description": "Brilliant feathers shining with exotic beauty"
   },
   {
     "src": "images/birds/catalina_macaw2.jpg",
     "title": "Catalina Macaw 2",
-    "category": "birds"
+    "category": "birds",
+    "description": "A striking burst of tropical color and confidence"
   },
   {
     "src": "images/birds/catalina_macaw3.jpg",
     "title": "Catalina Macaw 3",
-    "category": "birds"
+    "category": "birds",
+    "description": "Radiant plumage captured in vivid detail"
   },
   {
     "src": "images/birds/flamingo1.jpg",
     "title": "Flamingo 1",
-    "category": "birds"
+    "category": "birds",
+    "description": "Long legs and soft pink reflections at sunset"
   },
   {
     "src": "images/birds/flamingo2.jpg",
     "title": "Flamingo 2",
-    "category": "birds"
+    "category": "birds",
+    "description": "Graceful curves and vibrant tropical hues"
   },
   {
     "src": "images/birds/flamingo3.jpg",
     "title": "Flamingo 3",
-    "category": "birds"
+    "category": "birds",
+    "description": "A peaceful moment in paradise pink"
   },
   {
-    "src": "images/birds/grackle.png",
+    "src": "images/birds/grackle.jpg",
     "title": "Grackle",
-    "category": "birds"
+    "category": "birds",
+    "description": "Glossy feathers shimmering beneath the light"
   },
   {
     "src": "images/birds/great_blue_heron.jpg",
     "title": "Great Blue Heron",
     "category": "birds",
-    "description": "A graceful and dynamic moment frozen in time, showcasing the heron’s power and elegance against a natural backdrop—perfectly suited for a striking, large-format display."
+    "description": "A patient hunter standing tall at the water’s edge"
   },
   {
     "src": "images/birds/great_blue_heron_beach.png",
     "title": "Great Blue Heron on the Beach",
-    "category": "birds"
+    "category": "birds",
+    "description": "Coastal serenity meets timeless elegance"
   },
   {
     "src": "images/birds/great_egret.png",
     "title": "Great Egret",
-    "category": "birds"
+    "category": "birds",
+    "description": "Pure white beauty poised in stillness"
   },
   {
     "src": "images/birds/mandarin_duck.jpg",
     "title": "Mandarin Duck",
     "category": "birds",
-    "description": "Vibrant plumage and fine detail make this piece especially strong in metal and glossy finishes."
+    "description": "Nature’s masterpiece painted in brilliant color"
   },
   {
     "src": "images/birds/moluccan_cockatoo.jpg",
     "title": "Moluccan Cockatoo",
-    "category": "birds"
+    "category": "birds",
+    "description": "Soft feathers and a bold personality combined"
   },
   {
     "src": "images/birds/nanday_parakeet.png",
     "title": "Nanday Parakeet",
-    "category": "birds"
+    "category": "birds",
+    "description": "A spirited splash of green and gold"
   },
   {
     "src": "images/birds/nanday_parakeet_in_flight.png",
     "title": "Nanday Parakeet In Flight",
-    "category": "birds"
+    "category": "birds",
+    "description": "Wings spread wide in a moment of freedom"
   },
   {
     "src": "images/birds/parrot1.png",
     "title": "Parrot 1",
-    "category": "birds"
+    "category": "birds",
+    "description": "Tropical brilliance captured up close"
   },
   {
     "src": "images/birds/parrot2.png",
     "title": "Parrot 2",
-    "category": "birds"
+    "category": "birds",
+    "description": "Colorful feathers glowing with personality"
   },
   {
     "src": "images/birds/peacock.png",
     "title": "Peacock",
-    "category": "birds"
+    "category": "birds",
+    "description": "Regal beauty unfolding in dazzling detail"
   },
   {
     "src": "images/birds/scarlet_macaw.jpg",
     "title": "Scarlet Macaw",
     "category": "birds",
-    "description": "A vibrant, high-energy composition capturing the macaw in full motion, its radiant colors and sweeping wings creating a bold visual centerpiece that commands attention as a large statement print."
+    "description": "Fiery colors soaring with tropical energy"
   },
   {
     "src": "images/birds/scarlet_macaw2.jpg",
     "title": "Scarlet Macaw 2",
-    "category": "birds"
+    "category": "birds",
+    "description": "A bold and brilliant symbol of the rainforest"
   },
   {
     "src": "images/birds/two_nanday_parakeets.png",
     "title": "Two Nanday Parakeets",
-    "category": "birds"
+    "category": "birds",
+    "description": "A colorful pair sharing a quiet moment"
   },
   {
     "src": "images/birds/white_cockatoo.jpg",
     "title": "White Cockatoo",
-    "category": "birds"
+    "category": "birds",
+    "description": "Elegant white feathers with striking charm"
   },
   {
     "src": "images/birds/yellow_naped_amazon_parrot.jpg",
     "title": "Yellow Naped Amazon Parrot",
-    "category": "birds"
+    "category": "birds",
+    "description": "Vibrant personality wrapped in emerald feathers"
   },
   {
     "src": "images/animals/african_spurred_tortoise.jpg",
     "title": "African Spurred Tortoise",
-    "category": "animals"
+    "category": "animals",
+    "description": "Ancient eyes and quiet determination beneath the sun"
   },
   {
     "src": "images/animals/alligator.jpg",
     "title": "Alligator",
-    "category": "animals"
+    "category": "animals",
+    "description": "A silent predator gliding through still waters"
   },
   {
     "src": "images/animals/bengal_tiger.png",
     "title": "Bengal Tiger",
     "category": "animals",
-    "description": "A striking wildlife portrait with bold detail and rich color, ideal for statement wall art."
+    "description": "Fierce stripes blazing with untamed power"
   },
   {
     "src": "images/animals/donkey.jpg",
     "title": "Donkey",
-    "category": "animals"
+    "category": "animals",
+    "description": "A gentle soul with curious eyes and rustic charm"
   },
   {
     "src": "images/animals/ring-tailed_lemur.png",
     "title": "Ring-Tailed Lemur",
-    "category": "animals"
+    "category": "animals",
+    "description": "Bright eyes and playful energy in every glance"
   },
   {
     "src": "images/animals/zebra.jpg",
     "title": "Zebra",
-    "category": "animals"
+    "category": "animals",
+    "description": "Bold stripes standing out across the wild plains"
   },
   {
     "src": "images/misc/moonlit_monuments_tidal_basin.png",
     "title": "Moonlit Monuments Tidal Basin",
-    "category": "misc"
+    "category": "misc",
+    "description": "Monuments glowing beneath a tranquil night sky"
   },
   {
     "src": "images/misc/porch.jpg",
     "title": "Porch",
-    "category": "misc"
+    "category": "misc",
+    "description": "A quiet porch inviting peaceful reflection"
   },
   {
     "src": "images/misc/rocking_chair.jpg",
     "title": "Rocking Chair",
-    "category": "misc"
+    "category": "misc",
+    "description": "Gentle moments suspended in timeless comfort"
   },
   {
     "src": "images/misc/statue_of_liberty.png",
     "title": "Statue Of Liberty",
-    "category": "misc"
+    "category": "misc",
+    "description": "Freedom standing tall against the skyline"
   },
   {
     "src": "images/misc/sunset_boat.png",
     "title": "Sunset with Boat",
-    "category": "misc"
+    "category": "misc",
+    "description": "A lone boat drifting through golden waters"
   },
   {
     "src": "images/misc/sunset.png",
     "title": "Sunset 1",
-    "category": "misc"
+    "category": "misc",
+    "description": "Warm skies melting into evening calm"
   },
   {
     "src": "images/misc/sunset2.png",
     "title": "Sunset 2",
-    "category": "misc"
+    "category": "misc",
+    "description": "Nature’s final glow before nightfall"
   },
   {
     "src": "images/misc/us_capitol.png",
     "title": "US Capitol",
-    "category": "misc"
+    "category": "misc",
+    "description": "Historic grandeur beneath an endless sky"
   },
   {
     "src": "images/misc/washington_monument_reflecting_pool.png",
     "title": "Washington Monument Reflecting Pool",
     "category": "misc",
-    "description": "A dramatic scenic composition that works beautifully as a larger statement print."
+    "description": "Reflections of history stretching across still waters"
   }
 ]
