@@ -1,17 +1,17 @@
 [
   {
-    "src": "images/misc/monarch_butterfly_1.jpg",
+    "src": "images/animals/monarch_butterfly_1.jpg",
     "title": "Monarch Butterfly 1",
     "category": "misc"
   },
   {
-    "src": "images/misc/monarch_butterfly_2.jpg",
+    "src": "images/animals/monarch_butterfly_2.jpg",
     "title": "Monarch Butterfly 2",
     "category": "misc",
     "description": "An intimate and richly detailed nature scene, where delicate textures and vivid color contrast come together to create a captivating statement piece ideal for larger presentation."
   },
   {
-    "src": "images/misc/monarch_butterfly_3.jpg",
+    "src": "images/animals/monarch_butterfly_3.jpg",
     "title": "Monarch Butterfly 3",
     "category": "misc"
   },
@@ -36,7 +36,7 @@
     "category": "flowers"
   },
   {
-    "src": "images/flowers/white_cattleya_orchid.png",
+    "src": "images/flowers/white_cattleya_orchid.jpg",
     "title": "White Cattleya Orchid",
     "category": "flowers"
   },
@@ -117,7 +117,7 @@
     "category": "birds"
   },
   {
-    "src": "images/birds/great_egret.jpg",
+    "src": "images/birds/great_egret.png",
     "title": "Great Egret",
     "category": "birds"
   },
