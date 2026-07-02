@@ -2,24 +2,30 @@
   {
     "src": "images/animals/monarch_butterfly_1.jpg",
     "title": "Monarch Butterfly 1",
-    "category": "misc",
+    "category": "animals",
     "description": "Delicate wings glowing in golden light"
   },
   {
     "src": "images/animals/monarch_butterfly_2.jpg",
     "title": "Monarch Butterfly 2",
-    "category": "misc",
+    "category": "animals",
     "description": "Nature’s stained glass drifting on the breeze"
   },
   {
     "src": "images/animals/monarch_butterfly_3.jpg",
     "title": "Monarch Butterfly 3",
-    "category": "misc",
+    "category": "animals",
     "description": "A monarch paused in perfect elegance"
   },
   {
     "src": "images/flowers/baldans_kaleidoscope_orchid.jpg",
     "title": "Baldans Kaleidoscope",
+    "category": "flowers",
+    "description": "An explosion of color in delicate bloom"
+  },
+  {
+    "src": "images/flowers/blooming_orchids.jpg",
+    "title": "Blooming Orchids",
     "category": "flowers",
     "description": "An explosion of color in delicate bloom"
   },
@@ -132,18 +138,6 @@
     "description": "A patient hunter standing tall at the water’s edge"
   },
   {
-    "src": "images/birds/great_blue_heron_beach.png",
-    "title": "Great Blue Heron on the Beach",
-    "category": "birds",
-    "description": "Coastal serenity meets timeless elegance"
-  },
-  {
-    "src": "images/birds/great_egret.png",
-    "title": "Great Egret",
-    "category": "birds",
-    "description": "Pure white beauty poised in stillness"
-  },
-  {
     "src": "images/birds/mandarin_duck.jpg",
     "title": "Mandarin Duck",
     "category": "birds",
@@ -168,7 +162,7 @@
     "description": "Wings spread wide in a moment of freedom"
   },
   {
-    "src": "images/birds/parrot1.png",
+    "src": "images/birds/parrot1.jpg",
     "title": "Parrot 1",
     "category": "birds",
     "description": "Tropical brilliance captured up close"
@@ -282,14 +276,20 @@
     "description": "A lone boat drifting through golden waters"
   },
   {
-    "src": "images/misc/sunset.png",
+    "src": "images/misc/sunset1.png",
     "title": "Sunset 1",
     "category": "misc",
-    "description": "Warm skies melting into evening calm"
+    "description": "A lone boat drifting through golden waters"
   },
   {
     "src": "images/misc/sunset2.png",
     "title": "Sunset 2",
+    "category": "misc",
+    "description": "Warm skies melting into evening calm"
+  },
+  {
+    "src": "images/misc/sunset3.png",
+    "title": "Sunset 3",
     "category": "misc",
     "description": "Nature’s final glow before nightfall"
   },
