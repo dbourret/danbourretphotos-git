@@ -1,5 +1,7 @@
 require("dotenv").config();
 
+const multer = require("multer");
+
 const path = require("path");
 const {
   fulfillOrderWithWhcc,
@@ -214,6 +216,45 @@ function checkAdmin(req, res, next) {
 
   next();
 }
+
+const RESTORATION_MAX_FILE_SIZE = 20 * 1024 * 1024;
+
+const restorationAllowedMimeTypes = new Set([
+  "image/jpeg",
+  "image/png",
+  "image/tiff",
+]);
+
+const restorationAllowedExtensions = new Set([
+  ".jpg",
+  ".jpeg",
+  ".png",
+  ".tif",
+  ".tiff",
+]);
+
+const restorationUpload = multer({
+  storage: multer.memoryStorage(),
+
+  limits: {
+    fileSize: RESTORATION_MAX_FILE_SIZE,
+    files: 1,
+  },
+
+  fileFilter: (req, file, callback) => {
+    const extension = path.extname(file.originalname || "").toLowerCase();
+
+    const validExtension = restorationAllowedExtensions.has(extension);
+
+    const validMime = restorationAllowedMimeTypes.has(file.mimetype);
+
+    if (!validExtension || !validMime) {
+      return callback(new Error("INVALID_RESTORATION_FILE_TYPE"));
+    }
+
+    callback(null, true);
+  },
+});
 
 // ----------------------------------
 // Request logging
@@ -737,6 +778,363 @@ function formatSelectionsForHtml(selections) {
       `;
     })
     .join("");
+}
+
+async function sendRestorationQuoteEmail({
+  name,
+  email,
+  phone,
+  photoAge,
+  description,
+  file,
+}) {
+  if (!process.env.ORDER_NOTIFY_EMAIL || !process.env.ORDER_FROM_EMAIL) {
+    throw new Error(
+      "Missing ORDER_NOTIFY_EMAIL or ORDER_FROM_EMAIL configuration",
+    );
+  }
+
+  const receivedAt = new Date().toLocaleString("en-US", {
+    dateStyle: "medium",
+    timeStyle: "short",
+  });
+
+  const safePhotoAge = photoAge || "Not provided";
+
+  const textBody = `
+New photo restoration quote request
+
+CUSTOMER
+Name: ${name}
+Email: ${email}
+Phone: ${phone}
+Approximate Photo Age: ${safePhotoAge}
+
+RESTORATION REQUEST
+${description}
+
+UPLOADED PHOTOGRAPH
+Filename: ${file.originalname}
+File Type: ${file.mimetype}
+File Size: ${(file.size / 1024 / 1024).toFixed(2)} MB
+
+Received: ${receivedAt}
+  `.trim();
+
+  const htmlBody = `
+    <div style="
+      margin:0;
+      padding:24px;
+      background:#f5f5f5;
+      font-family:Arial,Helvetica,sans-serif;
+      color:#111827;
+    ">
+      <div style="
+        max-width:720px;
+        margin:0 auto;
+        background:#0f0f10;
+        border-radius:24px;
+        overflow:hidden;
+        box-shadow:0 20px 60px rgba(0,0,0,0.18);
+      ">
+
+        <div style="
+          padding:28px 32px;
+          background:linear-gradient(180deg,#171717 0%,#101010 100%);
+          border-bottom:1px solid rgba(255,255,255,0.08);
+        ">
+          <div style="
+            font-size:12px;
+            letter-spacing:0.22em;
+            text-transform:uppercase;
+            color:#d6b36a;
+            margin-bottom:10px;
+          ">
+            Dan Bourret Photos
+          </div>
+
+          <h1 style="
+            margin:0;
+            font-size:28px;
+            line-height:1.2;
+            color:#ffffff;
+          ">
+            New Restoration Quote Request
+          </h1>
+
+          <p style="
+            margin:10px 0 0;
+            color:#d1d5db;
+            font-size:15px;
+            line-height:1.7;
+          ">
+            A customer submitted a photograph for restoration review.
+          </p>
+        </div>
+
+        <div style="padding:28px 32px;background:#faf7f1;">
+
+          <div style="
+            padding:18px;
+            border:1px solid #eadfca;
+            border-radius:16px;
+            background:#ffffff;
+            margin-bottom:18px;
+          ">
+            <div style="
+              font-size:12px;
+              letter-spacing:0.14em;
+              text-transform:uppercase;
+              color:#8b7355;
+              margin-bottom:10px;
+            ">
+              Customer
+            </div>
+
+            <div style="
+              font-size:14px;
+              line-height:1.8;
+              color:#374151;
+            ">
+              <div><strong>Name:</strong> ${escapeHtml(name)}</div>
+              <div><strong>Email:</strong> ${escapeHtml(email)}</div>
+              <div><strong>Phone:</strong> ${escapeHtml(phone)}</div>
+              <div>
+                <strong>Approximate Photo Age:</strong>
+                ${escapeHtml(safePhotoAge)}
+              </div>
+              <div><strong>Received:</strong> ${escapeHtml(receivedAt)}</div>
+            </div>
+          </div>
+
+          <div style="
+            padding:18px;
+            border:1px solid #eadfca;
+            border-radius:16px;
+            background:#ffffff;
+            margin-bottom:18px;
+          ">
+            <div style="
+              font-size:12px;
+              letter-spacing:0.14em;
+              text-transform:uppercase;
+              color:#8b7355;
+              margin-bottom:10px;
+            ">
+              Requested Restoration
+            </div>
+
+            <div style="
+              font-size:14px;
+              line-height:1.8;
+              color:#374151;
+              white-space:pre-wrap;
+            ">
+              ${escapeHtml(description)}
+            </div>
+          </div>
+
+          <div style="
+            padding:18px;
+            border:1px solid #eadfca;
+            border-radius:16px;
+            background:#ffffff;
+          ">
+            <div style="
+              font-size:12px;
+              letter-spacing:0.14em;
+              text-transform:uppercase;
+              color:#8b7355;
+              margin-bottom:10px;
+            ">
+              Uploaded Photograph
+            </div>
+
+            <div style="
+              font-size:14px;
+              line-height:1.8;
+              color:#374151;
+            ">
+              <div>
+                <strong>Filename:</strong>
+                ${escapeHtml(file.originalname)}
+              </div>
+              <div>
+                <strong>File Type:</strong>
+                ${escapeHtml(file.mimetype)}
+              </div>
+              <div>
+                <strong>File Size:</strong>
+                ${(file.size / 1024 / 1024).toFixed(2)} MB
+              </div>
+              <div style="margin-top:8px;">
+                The submitted photograph is attached to this email.
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  `;
+
+  await transporter.sendMail({
+    from: `"Dan Bourret Photos" <${process.env.ORDER_FROM_EMAIL}>`,
+    to: process.env.ORDER_NOTIFY_EMAIL,
+    replyTo: email,
+    subject: `Photo Restoration Quote Request • ${name}`,
+    text: textBody,
+    html: htmlBody,
+    attachments: [
+      {
+        filename: file.originalname,
+        content: file.buffer,
+        contentType: file.mimetype,
+      },
+    ],
+  });
+
+  await transporter.sendMail({
+    from: `"Dan Bourret Photos" <${process.env.ORDER_FROM_EMAIL}>`,
+    to: email,
+    replyTo: process.env.ORDER_NOTIFY_EMAIL,
+    subject: "We received your photo restoration request",
+    text: `
+Hi ${name},
+
+Thank you for submitting your photo restoration request.
+
+Your photograph and project description have been received. I will review the image and contact you with a quote and any questions before restoration work begins.
+
+Submitted photograph: ${file.originalname}
+
+Thank you,
+Dan Bourret Photos
+  `.trim(),
+
+    html: `
+    <div style="
+      margin:0;
+      padding:24px;
+      background:#f5f5f5;
+      font-family:Arial,Helvetica,sans-serif;
+      color:#111827;
+    ">
+      <div style="
+        max-width:720px;
+        margin:0 auto;
+        background:#0f0f10;
+        border-radius:24px;
+        overflow:hidden;
+        box-shadow:0 20px 60px rgba(0,0,0,0.18);
+      ">
+
+        <div style="
+          padding:28px 32px;
+          background:linear-gradient(180deg,#171717 0%,#101010 100%);
+          border-bottom:1px solid rgba(255,255,255,0.08);
+        ">
+          <div style="
+            font-size:12px;
+            letter-spacing:0.22em;
+            text-transform:uppercase;
+            color:#d6b36a;
+            margin-bottom:10px;
+          ">
+            Dan Bourret Photos
+          </div>
+
+          <h1 style="
+            margin:0;
+            font-size:28px;
+            line-height:1.2;
+            color:#ffffff;
+          ">
+            Restoration Request Received
+          </h1>
+
+          <p style="
+            margin:10px 0 0;
+            color:#d1d5db;
+            font-size:15px;
+            line-height:1.7;
+          ">
+            Thank you for submitting your photograph for review.
+          </p>
+        </div>
+
+        <div style="
+          padding:28px 32px;
+          background:#faf7f1;
+        ">
+          <div style="
+            padding:18px;
+            border:1px solid #eadfca;
+            border-radius:16px;
+            background:#ffffff;
+            margin-bottom:18px;
+          ">
+            <div style="
+              font-size:14px;
+              line-height:1.8;
+              color:#374151;
+            ">
+              Hi ${escapeHtml(name)},<br><br>
+
+              Your photograph and project description have been received.
+              I will review the image and contact you with a quote and any
+              questions before restoration work begins.
+            </div>
+          </div>
+
+          <div style="
+            padding:18px;
+            border:1px solid #eadfca;
+            border-radius:16px;
+            background:#ffffff;
+            margin-bottom:18px;
+          ">
+            <div style="
+              font-size:12px;
+              letter-spacing:0.14em;
+              text-transform:uppercase;
+              color:#8b7355;
+              margin-bottom:10px;
+            ">
+              Submitted Photograph
+            </div>
+
+            <div style="
+              font-size:14px;
+              line-height:1.8;
+              color:#374151;
+            ">
+              ${escapeHtml(file.originalname)}
+            </div>
+          </div>
+
+          <div style="
+            padding:18px;
+            border:1px solid #eadfca;
+            border-radius:16px;
+            background:#ffffff;
+          ">
+            <div style="
+              font-size:14px;
+              line-height:1.8;
+              color:#374151;
+            ">
+              Thank you,<br>
+              Dan Bourret Photos
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `,
+  });
+
+  console.log("Restoration confirmation email sent to:", email);
 }
 
 async function sendContactInquiry({ name, email, subject, message }) {
@@ -2064,6 +2462,128 @@ app.get("/api/admin/schema-check", checkAdmin, async (req, res) => {
     return res.status(500).json({ error: "Schema check failed" });
   }
 });
+
+app.post(
+  "/api/restoration-quote",
+  (req, res, next) => {
+    restorationUpload.single("image")(req, res, (error) => {
+      if (error) {
+        if (
+          error instanceof multer.MulterError &&
+          error.code === "LIMIT_FILE_SIZE"
+        ) {
+          return res.status(400).json({
+            error:
+              "The uploaded image is larger than 50 MB. Please choose a smaller TIFF, PNG, or high-quality JPEG.",
+          });
+        }
+
+        if (error.message === "INVALID_RESTORATION_FILE_TYPE") {
+          return res.status(400).json({
+            error: "Please upload a TIFF, PNG, or high-quality JPEG image.",
+          });
+        }
+
+        return res.status(400).json({
+          error:
+            "The photograph could not be uploaded. Please check the file and try again.",
+        });
+      }
+
+      next();
+    });
+  },
+
+  async (req, res) => {
+    try {
+      const name = String(req.body.name || "").trim();
+      const email = String(req.body.email || "").trim();
+      const phone = String(req.body.phone || "").trim();
+      const photoAge = String(req.body.photoAge || "").trim();
+      const description = String(req.body.description || "").trim();
+
+      const rightsConfirmed =
+        String(req.body.rightsConfirmed || "") === "on" ||
+        String(req.body.rightsConfirmed || "") === "true";
+
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+      if (!name) {
+        return res.status(400).json({
+          error: "Name is required.",
+        });
+      }
+
+      if (!email || !emailPattern.test(email)) {
+        return res.status(400).json({
+          error: "A valid email address is required.",
+        });
+      }
+
+      if (!phone) {
+        return res.status(400).json({
+          error: "Phone number is required.",
+        });
+      }
+
+      if (!req.file) {
+        return res.status(400).json({
+          error: "A TIFF, PNG, or high-quality JPEG photograph is required.",
+        });
+      }
+
+      if (!description || description.length < 20) {
+        return res.status(400).json({
+          error:
+            "Please describe the damage and any specific restoration changes you would like.",
+        });
+      }
+
+      if (!rightsConfirmed) {
+        return res.status(400).json({
+          error:
+            "You must confirm that you own the photograph or have permission to submit it.",
+        });
+      }
+
+      /*
+       * Copyright/trademark inspection will be added here.
+       *
+       * Important: file name scanning alone is not enough.
+       * The image contents must be examined by OCR or a
+       * dedicated image-analysis service.
+       */
+
+      await sendRestorationQuoteEmail({
+        name,
+        email,
+        phone,
+        photoAge,
+        description,
+        file: req.file,
+      });
+
+      return res.status(200).json({
+        success: true,
+        message: "Restoration quote request received.",
+        received: {
+          name,
+          email,
+          phone,
+          photoAge,
+          filename: req.file.originalname,
+          fileSize: req.file.size,
+        },
+      });
+    } catch (error) {
+      console.error("Restoration quote error:", error);
+
+      return res.status(500).json({
+        error: "The quote request could not be submitted.",
+      });
+    }
+  },
+);
 
 /* =============================
    API 404
