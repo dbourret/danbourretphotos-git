@@ -3,7 +3,7 @@
     "@aws-sdk/client-s3": "^3.1085.0",
     "@aws-sdk/s3-request-presigner": "^3.1085.0",
     "dotenv": "^17.4.2",
-    "express": "^5.2.1",
+    "express": "4.21.2",
     "express-rate-limit": "^8.5.2",
     "multer": "^2.2.0",
     "mysql2": "^3.22.6",
