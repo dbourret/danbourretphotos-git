@@ -16,5 +16,8 @@
   "main": "nodejs/server.js",
   "scripts": {
     "start": "node nodejs/server.js"
+  },
+  "engines": {
+    "node": "22.x"
   }
 }
