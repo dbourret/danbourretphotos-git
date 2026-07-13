@@ -10,6 +10,207 @@
       content="Wildlife and nature photography by Dan Bourret Photos."
     />
     <link rel="stylesheet" href="css/styles.css?v=mobilefix3" />
+
+    <style>
+      .restoration-showcase {
+        margin-top: 24px;
+      }
+
+      .restoration-compare {
+        position: relative;
+        width: 100%;
+        aspect-ratio: 16 / 10;
+        overflow: hidden;
+        border-radius: 18px;
+        background: #0b0b0b;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        box-shadow: 0 18px 50px rgba(0, 0, 0, 0.28);
+        user-select: none;
+        touch-action: none;
+      }
+
+      .restoration-compare img {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        background: #080808;
+        pointer-events: none;
+      }
+
+      .restoration-after-wrap {
+        position: absolute;
+        inset: 0 auto 0 0;
+        width: 50%;
+        overflow: hidden;
+      }
+
+      .restoration-after-wrap img {
+        width: 100vw;
+        max-width: none;
+      }
+
+      .restoration-divider {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 50%;
+        width: 3px;
+        transform: translateX(-50%);
+        background: #f2d38a;
+        box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.35);
+        pointer-events: none;
+      }
+
+      .restoration-handle {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 54px;
+        height: 54px;
+        transform: translate(-50%, -50%);
+        border-radius: 999px;
+        border: 2px solid #f2d38a;
+        background: rgba(10, 10, 10, 0.92);
+        color: #f2d38a;
+        display: grid;
+        place-items: center;
+        font-size: 22px;
+        font-weight: 800;
+        box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
+        pointer-events: none;
+      }
+
+      .restoration-label {
+        position: absolute;
+        top: 16px;
+        z-index: 4;
+        padding: 7px 11px;
+        border-radius: 999px;
+        background: rgba(0, 0, 0, 0.72);
+        color: #fff;
+        font-size: 0.74rem;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        pointer-events: none;
+      }
+
+      .restoration-label.before {
+        left: 16px;
+      }
+      .restoration-label.after {
+        right: 16px;
+      }
+
+      .restoration-slider-input {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        cursor: ew-resize;
+        z-index: 5;
+      }
+
+      .restoration-example-copy {
+        margin-top: 18px;
+        text-align: center;
+      }
+
+      .restoration-example-copy h3 {
+        margin-bottom: 8px;
+      }
+
+      .restoration-example-nav {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 18px;
+      }
+
+      .restoration-example-count {
+        min-width: 80px;
+        text-align: center;
+        color: #cfcfcf;
+        font-size: 0.92rem;
+      }
+
+      .restoration-stage-nav {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin: 0 0 18px;
+      }
+
+      .restoration-stage-btn {
+        min-width: 118px;
+      }
+
+      .restoration-stage-btn.active {
+        background: linear-gradient(180deg, #f4dfac, #d6b36a);
+        color: #171717;
+        border-color: transparent;
+      }
+
+      .restoration-stage-image {
+        opacity: 1;
+        transition: opacity 0.28s ease;
+      }
+
+      .restoration-stage-image.is-changing {
+        opacity: 0;
+      }
+
+      .restoration-viewer-note {
+        margin: 10px 0 0;
+        text-align: center;
+        font-size: 0.85rem;
+        color: #aaa;
+      }
+
+      .restoration-detail-list {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 8px 14px;
+        margin-top: 12px;
+        padding: 0;
+        list-style: none;
+        color: #cfcfcf;
+        font-size: 0.9rem;
+      }
+
+      .restoration-detail-list li::before {
+        content: "✓";
+        color: #f2d38a;
+        margin-right: 6px;
+        font-weight: 800;
+      }
+
+      @media (max-width: 700px) {
+        .restoration-compare {
+          aspect-ratio: 4 / 3;
+        }
+        .restoration-handle {
+          width: 46px;
+          height: 46px;
+        }
+        .restoration-label {
+          top: 10px;
+        }
+        .restoration-label.before {
+          left: 10px;
+        }
+        .restoration-label.after {
+          right: 10px;
+        }
+      }
+    </style>
   </head>
   <body>
     <header class="site-header">
@@ -21,7 +222,7 @@
 
         <nav class="site-nav">
           <a href="#" data-page="home">Home</a>
-          <a href="#" data-page="gallery">Gallery</a>
+          <a href="#" data-page="services">Services</a>
           <a href="#" data-page="pricing">Pricing</a>
           <a href="#" data-page="contact">Contact</a>
           <a href="#" data-page="order">Cart</a>
@@ -44,8 +245,8 @@
             </p>
 
             <div class="button-row">
-              <button class="btn btn-primary" data-page-target="gallery">
-                View Gallery
+              <button class="btn btn-primary" data-page-target="services">
+                View Services
               </button>
               <button class="btn btn-primary" data-page-target="pricing">
                 Explore Pricing
@@ -72,6 +273,459 @@
         </div>
       </section>
 
+      <section id="page-services" class="page">
+        <div class="container">
+          <div class="section-heading">
+            <span>Services</span>
+            <h2>Photography, prints, and creative photo services</h2>
+            <p>
+              Choose the service that best matches what you would like to do.
+            </p>
+          </div>
+
+          <div class="services-grid">
+            <article
+              class="card"
+              style="display: flex; flex-direction: column; gap: 16px"
+            >
+              <div>
+                <span class="eyebrow">Fine Art Prints</span>
+                <h3 style="margin-top: 14px">Gallery</h3>
+                <p class="muted">
+                  Browse wildlife, nature, floral, and scenic photography
+                  available in multiple print formats and sizes.
+                </p>
+              </div>
+              <div style="margin-top: auto">
+                <button
+                  class="btn btn-primary"
+                  type="button"
+                  data-page-target="gallery"
+                >
+                  Browse Gallery
+                </button>
+              </div>
+            </article>
+
+            <article
+              class="card"
+              style="display: flex; flex-direction: column; gap: 16px"
+            >
+              <div>
+                <span class="eyebrow">Custom Editing</span>
+                <h3 style="margin-top: 14px">Photo Services</h3>
+                <p class="muted">
+                  Explore professional photo restoration, enhancement,
+                  retouching, background cleanup, object removal, and related
+                  services.
+                </p>
+              </div>
+              <div style="margin-top: auto">
+                <button
+                  class="btn btn-primary"
+                  type="button"
+                  data-page-target="photo-services"
+                >
+                  View Photo Services
+                </button>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="page-photo-services" class="page">
+        <div class="container">
+          <div class="section-heading">
+            <span>Photo Services</span>
+            <h2>Professional help for your favorite photographs</h2>
+            <p>
+              Photo Restoration is currently available. Additional editing
+              services are being developed and will be introduced soon.
+            </p>
+          </div>
+
+          <div class="services-grid">
+            <article class="card">
+              <h3>Photo Restoration</h3>
+              <p class="muted">
+                Repair fading, scratches, dust, tears, discoloration, and other
+                age-related damage in treasured photographs.
+              </p>
+              <div class="button-row">
+                <button
+                  class="btn btn-primary"
+                  type="button"
+                  data-page-target="photo-restoration"
+                >
+                  Learn More
+                </button>
+              </div>
+            </article>
+
+            <article class="card">
+              <h3>Photo Enhancement</h3>
+              <img
+                src="images/coming-soon-banner.png"
+                alt="Coming Soon — this service will be available soon"
+                style="
+                  width: 100%;
+                  height: auto;
+                  border-radius: 12px;
+                  margin: 14px 0;
+                  display: block;
+                "
+              />
+              <p class="muted">
+                Improve sharpness, color, contrast, lighting, detail, and
+                overall presentation while preserving a natural look.
+              </p>
+            </article>
+
+            <article class="card">
+              <h3>Retouching</h3>
+              <img
+                src="images/coming-soon-banner.png"
+                alt="Coming Soon — this service will be available soon"
+                style="
+                  width: 100%;
+                  height: auto;
+                  border-radius: 12px;
+                  margin: 14px 0;
+                  display: block;
+                "
+              />
+              <p class="muted">
+                Refine portraits and personal photographs with careful skin,
+                clothing, lighting, and distraction cleanup.
+              </p>
+            </article>
+
+            <article class="card">
+              <h3>Background &amp; Object Removal</h3>
+              <img
+                src="images/coming-soon-banner.png"
+                alt="Coming Soon — this service will be available soon"
+                style="
+                  width: 100%;
+                  height: auto;
+                  border-radius: 12px;
+                  margin: 14px 0;
+                  display: block;
+                "
+              />
+              <p class="muted">
+                Remove distracting objects, unwanted people, clutter, screens,
+                or backgrounds and rebuild areas when possible.
+              </p>
+            </article>
+
+            <article class="card">
+              <h3>Black-and-White Colorization</h3>
+              <img
+                src="images/coming-soon-banner.png"
+                alt="Coming Soon — this service will be available soon"
+                style="
+                  width: 100%;
+                  height: auto;
+                  border-radius: 12px;
+                  margin: 14px 0;
+                  display: block;
+                "
+              />
+              <p class="muted">
+                Add realistic color to black-and-white photographs using visual
+                references and careful artistic judgment.
+              </p>
+            </article>
+
+            <article class="card">
+              <h3>Image Upscaling &amp; Print Preparation</h3>
+              <img
+                src="images/coming-soon-banner.png"
+                alt="Coming Soon — this service will be available soon"
+                style="
+                  width: 100%;
+                  height: auto;
+                  border-radius: 12px;
+                  margin: 14px 0;
+                  display: block;
+                "
+              />
+              <p class="muted">
+                Prepare images for larger prints by improving resolution,
+                reducing noise, sharpening detail, and optimizing the crop.
+              </p>
+            </article>
+          </div>
+
+          <div class="card" style="margin-top: 24px; text-align: center">
+            <h3>Have a restoration project in mind?</h3>
+            <p class="muted">
+              Visit the Photo Restoration page to learn about the process and
+              request a project quote.
+            </p>
+            <div class="button-row" style="justify-content: center">
+              <button
+                class="btn btn-primary"
+                type="button"
+                data-page-target="photo-restoration"
+              >
+                View Photo Restoration
+              </button>
+              <button
+                class="btn btn-secondary"
+                type="button"
+                data-page-target="services"
+              >
+                Back to Services
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="page-photo-restoration" class="page">
+        <div class="container">
+          <div class="section-heading">
+            <span>Photo Restoration</span>
+            <h2>Bring treasured photographs back to life</h2>
+            <p>
+              Old and damaged photographs can often be carefully repaired,
+              enhanced, and prepared for future generations. Every project is
+              reviewed individually so the finished image remains true to the
+              character of the original.
+            </p>
+          </div>
+
+          <div class="card restoration-showcase">
+            <div class="section-heading" style="margin-bottom: 18px">
+              <span>Restoration Portfolio</span>
+              <h2>Original → Restored B&amp;W → Colorized</h2>
+              <p>
+                Choose a stage to see how each photograph progressed from the
+                original image to a carefully restored black-and-white version
+                and, where available, a full-color restoration.
+              </p>
+            </div>
+
+            <div class="restoration-stage-nav" aria-label="Restoration stages">
+              <button
+                class="btn btn-secondary restoration-stage-btn active"
+                type="button"
+                data-restoration-stage="original"
+              >
+                Original
+              </button>
+              <button
+                class="btn btn-secondary restoration-stage-btn"
+                type="button"
+                data-restoration-stage="bw"
+              >
+                Restored B&amp;W
+              </button>
+              <button
+                class="btn btn-secondary restoration-stage-btn"
+                type="button"
+                data-restoration-stage="color"
+              >
+                Colorized
+              </button>
+            </div>
+
+            <div
+              id="restoration-stage-viewer"
+              class="restoration-compare"
+              role="group"
+              aria-label="Restoration stage viewer"
+            >
+              <img
+                id="restoration-stage-image"
+                class="restoration-stage-image"
+                src="images/restoration-samples/wedding-reception-before.jpg"
+                alt="Original faded wedding reception photograph"
+              />
+              <span
+                id="restoration-stage-label"
+                class="restoration-label before"
+                >Original</span
+              >
+            </div>
+
+            <p class="restoration-viewer-note">
+              Click the photograph to view it full screen.
+            </p>
+
+            <div class="restoration-example-copy">
+              <h3 id="restoration-example-title">Wedding Reception</h3>
+              <p id="restoration-example-description" class="muted">
+                Severe fading repaired, tonal balance restored, and natural
+                color carefully rebuilt.
+              </p>
+              <ul
+                id="restoration-detail-list"
+                class="restoration-detail-list"
+              ></ul>
+            </div>
+
+            <div class="restoration-example-nav">
+              <button
+                id="restoration-prev"
+                class="btn btn-secondary"
+                type="button"
+              >
+                Previous Project
+              </button>
+              <span
+                id="restoration-example-count"
+                class="restoration-example-count"
+                >1 of 4</span
+              >
+              <button
+                id="restoration-next"
+                class="btn btn-primary"
+                type="button"
+              >
+                Next Project
+              </button>
+            </div>
+          </div>
+
+          <p></p>
+
+          <div class="card" style="margin-bottom: 24px">
+            <h3>Professional Photo Restoration</h3>
+            <p class="muted">
+              Photo restoration can repair many common forms of age and damage,
+              including fading, scratches, stains, tears, creases,
+              discoloration, dust, and small missing areas.
+            </p>
+            <p class="muted">
+              The goal is not to make an old photograph look artificial. The
+              goal is to restore visible detail, improve clarity, and preserve
+              the natural appearance and history of the original image.
+            </p>
+          </div>
+
+          <div class="services-grid">
+            <article class="card">
+              <h3>Damage Repair</h3>
+              <p class="muted">
+                Repair scratches, tears, cracks, folds, creases, dust, stains,
+                and other physical damage.
+              </p>
+            </article>
+            <article class="card">
+              <h3>Fading &amp; Color Correction</h3>
+              <p class="muted">
+                Improve faded colors, restore contrast, correct color casts, and
+                recover details that have become difficult to see.
+              </p>
+            </article>
+            <article class="card">
+              <h3>Missing Area Reconstruction</h3>
+              <p class="muted">
+                Rebuild small missing or damaged areas using surrounding image
+                details while keeping the repair natural.
+              </p>
+            </article>
+            <article class="card">
+              <h3>Black-and-White Restoration</h3>
+              <p class="muted">
+                Improve tone, contrast, sharpness, and visible detail in older
+                black-and-white photographs.
+              </p>
+            </article>
+            <article class="card">
+              <h3>Portrait Cleanup</h3>
+              <p class="muted">
+                Carefully improve faces, clothing, backgrounds, and other
+                important details without an overly processed appearance.
+              </p>
+            </article>
+            <article class="card">
+              <h3>Print Preparation</h3>
+              <p class="muted">
+                Prepare the completed restoration as a high-resolution digital
+                file suitable for sharing, archiving, or professional printing.
+              </p>
+            </article>
+          </div>
+
+          <div class="card" style="margin-top: 24px">
+            <h3>How the Process Works</h3>
+            <ol class="info-list">
+              <li>Send a clear scan or photograph of the original image.</li>
+              <li>
+                Describe the damage and any specific changes you would like.
+              </li>
+              <li>
+                The photograph will be reviewed and you will receive a project
+                quote.
+              </li>
+              <li>
+                Restoration begins after the scope and price are approved.
+              </li>
+              <li>
+                The completed restoration is delivered as a high-resolution
+                digital file.
+              </li>
+            </ol>
+          </div>
+
+          <div class="card" style="margin-top: 24px">
+            <h3>What to Send</h3>
+            <p class="muted">
+              For the best result, provide the highest-quality scan or
+              photograph available.
+            </p>
+            <ul class="info-list">
+              <li>Scan the original at 600 DPI when possible</li>
+              <li>Use TIFF, PNG, or a high-quality JPEG</li>
+              <li>Avoid screenshots or images downloaded from social media</li>
+              <li>Keep the original photograph flat and evenly lit</li>
+              <li>
+                Do not apply filters or automatic enhancements before sending it
+              </li>
+            </ul>
+          </div>
+
+          <div class="card" style="margin-top: 24px">
+            <h3>Restoration Pricing</h3>
+            <p class="muted">
+              Pricing depends on the level of damage, the complexity of the
+              repair, the amount of missing detail, and the final size needed.
+              You will receive a quote before any restoration work begins.
+            </p>
+          </div>
+
+          <div class="card" style="margin-top: 24px; text-align: center">
+            <h3>Request a Photo Restoration Quote</h3>
+            <p class="muted">
+              Tell me about your photograph, the type of damage, and what you
+              would like restored. I will review the project and contact you
+              with the next steps.
+            </p>
+            <div class="button-row" style="justify-content: center">
+              <button
+                type="button"
+                class="btn btn-primary"
+                data-page-target="restoration-quote"
+              >
+                Request a Quote
+              </button>
+              <button
+                class="btn btn-secondary"
+                type="button"
+                data-page-target="photo-services"
+              >
+                Back to Photo Services
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section id="page-gallery" class="page">
         <div class="container">
           <div class="section-heading">
@@ -81,7 +735,9 @@
               Browse the collection below. Click any image to view it in detail
               or choose print options for your preferred format and size.<br />
               <span style="font-size: 0.9rem; color: #aaa; font-style: italic">
-                These preview images are intentionally low-resolution for fast browsing. All prints are produced from full-resolution originals with exceptional detail and clarity.
+                These preview images are intentionally low-resolution for fast
+                browsing. All prints are produced from full-resolution originals
+                with exceptional detail and clarity.
               </span>
             </p>
           </div>
@@ -174,6 +830,183 @@
               <button type="submit" class="btn btn-primary">
                 Send Inquiry
               </button>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <section id="page-restoration-quote" class="page">
+        <div class="container">
+          <div class="section-heading">
+            <span>Photo Restoration</span>
+            <h2>Request a Restoration Quote</h2>
+            <p>
+              Submit your photograph and describe the restoration work you would
+              like completed. Your image will be reviewed before a quote is
+              provided.
+            </p>
+          </div>
+
+          <div class="card" style="margin-bottom: 24px">
+            <h3>How the Process Works</h3>
+
+            <ol class="info-list">
+              <li>Send a clear scan or photograph of the original image.</li>
+              <li>
+                Describe the damage and any specific changes you would like.
+              </li>
+              <li>
+                The photograph will be reviewed and you will receive a project
+                quote.
+              </li>
+              <li>
+                Restoration begins after the scope and price are approved.
+              </li>
+              <li>
+                The completed restoration is delivered as a high-resolution
+                digital file.
+              </li>
+            </ol>
+          </div>
+
+          <div class="card">
+            <h3>Restoration Quote Form</h3>
+
+            <form id="restoration-quote-form" enctype="multipart/form-data">
+              <div class="checkout-grid">
+                <div>
+                  <label for="quote-name">Name *</label>
+                  <input
+                    id="quote-name"
+                    name="name"
+                    type="text"
+                    autocomplete="name"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label for="quote-email">Email Address *</label>
+                  <input
+                    id="quote-email"
+                    name="email"
+                    type="email"
+                    autocomplete="email"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label for="quote-phone">Phone Number *</label>
+                  <input
+                    id="quote-phone"
+                    name="phone"
+                    type="tel"
+                    autocomplete="tel"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label for="quote-photo-age">
+                    Approximate Age of Photograph
+                  </label>
+                  <input
+                    id="quote-photo-age"
+                    name="photoAge"
+                    type="text"
+                    placeholder="Example: 1940s"
+                  />
+                </div>
+              </div>
+
+              <div style="margin-top: 20px">
+                <label for="quote-image"> Upload Photograph * </label>
+
+                <input
+                  id="quote-image"
+                  name="image"
+                  type="file"
+                  accept=".tif,.tiff,.png,.jpg,.jpeg,image/tiff,image/png,image/jpeg"
+                  required
+                />
+
+                <p class="muted" style="margin-top: 8px">
+                  Upload a TIFF, PNG, or high-quality JPEG. Maximum file size:
+                  20 MB.
+                </p>
+              </div>
+
+              <div style="margin-top: 20px">
+                <label for="quote-description">
+                  Describe the damage and any specific changes you would like *
+                </label>
+
+                <textarea
+                  id="quote-description"
+                  name="description"
+                  rows="8"
+                  required
+                  minlength="20"
+                  placeholder="Describe fading, tears, scratches, stains, missing areas, color correction, background cleanup, or other requested changes."
+                ></textarea>
+              </div>
+
+              <div class="quote-confirmation" style="margin-top: 20px">
+                <div style="font-weight: 600; margin-bottom: 10px">
+                  Confirmation *
+                </div>
+
+                <label
+                  for="quote-rights-confirmation"
+                  style="
+                    display: flex;
+                    align-items: flex-start;
+                    gap: 12px;
+                    cursor: pointer;
+                    max-width: 800px;
+                  "
+                >
+                  <input
+                    id="quote-rights-confirmation"
+                    name="rightsConfirmed"
+                    type="checkbox"
+                    required
+                    style="
+                      margin-top: 4px;
+                      width: 18px;
+                      height: 18px;
+                      flex: 0 0 auto;
+                    "
+                  />
+
+                  <span style="line-height: 1.6">
+                    I confirm that I own this photograph or have permission from
+                    the copyright owner to submit it for restoration.
+                  </span>
+                </label>
+              </div>
+
+              <div
+                id="restoration-quote-status"
+                class="contact-status"
+                aria-live="polite"
+                style="margin-top: 18px"
+              ></div>
+
+              <div class="button-row">
+                <button type="submit" class="btn btn-primary">
+                  Submit for Review
+                </button>
+
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-page-target="photo-restoration"
+                >
+                  Back to Photo Restoration
+                </button>
+              </div>
             </form>
           </div>
         </div>
@@ -317,10 +1150,10 @@
     </div>
 
     <script src="js/bootstrap-square.js?v=mobilefix3"></script>
-    <script src="js/main.js?v=mobilefix3"></script>
+    <script src="js/main_three_stage.js?v=restoration3stage1"></script>
     <script src="js/gallery.js?v=mobilefix4"></script>
-    <link rel="stylesheet" href="css/styles.css?v=wallpreview1"
-    <link rel="stylesheet" href="styles.css?v=1.0.4">
-<script src="script.js?v=1.0.4"></script>
+    <link rel="stylesheet" href="css/styles.css?v=wallpreview1" />
+    <link rel="stylesheet" href="styles.css?v=1.0.4" />
+    <script src="script.js?v=1.0.4"></script>
   </body>
 </html>
