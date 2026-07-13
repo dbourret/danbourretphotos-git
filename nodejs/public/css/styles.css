@@ -1073,17 +1073,3 @@ input {
   background-color: #4b5563 !important;
   color: #fff !important;
 }
-
-#restoration-quote-status {
-  white-space: pre-line;
-}
-
-#restoration-quote-form .input-error {
-  border-color: #ff6b6b !important;
-  box-shadow: 0 0 0 2px rgba(255, 107, 107, 0.18);
-}
-
-#quote-rights-confirmation.input-error {
-  outline: 2px solid #ff6b6b;
-  outline-offset: 3px;
-}

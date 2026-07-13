@@ -1,5 +1,2 @@
 .env*
 !.env.example
-
-node_modules/
-nodejs/node_modules/
