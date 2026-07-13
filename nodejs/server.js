@@ -12,6 +12,33 @@ const {
   verifyS3ObjectExists,
 } = require("./whcc");
 
+process.on("unhandledRejection", (reason, promise) => {
+  console.error("====================================");
+  console.error("UNHANDLED PROMISE REJECTION");
+  console.error("Reason:", reason);
+  console.error("Promise:", promise);
+  console.error("====================================");
+});
+
+process.on("uncaughtException", (error) => {
+  console.error("====================================");
+  console.error("UNCAUGHT EXCEPTION");
+  console.error("Message:", error.message);
+  console.error("Stack:", error.stack);
+  console.error("====================================");
+
+  // Do not silently continue in an unknown state.
+  process.exit(1);
+});
+
+process.on("SIGTERM", () => {
+  console.log("SIGTERM received — Hostinger is stopping the application");
+});
+
+process.on("SIGINT", () => {
+  console.log("SIGINT received — application is stopping");
+});
+
 console.log("DB_HOST =", process.env.DB_HOST);
 console.log("DB_USER =", process.env.DB_USER);
 console.log("DB_PASSWORD exists =", !!process.env.DB_PASSWORD);
@@ -143,8 +170,11 @@ const db = mysql.createPool({
   password: process.env.DB_PASSWORD || "",
   database: process.env.DB_NAME || "danbourret_photos_local",
   waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0,
+  connectionLimit: 3,
+  maxIdle: 3,
+  idleTimeout: 60000,
+  enableKeepAlive: true,
+  keepAliveInitialDelay: 0,
 });
 
 (async () => {
@@ -451,12 +481,31 @@ app.use(express.static(publicDir, { extensions: ["html"] }));
    HEALTH
 ============================= */
 
-app.get("/api/health", (req, res) => {
-  res.json({
-    ok: true,
-    squareEnvironment: process.env.SQUARE_ENVIRONMENT || "sandbox",
-    time: new Date().toISOString(),
-  });
+app.get("/api/health", async (req, res) => {
+  try {
+    await db.query("SELECT 1");
+
+    return res.status(200).json({
+      ok: true,
+      database: "connected",
+      uptimeSeconds: Math.round(process.uptime()),
+      memory: {
+        rssMB: Math.round(process.memoryUsage().rss / 1024 / 1024),
+        heapUsedMB: Math.round(process.memoryUsage().heapUsed / 1024 / 1024),
+      },
+      squareEnvironment: process.env.SQUARE_ENVIRONMENT || "sandbox",
+      time: new Date().toISOString(),
+    });
+  } catch (error) {
+    console.error("HEALTH CHECK DATABASE ERROR:", error);
+
+    return res.status(503).json({
+      ok: false,
+      database: "disconnected",
+      error: error.message,
+      time: new Date().toISOString(),
+    });
+  }
 });
 
 /* =============================
@@ -2744,8 +2793,20 @@ app.use((err, req, res, next) => {
    START SERVER
 ============================= */
 
-app.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}`);
+const server = app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
+
+server.on("error", (error) => {
+  console.error("HTTP SERVER ERROR:", {
+    message: error.message,
+    code: error.code,
+    stack: error.stack,
+  });
+});
+
+server.on("close", () => {
+  console.log("HTTP server closed");
 });
 
 app.post("/api/orders/:id/send-shipping-email", async (req, res) => {

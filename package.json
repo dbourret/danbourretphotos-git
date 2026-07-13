@@ -13,11 +13,8 @@
   "name": "dan-bourret-photos",
   "version": "1.0.0",
   "private": true,
-  "main": "nodejs/server.js",
+  "main": "server.js",
   "scripts": {
-    "start": "node nodejs/server.js"
-  },
-  "engines": {
-    "node": "22.x"
+    "start": "node server.js"
   }
 }
