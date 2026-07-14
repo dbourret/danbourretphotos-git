@@ -1,0 +1,7 @@
+# Prevent folder listings
+Options -Indexes
+
+# Tell compatible servers and search engines not to index these pages
+<IfModule mod_headers.c>
+  Header set X-Robots-Tag "noindex, nofollow, noarchive, nosnippet"
+</IfModule>

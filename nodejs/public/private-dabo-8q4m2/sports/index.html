@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Keep this page out of search engine results -->
+  <meta name="robots" content="noindex, nofollow, noarchive, nosnippet" />
+  <meta name="googlebot" content="noindex, nofollow, noarchive, nosnippet" />
+  <meta name="referrer" content="no-referrer" />
+
+  <title>Sports | Private DABOPhotos Gallery</title>
+  <link rel="stylesheet" href="../assets/private.css" />
+</head>
+<body data-gallery-json="photos.json">
+  <header class="site-header">
+    <div class="header-inner gallery-header">
+      <div>
+        <h1>DABOPhotos</h1>
+        <p>Private Sports Gallery</p>
+      </div>
+
+      <nav class="private-nav" aria-label="Private gallery navigation">
+        <a href="../">Private Home</a>
+        <a href="../sports/">Sports</a>
+        <a href="../cars/">Cars</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="page-shell">
+    <section class="gallery-intro">
+      <p class="eyebrow">Private collection</p>
+      <h2>Sports</h2>
+      <p>Click any photograph to view it full size.</p>
+    </section>
+
+    <section id="gallery" class="gallery" aria-live="polite">
+      <p class="loading-message">Loading photographs…</p>
+    </section>
+  </main>
+
+  <div id="lightbox" class="lightbox" role="dialog" aria-modal="true" aria-label="Sports photo viewer">
+    <button id="closeLightbox" class="close-lightbox" type="button" aria-label="Close photo viewer">&times;</button>
+    <button id="prevBtn" class="nav-btn prev-btn" type="button" aria-label="Previous photograph">&#10094;</button>
+
+    <figure class="lightbox-content">
+      <img id="lightboxImage" src="" alt="" />
+      <figcaption id="lightboxTitle"></figcaption>
+    </figure>
+
+    <button id="nextBtn" class="nav-btn next-btn" type="button" aria-label="Next photograph">&#10095;</button>
+  </div>
+
+  <footer>
+    <p>&copy; 2026 DABOPhotos. All rights reserved.</p>
+  </footer>
+
+  <script src="../assets/gallery.js"></script>
+</body>
+</html>

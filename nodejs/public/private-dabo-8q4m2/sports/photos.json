@@ -1,0 +1,65 @@
+[
+  {
+    "title": "Night Game at Fenway Park — Panoramic View",
+    "description": "A sweeping nighttime panorama of Fenway Park, capturing the pitcher on the mound, the Green Monster, and a packed crowd beneath the stadium lights.",
+    "image": "../images/sports/01_fenway_park_05-06-2010_01.png",
+    "alt": "Panoramic nighttime view of a baseball game at Fenway Park",
+    "category": "sports"
+  },
+  {
+    "title": "Fenway Park Under the Lights",
+    "description": "A wide-angle view of Fenway Park during an evening baseball game, with the full infield, Green Monster, illuminated scoreboards, and fans filling the historic ballpark.",
+    "image": "../images/sports/02_fenway_park_05-06-2010_02.png",
+    "alt": "Wide nighttime view of Fenway Park during a baseball game",
+    "category": "sports"
+  },
+  {
+    "title": "Mike Lowell at the Plate",
+    "description": "Mike Lowell stands near home plate in a Boston Red Sox uniform as the opposing catcher signals toward the field during a game at Fenway Park.",
+    "image": "../images/sports/03_mike_lowell_05-06-2010.png",
+    "alt": "Mike Lowell standing near home plate at Fenway Park",
+    "category": "sports"
+  },
+  {
+    "title": "Victor Martinez Behind the Plate",
+    "description": "Boston Red Sox catcher Victor Martinez settles into position behind home plate while the umpire prepares for the next pitch.",
+    "image": "../images/sports/04_victor_martinez_05-06-2010.png",
+    "alt": "Victor Martinez catching behind home plate at Fenway Park",
+    "category": "sports"
+  },
+  {
+    "title": "Hockey Night at TD Garden",
+    "description": "A panoramic view inside TD Garden during a Boston Bruins game, with the ice illuminated beneath championship banners and a sea of black-and-gold seats.",
+    "image": "../images/sports/05_t_d_garden_01-15-2015.png",
+    "alt": "Panoramic view of a Boston Bruins hockey game at TD Garden",
+    "category": "sports"
+  },
+  {
+    "title": "Tuukka Rask Guards the Crease",
+    "description": "Boston Bruins goaltender Tuukka Rask crouches beside the net, focused and ready as play develops in front of him.",
+    "image": "../images/sports/06_tuukka_rask_2015.png",
+    "alt": "Tuukka Rask positioned beside the Boston Bruins net",
+    "category": "sports"
+  },
+  {
+    "title": "Tuukka Rask Ready in Net",
+    "description": "Tuukka Rask faces the action from inside the crease, framed by the goal and wearing the Boston Bruins' classic black-and-gold colors.",
+    "image": "../images/sports/07_tuukka_rask_2015_2.png",
+    "alt": "Tuukka Rask facing forward in the Boston Bruins goal",
+    "category": "sports"
+  },
+  {
+    "title": "Bruins Goal at TD Garden",
+    "description": "The puck rests in the net as Boston Bruins and opposing players crowd the crease during an exciting scoring play at TD Garden.",
+    "image": "../images/sports/08_bruins_goal_01-15-2015.png",
+    "alt": "Boston Bruins scoring play with players gathered around the goal",
+    "category": "sports"
+  },
+  {
+    "title": "Wanda and Joe at a Bruins Game",
+    "description": "A lively crowd scene inside TD Garden, filled with Boston Bruins supporters dressed in black and gold during a January 2015 game.",
+    "image": "../images/sports/09_wanda_joe_bruins_01-15-2015.png",
+    "alt": "Boston Bruins fans seated in the stands at TD Garden",
+    "category": "sports"
+  }
+]
