@@ -12,8 +12,6 @@
     <link rel="stylesheet" href="css/styles.css?v=mobilefix3" />
 
     <style>
-
-
       .restoration-showcase {
         margin-top: 24px;
       }
@@ -236,7 +234,9 @@
       <section id="page-home" class="page">
         <div class="container hero-grid">
           <div class="hero-copy">
-            <span class="eyebrow">Wildlife Photography &amp; Photo Restoration</span>
+            <span class="eyebrow"
+              >Wildlife Photography &amp; Photo Restoration</span
+            >
             <h2 class="hero-title">
               Museum-quality wildlife photography and
               <a
@@ -254,14 +254,14 @@
             </p>
 
             <div class="button-row">
-              <button class="btn btn-primary" data-page-target="photo-restoration">
+              <button
+                class="btn btn-primary"
+                data-page-target="photo-restoration"
+              >
                 View Photo Restoration
               </button>
               <button class="btn btn-primary" data-page-target="gallery">
                 Browse Wildlife Gallery
-              </button>
-              <button class="btn btn-primary" data-page-target="contact">
-                Get in Touch
               </button>
             </div>
           </div>
@@ -273,15 +273,20 @@
             >
               <div class="home-restoration-feature__header">
                 <div>
-                  <span class="home-restoration-feature__kicker">New Service</span>
-                  <strong id="home-restoration-feature-title">Photo Restoration</strong>
+                  <span class="home-restoration-feature__kicker"
+                    >New Service</span
+                  >
+                  <strong id="home-restoration-feature-title"
+                    >Photo Restoration</strong
+                  >
                 </div>
                 <a
                   class="home-restoration-feature__arrow"
                   href="?page=photo-restoration"
                   data-page-target="photo-restoration"
                   aria-label="View the full Photo Restoration portfolio"
-                >→</a>
+                  >→</a
+                >
               </div>
 
               <div
@@ -333,7 +338,8 @@
                 <span
                   id="home-restoration-stage-label"
                   class="restoration-label before"
-                >Original</span>
+                  >Original</span
+                >
               </div>
 
               <div class="home-restoration-feature__footer">
@@ -341,7 +347,8 @@
                 <a
                   href="?page=photo-restoration"
                   data-page-target="photo-restoration"
-                >View the full restoration portfolio →</a>
+                  >View the full restoration portfolio →</a
+                >
               </div>
             </article>
 
@@ -357,7 +364,9 @@
                 loading="eager"
               />
               <span class="home-wildlife-feature__copy">
-                <span class="home-wildlife-feature__kicker">Fine Art Photography</span>
+                <span class="home-wildlife-feature__kicker"
+                  >Fine Art Photography</span
+                >
                 <strong>Wildlife &amp; Nature Prints</strong>
                 <span>Browse the gallery →</span>
               </span>
@@ -1258,24 +1267,18 @@
           original: {
             label: "Original",
             alt: "Original faded Wedding Hallway photograph",
-            sources: [
-              "images/restoration-samples/wedding-hallway-before.jpg",
-            ],
+            sources: ["images/restoration-samples/wedding-hallway-before.jpg"],
           },
           bw: {
             label: "Restored B&W",
             alt: "Restored black-and-white Wedding Hallway photograph",
-            sources: [
-              "images/restoration-samples/wedding-hallway-after.png",
-            ],
+            sources: ["images/restoration-samples/wedding-hallway-after.png"],
             filter: "grayscale(1) contrast(1.08)",
           },
           color: {
             label: "Colorized",
             alt: "Colorized Wedding Hallway photograph",
-            sources: [
-              "images/restoration-samples/wedding-hallway-after.png",
-            ],
+            sources: ["images/restoration-samples/wedding-hallway-after.png"],
           },
         };
 
@@ -1286,8 +1289,7 @@
           const requestId = ++stageRequest;
 
           buttons.forEach((button) => {
-            const isActive =
-              button.dataset.homeRestorationStage === stageName;
+            const isActive = button.dataset.homeRestorationStage === stageName;
             button.classList.toggle("active", isActive);
             button.setAttribute("aria-selected", String(isActive));
           });
