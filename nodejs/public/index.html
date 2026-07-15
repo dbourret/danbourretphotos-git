@@ -12,6 +12,8 @@
     <link rel="stylesheet" href="css/styles.css?v=mobilefix3" />
 
     <style>
+
+
       .restoration-showcase {
         margin-top: 24px;
       }
@@ -234,22 +236,29 @@
       <section id="page-home" class="page">
         <div class="container hero-grid">
           <div class="hero-copy">
-            <span class="eyebrow">Premium wildlife collection</span>
+            <span class="eyebrow">Wildlife Photography &amp; Photo Restoration</span>
             <h2 class="hero-title">
-              Museum-quality wildlife photography designed to elevate your
-              space.
+              Museum-quality wildlife photography and
+              <a
+                href="?page=photo-restoration"
+                class="hero-restoration-link"
+                data-page-target="photo-restoration"
+              >
+                Photo Restoration
+                <span class="hero-new-badge">NEW</span>
+              </a>
             </h2>
             <p class="lead">
-              Dan Bourret Photos offers premium wildlife and nature prints
-              crafted for collectors, home decor, and statement wall art.
+              Discover premium wildlife and nature prints, or bring a treasured
+              photograph back to life through professional photo restoration.
             </p>
 
             <div class="button-row">
-              <button class="btn btn-primary" data-page-target="services">
-                View Services
+              <button class="btn btn-primary" data-page-target="photo-restoration">
+                View Photo Restoration
               </button>
-              <button class="btn btn-primary" data-page-target="pricing">
-                Explore Pricing
+              <button class="btn btn-primary" data-page-target="gallery">
+                Browse Wildlife Gallery
               </button>
               <button class="btn btn-primary" data-page-target="contact">
                 Get in Touch
@@ -257,18 +266,102 @@
             </div>
           </div>
 
-          <div class="hero-media">
-            <div class="image-card">
+          <div class="hero-media hero-media-stack">
+            <article
+              class="home-restoration-feature"
+              aria-labelledby="home-restoration-feature-title"
+            >
+              <div class="home-restoration-feature__header">
+                <div>
+                  <span class="home-restoration-feature__kicker">New Service</span>
+                  <strong id="home-restoration-feature-title">Photo Restoration</strong>
+                </div>
+                <a
+                  class="home-restoration-feature__arrow"
+                  href="?page=photo-restoration"
+                  data-page-target="photo-restoration"
+                  aria-label="View the full Photo Restoration portfolio"
+                >→</a>
+              </div>
+
+              <div
+                class="restoration-stage-nav home-restoration-stage-nav"
+                role="tablist"
+                aria-label="Wedding Hallway restoration stages"
+              >
+                <button
+                  class="btn btn-secondary restoration-stage-btn home-restoration-stage-btn active"
+                  type="button"
+                  role="tab"
+                  aria-selected="true"
+                  data-home-restoration-stage="original"
+                >
+                  Original
+                </button>
+                <button
+                  class="btn btn-secondary restoration-stage-btn home-restoration-stage-btn"
+                  type="button"
+                  role="tab"
+                  aria-selected="false"
+                  data-home-restoration-stage="bw"
+                >
+                  Restored B&amp;W
+                </button>
+                <button
+                  class="btn btn-secondary restoration-stage-btn home-restoration-stage-btn"
+                  type="button"
+                  role="tab"
+                  aria-selected="false"
+                  data-home-restoration-stage="color"
+                >
+                  Colorized
+                </button>
+              </div>
+
+              <div
+                class="home-restoration-viewer"
+                role="tabpanel"
+                aria-live="polite"
+              >
+                <img
+                  id="home-restoration-stage-image"
+                  class="restoration-stage-image home-restoration-viewer__image"
+                  src="images/restoration-samples/wedding-hallway-before.jpg"
+                  alt="Original faded Wedding Hallway photograph"
+                  loading="eager"
+                />
+                <span
+                  id="home-restoration-stage-label"
+                  class="restoration-label before"
+                >Original</span>
+              </div>
+
+              <div class="home-restoration-feature__footer">
+                <span><strong>Project 3:</strong> Wedding Hallway</span>
+                <a
+                  href="?page=photo-restoration"
+                  data-page-target="photo-restoration"
+                >View the full restoration portfolio →</a>
+              </div>
+            </article>
+
+            <a
+              class="home-wildlife-feature"
+              href="?page=gallery"
+              data-page-target="gallery"
+              aria-label="Browse the wildlife and nature photography gallery"
+            >
               <img
                 src="images/animals/bengal_tiger.png"
                 alt="Bengal Tiger"
                 loading="eager"
               />
-              <div class="image-caption">
-                <strong>Photo taken at Kowiachobee Animal Preserve</strong>
-                <span>2861 4th Ave SE, Naples, FL 34117</span>
-              </div>
-            </div>
+              <span class="home-wildlife-feature__copy">
+                <span class="home-wildlife-feature__kicker">Fine Art Photography</span>
+                <strong>Wildlife &amp; Nature Prints</strong>
+                <span>Browse the gallery →</span>
+              </span>
+            </a>
           </div>
         </div>
       </section>
@@ -1149,11 +1242,108 @@
       </div>
     </div>
 
+    <script>
+      (() => {
+        const image = document.getElementById("home-restoration-stage-image");
+        const label = document.getElementById("home-restoration-stage-label");
+        const buttons = document.querySelectorAll(
+          "[data-home-restoration-stage]",
+        );
+
+        if (!image || !label || !buttons.length) return;
+
+        let stageRequest = 0;
+
+        const stages = {
+          original: {
+            label: "Original",
+            alt: "Original faded Wedding Hallway photograph",
+            sources: [
+              "images/restoration-samples/wedding-hallway-before.jpg",
+            ],
+          },
+          bw: {
+            label: "Restored B&W",
+            alt: "Restored black-and-white Wedding Hallway photograph",
+            sources: [
+              "images/restoration-samples/wedding-hallway-after.png",
+            ],
+            filter: "grayscale(1) contrast(1.08)",
+          },
+          color: {
+            label: "Colorized",
+            alt: "Colorized Wedding Hallway photograph",
+            sources: [
+              "images/restoration-samples/wedding-hallway-after.png",
+            ],
+          },
+        };
+
+        function showStage(stageName) {
+          const stage = stages[stageName];
+          if (!stage) return;
+
+          const requestId = ++stageRequest;
+
+          buttons.forEach((button) => {
+            const isActive =
+              button.dataset.homeRestorationStage === stageName;
+            button.classList.toggle("active", isActive);
+            button.setAttribute("aria-selected", String(isActive));
+          });
+
+          image.classList.add("is-changing");
+          image.classList.remove("home-restoration-viewer__fallback-bw");
+          image.style.filter = stage.filter || "none";
+          label.textContent = stage.label;
+
+          window.setTimeout(() => {
+            if (requestId !== stageRequest) return;
+
+            let sourceIndex = 0;
+
+            const loadSource = () => {
+              image.onerror = () => {
+                if (requestId !== stageRequest) return;
+
+                sourceIndex += 1;
+
+                if (sourceIndex < stage.sources.length) {
+                  loadSource();
+                  return;
+                }
+
+                image.onerror = null;
+                image.classList.remove("is-changing");
+              };
+
+              image.onload = () => {
+                if (requestId === stageRequest) {
+                  image.classList.remove("is-changing");
+                }
+              };
+
+              image.alt = stage.alt;
+              image.src = stage.sources[sourceIndex];
+            };
+
+            loadSource();
+          }, 140);
+        }
+
+        buttons.forEach((button) => {
+          button.addEventListener("click", () => {
+            showStage(button.dataset.homeRestorationStage);
+          });
+        });
+      })();
+    </script>
+
     <script src="js/bootstrap-square.js?v=mobilefix3"></script>
     <script src="js/main_three_stage.js?v=restoration3stage1"></script>
     <script src="js/gallery.js?v=mobilefix4"></script>
     <link rel="stylesheet" href="css/styles.css?v=wallpreview1" />
-    <link rel="stylesheet" href="styles.css?v=1.0.4" />
+    <link rel="stylesheet" href="styles.css?v=home-restoration-viewer3" />
     <script src="script.js?v=1.0.4"></script>
   </body>
 </html>
