@@ -16,6 +16,9 @@
   let photos = [];
   let currentIndex = 0;
   let touchStartX = 0;
+  let touchStartY = 0;
+  let touchStartedWithOneFinger = false;
+  let previouslyFocusedElement = null;
   const jsonFile = document.body.dataset.galleryJson || "photos.json";
 
   function normalizeIndex(index) {
@@ -39,21 +42,37 @@
       return;
     }
 
+    const wasAlreadyOpen = lightbox.classList.contains("open");
+
+    if (!wasAlreadyOpen) {
+      previouslyFocusedElement = document.activeElement;
+    }
+
     currentIndex = normalizeIndex(index);
     const photo = photos[currentIndex];
+    const fullSizeImage = photo.full || photo.fullImage || photo.image;
 
-    lightboxImage.src = photo.image;
+    lightboxImage.src = fullSizeImage;
     lightboxImage.alt = photo.alt || photo.title || "Private gallery photograph";
     lightboxTitle.textContent = photo.title || "";
     lightbox.classList.add("open");
-    document.body.style.overflow = "hidden";
-    closeLightbox.focus();
+    document.body.classList.add("lightbox-open");
+
+    if (!wasAlreadyOpen) {
+      closeLightbox.focus({ preventScroll: true });
+    }
   }
 
   function closeViewer() {
     lightbox.classList.remove("open");
+    document.body.classList.remove("lightbox-open");
     lightboxImage.src = "";
-    document.body.style.overflow = "";
+
+    if (previouslyFocusedElement && typeof previouslyFocusedElement.focus === "function") {
+      previouslyFocusedElement.focus({ preventScroll: true });
+    }
+
+    previouslyFocusedElement = null;
   }
 
   function createPhotoCard(photo, index) {
@@ -64,7 +83,7 @@
     card.setAttribute("aria-label", `Open ${photo.title || "photograph"}`);
 
     const image = document.createElement("img");
-    image.src = photo.image;
+    image.src = photo.thumbnail || photo.image;
     image.alt = photo.alt || photo.title || "Private gallery photograph";
     image.loading = "lazy";
 
@@ -157,18 +176,37 @@
   });
 
   lightbox.addEventListener("touchstart", event => {
-    touchStartX = event.changedTouches[0].screenX;
-  }, { passive: true });
+    touchStartedWithOneFinger = event.touches.length === 1;
 
-  lightbox.addEventListener("touchend", event => {
-    const touchEndX = event.changedTouches[0].screenX;
-    const difference = touchEndX - touchStartX;
-
-    if (Math.abs(difference) < 50) {
+    if (!touchStartedWithOneFinger) {
       return;
     }
 
-    if (difference < 0) {
+    touchStartX = event.touches[0].clientX;
+    touchStartY = event.touches[0].clientY;
+  }, { passive: true });
+
+  lightbox.addEventListener("touchend", event => {
+    if (!touchStartedWithOneFinger || event.changedTouches.length !== 1) {
+      touchStartedWithOneFinger = false;
+      return;
+    }
+
+    const touchEndX = event.changedTouches[0].clientX;
+    const touchEndY = event.changedTouches[0].clientY;
+    const horizontalDistance = touchEndX - touchStartX;
+    const verticalDistance = touchEndY - touchStartY;
+
+    touchStartedWithOneFinger = false;
+
+    if (
+      Math.abs(horizontalDistance) < 55 ||
+      Math.abs(horizontalDistance) <= Math.abs(verticalDistance)
+    ) {
+      return;
+    }
+
+    if (horizontalDistance < 0) {
       showPhoto(currentIndex + 1);
     } else {
       showPhoto(currentIndex - 1);

@@ -231,6 +231,11 @@ button:focus-visible {
   color: #8b1e1e;
 }
 
+body.lightbox-open {
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
 .lightbox {
   position: fixed;
   z-index: 999;
@@ -239,7 +244,8 @@ button:focus-visible {
   align-items: center;
   justify-content: center;
   padding: 30px 100px;
-  background: rgba(0, 0, 0, 0.92);
+  background: rgba(0, 0, 0, 0.96);
+  overscroll-behavior: contain;
 }
 
 .lightbox.open {
@@ -260,6 +266,7 @@ button:focus-visible {
   padding: 14px;
   background: white;
   border: 8px solid #333333;
+  object-fit: contain;
 }
 
 .lightbox-content figcaption {
@@ -358,34 +365,86 @@ footer p {
   }
 
   .lightbox {
-    padding: 70px 10px 100px;
-    overflow-y: auto;
-    touch-action: pan-y;
+    width: 100vw;
+    width: 100dvw;
+    height: 100vh;
+    height: 100dvh;
+    padding: 0;
+    overflow: hidden;
+    background: #000000;
+    touch-action: pan-y pinch-zoom;
+  }
+
+  .lightbox-content {
+    position: relative;
+    width: 100vw;
+    width: 100dvw;
+    height: 100vh;
+    height: 100dvh;
+    max-width: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .lightbox-content img {
-    max-width: 94vw;
-    max-height: 68vh;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: #000000;
+    object-fit: contain;
+    touch-action: pan-y pinch-zoom;
+    user-select: none;
+    -webkit-user-drag: none;
+  }
+
+  .lightbox-content figcaption {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 2;
+    margin: 0;
+    padding: 38px 72px max(16px, env(safe-area-inset-bottom));
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+    font-size: 1rem;
+    pointer-events: none;
   }
 
   .nav-btn {
-    top: auto;
-    bottom: 24px;
-    transform: none;
-    padding: 10px 17px;
+    top: 50%;
+    bottom: auto;
+    width: 48px;
+    height: 58px;
+    padding: 0;
+    transform: translateY(-50%);
+    border-radius: 0;
+    background: rgba(0, 0, 0, 0.42);
     font-size: 2rem;
+    line-height: 1;
   }
 
   .prev-btn {
-    left: 22px;
+    left: 0;
   }
 
   .next-btn {
-    right: 22px;
+    right: 0;
   }
 
   .close-lightbox {
-    top: 8px;
-    right: 12px;
+    top: max(6px, env(safe-area-inset-top));
+    right: max(6px, env(safe-area-inset-right));
+    z-index: 3;
+    width: 52px;
+    height: 52px;
+    padding: 0;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.52);
+    font-size: 2.7rem;
   }
 }
