@@ -238,50 +238,86 @@ body.lightbox-open {
 
 .lightbox {
   position: fixed;
-  z-index: 999;
+  z-index: 9999;
   inset: 0;
+  width: 100vw;
+  width: 100dvw;
+  height: 100vh;
+  height: 100dvh;
   display: none;
   align-items: center;
   justify-content: center;
-  padding: 30px 100px;
-  background: rgba(0, 0, 0, 0.96);
-  overscroll-behavior: contain;
+  padding: 0;
+  overflow: hidden;
+  background: #000000;
+  overscroll-behavior: none;
+  touch-action: pinch-zoom;
 }
 
 .lightbox.open {
   display: flex;
 }
 
+.lightbox:fullscreen,
+.lightbox:-webkit-full-screen {
+  width: 100%;
+  height: 100%;
+  background: #000000;
+}
+
 .lightbox-content {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  max-width: none;
   margin: 0;
-  max-width: min(1100px, 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   text-align: center;
 }
 
 .lightbox-content img {
-  max-width: 100%;
-  max-height: 78vh;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
   display: block;
-  margin: 0 auto;
-  padding: 14px;
-  background: white;
-  border: 8px solid #333333;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: #000000;
   object-fit: contain;
+  touch-action: pinch-zoom;
+  user-select: none;
+  -webkit-user-drag: none;
 }
 
 .lightbox-content figcaption {
-  margin-top: 14px;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 2;
+  margin: 0;
+  padding: 60px 90px max(20px, env(safe-area-inset-bottom));
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.82), transparent);
   color: white;
   font-size: 1.15rem;
+  pointer-events: none;
 }
 
 .close-lightbox {
   position: absolute;
-  top: 18px;
-  right: 28px;
-  padding: 4px 12px;
-  background: transparent;
+  top: max(12px, env(safe-area-inset-top));
+  right: max(14px, env(safe-area-inset-right));
+  z-index: 4;
+  width: 56px;
+  height: 56px;
+  padding: 0;
   border: 0;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.62);
   color: white;
   font-size: 3rem;
   line-height: 1;
@@ -290,14 +326,18 @@ body.lightbox-open {
 
 .nav-btn {
   position: absolute;
+  z-index: 3;
   top: 50%;
+  width: 58px;
+  height: 76px;
+  padding: 0;
   transform: translateY(-50%);
-  padding: 15px 20px;
   border: 0;
   border-radius: 6px;
-  background: rgba(0, 0, 0, 0.58);
+  background: rgba(0, 0, 0, 0.52);
   color: white;
   font-size: 3rem;
+  line-height: 1;
   cursor: pointer;
   user-select: none;
 }
@@ -307,11 +347,11 @@ body.lightbox-open {
 }
 
 .prev-btn {
-  left: 30px;
+  left: max(14px, env(safe-area-inset-left));
 }
 
 .next-btn {
-  right: 30px;
+  right: max(14px, env(safe-area-inset-right));
 }
 
 footer {
@@ -364,68 +404,16 @@ footer p {
     object-fit: contain;
   }
 
-  .lightbox {
-    width: 100vw;
-    width: 100dvw;
-    height: 100vh;
-    height: 100dvh;
-    padding: 0;
-    overflow: hidden;
-    background: #000000;
-    touch-action: pan-y pinch-zoom;
-  }
-
-  .lightbox-content {
-    position: relative;
-    width: 100vw;
-    width: 100dvw;
-    height: 100vh;
-    height: 100dvh;
-    max-width: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .lightbox-content img {
-    width: 100%;
-    height: 100%;
-    max-width: none;
-    max-height: none;
-    margin: 0;
-    padding: 0;
-    border: 0;
-    background: #000000;
-    object-fit: contain;
-    touch-action: pan-y pinch-zoom;
-    user-select: none;
-    -webkit-user-drag: none;
-  }
-
   .lightbox-content figcaption {
-    position: absolute;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    z-index: 2;
-    margin: 0;
-    padding: 38px 72px max(16px, env(safe-area-inset-bottom));
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
-    font-size: 1rem;
-    pointer-events: none;
+    padding: 48px 64px max(14px, env(safe-area-inset-bottom));
+    font-size: 0.95rem;
   }
 
   .nav-btn {
-    top: 50%;
-    bottom: auto;
-    width: 48px;
-    height: 58px;
-    padding: 0;
-    transform: translateY(-50%);
+    width: 46px;
+    height: 60px;
     border-radius: 0;
-    background: rgba(0, 0, 0, 0.42);
     font-size: 2rem;
-    line-height: 1;
   }
 
   .prev-btn {
@@ -439,12 +427,8 @@ footer p {
   .close-lightbox {
     top: max(6px, env(safe-area-inset-top));
     right: max(6px, env(safe-area-inset-right));
-    z-index: 3;
-    width: 52px;
-    height: 52px;
-    padding: 0;
-    border-radius: 50%;
-    background: rgba(0, 0, 0, 0.52);
-    font-size: 2.7rem;
+    width: 50px;
+    height: 50px;
+    font-size: 2.6rem;
   }
 }

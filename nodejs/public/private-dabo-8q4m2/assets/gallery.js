@@ -19,7 +19,68 @@
   let touchStartY = 0;
   let touchStartedWithOneFinger = false;
   let previouslyFocusedElement = null;
+  let browserFullscreenActive = false;
+  let closingViewer = false;
   const jsonFile = document.body.dataset.galleryJson || "photos.json";
+
+  function getFullscreenElement() {
+    return document.fullscreenElement || document.webkitFullscreenElement || null;
+  }
+
+  async function enterBrowserFullscreen() {
+    if (getFullscreenElement()) {
+      browserFullscreenActive = true;
+      return;
+    }
+
+    const requestFullscreen =
+      lightbox.requestFullscreen || lightbox.webkitRequestFullscreen;
+
+    if (typeof requestFullscreen !== "function") {
+      return;
+    }
+
+    try {
+      const result = requestFullscreen.call(lightbox, { navigationUI: "hide" });
+
+      if (result && typeof result.then === "function") {
+        await result;
+      }
+
+      browserFullscreenActive = Boolean(getFullscreenElement());
+    } catch (error) {
+      // Some mobile browsers block the Fullscreen API. The CSS viewer still
+      // fills the complete viewport, so no user-facing error is necessary.
+      browserFullscreenActive = false;
+    }
+  }
+
+  async function exitBrowserFullscreen() {
+    if (!getFullscreenElement()) {
+      browserFullscreenActive = false;
+      return;
+    }
+
+    const exitFullscreen =
+      document.exitFullscreen || document.webkitExitFullscreen;
+
+    if (typeof exitFullscreen !== "function") {
+      browserFullscreenActive = false;
+      return;
+    }
+
+    try {
+      const result = exitFullscreen.call(document);
+
+      if (result && typeof result.then === "function") {
+        await result;
+      }
+    } catch (error) {
+      // The visual lightbox can still close even if the browser rejects this.
+    } finally {
+      browserFullscreenActive = false;
+    }
+  }
 
   function normalizeIndex(index) {
     if (!photos.length) {
@@ -37,7 +98,7 @@
     return index;
   }
 
-  function showPhoto(index) {
+  function showPhoto(index, requestFullscreen = false) {
     if (!photos.length) {
       return;
     }
@@ -60,19 +121,35 @@
 
     if (!wasAlreadyOpen) {
       closeLightbox.focus({ preventScroll: true });
+
+      if (requestFullscreen) {
+        enterBrowserFullscreen();
+      }
     }
   }
 
-  function closeViewer() {
+  async function closeViewer(options = {}) {
+    const { exitFullscreen = true } = options;
+
+    if (closingViewer) {
+      return;
+    }
+
+    closingViewer = true;
     lightbox.classList.remove("open");
     document.body.classList.remove("lightbox-open");
     lightboxImage.src = "";
+
+    if (exitFullscreen) {
+      await exitBrowserFullscreen();
+    }
 
     if (previouslyFocusedElement && typeof previouslyFocusedElement.focus === "function") {
       previouslyFocusedElement.focus({ preventScroll: true });
     }
 
     previouslyFocusedElement = null;
+    closingViewer = false;
   }
 
   function createPhotoCard(photo, index) {
@@ -92,11 +169,11 @@
 
     card.append(image, title);
 
-    card.addEventListener("click", () => showPhoto(index));
+    card.addEventListener("click", () => showPhoto(index, true));
     card.addEventListener("keydown", event => {
       if (event.key === "Enter" || event.key === " ") {
         event.preventDefault();
-        showPhoto(index);
+        showPhoto(index, true);
       }
     });
 
@@ -143,7 +220,7 @@
     }
   }
 
-  closeLightbox.addEventListener("click", closeViewer);
+  closeLightbox.addEventListener("click", () => closeViewer());
 
   prevBtn.addEventListener("click", event => {
     event.stopPropagation();
@@ -212,6 +289,23 @@
       showPhoto(currentIndex - 1);
     }
   }, { passive: true });
+
+  function handleFullscreenChange() {
+    const fullscreenElement = getFullscreenElement();
+
+    if (fullscreenElement === lightbox) {
+      browserFullscreenActive = true;
+      return;
+    }
+
+    if (browserFullscreenActive && lightbox.classList.contains("open")) {
+      browserFullscreenActive = false;
+      closeViewer({ exitFullscreen: false });
+    }
+  }
+
+  document.addEventListener("fullscreenchange", handleFullscreenChange);
+  document.addEventListener("webkitfullscreenchange", handleFullscreenChange);
 
   loadGallery();
 })();
