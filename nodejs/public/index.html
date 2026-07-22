@@ -217,7 +217,9 @@
         text-shadow: 0 2px 2px rgba(0, 0, 0, 0.8);
         filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.62));
         transform: translate(-50%, -50%) rotate(7deg);
-        transition: transform 0.2s ease, filter 0.2s ease;
+        transition:
+          transform 0.2s ease,
+          filter 0.2s ease;
       }
 
       .home-restoration-burst::before {
@@ -227,10 +229,30 @@
         z-index: -2;
         background: #171717;
         clip-path: polygon(
-          50% 0%, 60% 13%, 75% 7%, 79% 23%, 96% 21%, 91% 38%,
-          100% 50%, 87% 60%, 93% 75%, 77% 79%, 79% 96%, 62% 91%,
-          50% 100%, 40% 87%, 25% 93%, 21% 77%, 4% 79%, 9% 62%,
-          0% 50%, 13% 40%, 7% 25%, 23% 21%, 21% 4%, 38% 9%
+          50% 0%,
+          60% 13%,
+          75% 7%,
+          79% 23%,
+          96% 21%,
+          91% 38%,
+          100% 50%,
+          87% 60%,
+          93% 75%,
+          77% 79%,
+          79% 96%,
+          62% 91%,
+          50% 100%,
+          40% 87%,
+          25% 93%,
+          21% 77%,
+          4% 79%,
+          9% 62%,
+          0% 50%,
+          13% 40%,
+          7% 25%,
+          23% 21%,
+          21% 4%,
+          38% 9%
         );
       }
 
@@ -239,12 +261,37 @@
         position: absolute;
         inset: 5px;
         z-index: -1;
-        background: linear-gradient(145deg, #ff5a36 0%, #ff1744 52%, #d5006d 100%);
+        background: linear-gradient(
+          145deg,
+          #ff5a36 0%,
+          #ff1744 52%,
+          #d5006d 100%
+        );
         clip-path: polygon(
-          50% 0%, 60% 13%, 75% 7%, 79% 23%, 96% 21%, 91% 38%,
-          100% 50%, 87% 60%, 93% 75%, 77% 79%, 79% 96%, 62% 91%,
-          50% 100%, 40% 87%, 25% 93%, 21% 77%, 4% 79%, 9% 62%,
-          0% 50%, 13% 40%, 7% 25%, 23% 21%, 21% 4%, 38% 9%
+          50% 0%,
+          60% 13%,
+          75% 7%,
+          79% 23%,
+          96% 21%,
+          91% 38%,
+          100% 50%,
+          87% 60%,
+          93% 75%,
+          77% 79%,
+          79% 96%,
+          62% 91%,
+          50% 100%,
+          40% 87%,
+          25% 93%,
+          21% 77%,
+          4% 79%,
+          9% 62%,
+          0% 50%,
+          13% 40%,
+          7% 25%,
+          23% 21%,
+          21% 4%,
+          38% 9%
         );
       }
 
@@ -252,8 +299,7 @@
       .home-restoration-burst:focus-visible {
         color: #ffffff;
         transform: translate(-50%, -50%) rotate(2deg) scale(1.08);
-        filter:
-          drop-shadow(0 14px 22px rgba(0, 0, 0, 0.68))
+        filter: drop-shadow(0 14px 22px rgba(0, 0, 0, 0.68))
           drop-shadow(0 0 12px rgba(255, 23, 68, 0.62));
       }
 
@@ -323,7 +369,6 @@
           transform: translate(-50%, -50%) rotate(2deg) scale(1.05);
         }
       }
-
 
       /* Compact home-page actions: three smaller buttons on one row. */
       .home-hero-actions {
@@ -399,8 +444,16 @@
         margin-bottom: 24px;
         padding: clamp(24px, 4vw, 42px);
         background:
-          radial-gradient(circle at 85% 20%, rgba(242, 211, 138, 0.2), transparent 30%),
-          linear-gradient(145deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.018));
+          radial-gradient(
+            circle at 85% 20%,
+            rgba(242, 211, 138, 0.2),
+            transparent 30%
+          ),
+          linear-gradient(
+            145deg,
+            rgba(255, 255, 255, 0.055),
+            rgba(255, 255, 255, 0.018)
+          );
       }
 
       .calendar-hero-card h2 {
@@ -458,8 +511,18 @@
         border: 1px solid rgba(255, 255, 255, 0.12);
         border-radius: 18px;
         background:
-          linear-gradient(45deg, rgba(255, 255, 255, 0.025) 25%, transparent 25%) 0 0 / 22px 22px,
-          linear-gradient(-45deg, rgba(255, 255, 255, 0.025) 25%, transparent 25%) 0 11px / 22px 22px,
+          linear-gradient(
+              45deg,
+              rgba(255, 255, 255, 0.025) 25%,
+              transparent 25%
+            )
+            0 0 / 22px 22px,
+          linear-gradient(
+              -45deg,
+              rgba(255, 255, 255, 0.025) 25%,
+              transparent 25%
+            )
+            0 11px / 22px 22px,
           #080808;
         color: inherit;
         font: inherit;
@@ -531,7 +594,10 @@
         border-radius: 10px;
         background: #111;
         cursor: pointer;
-        transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+        transition:
+          transform 0.18s ease,
+          border-color 0.18s ease,
+          box-shadow 0.18s ease;
       }
 
       .calendar-thumbnail:hover,
@@ -752,7 +818,6 @@
         }
       }
 
-
       @media (max-width: 480px) {
         .home-hero-actions {
           flex-direction: column;
@@ -765,7 +830,6 @@
           min-height: 46px;
         }
       }
-
     </style>
   </head>
   <body>
@@ -1401,7 +1465,6 @@
         </div>
       </section>
 
-
       <section id="page-calendars-2027" class="page">
         <div class="container">
           <div class="card calendar-hero-card">
@@ -1409,10 +1472,10 @@
               <span class="eyebrow">Available Now</span>
               <h2>2027 Florida Wildlife &amp; Scenery Calendar</h2>
               <p class="lead">
-                Bring a full year of Florida&rsquo;s natural beauty to your wall.
-                Every featured photograph was taken by Dan Bourret in Florida,
-                capturing the state&rsquo;s wildlife, tropical birds, flowers,
-                waterways, and memorable scenery.
+                Bring a full year of Florida&rsquo;s natural beauty to your
+                wall. Every featured photograph was taken by Dan Bourret in
+                Florida, capturing the state&rsquo;s wildlife, tropical birds,
+                flowers, waterways, and memorable scenery.
               </p>
               <p class="muted">
                 Preview all twelve months below, choose the quantity you would
@@ -1420,8 +1483,11 @@
                 Square checkout used for photography prints.
               </p>
             </div>
-            <div class="calendar-price-badge" aria-label="Price is 22 dollars with shipping included">
-              <strong>$22.00</strong>
+            <div
+              class="calendar-price-badge"
+              aria-label="Price is 22 dollars with shipping included"
+            >
+              <strong>$25.00</strong>
               <span>Shipping included</span>
             </div>
           </div>
@@ -1430,7 +1496,11 @@
             <article class="card calendar-viewer-card">
               <div class="calendar-month-heading">
                 <h3 id="calendar-2027-month-title">January 2027</h3>
-                <span id="calendar-2027-month-count" class="calendar-month-count">1 of 12</span>
+                <span
+                  id="calendar-2027-month-count"
+                  class="calendar-month-count"
+                  >1 of 12</span
+                >
               </div>
 
               <button
@@ -1453,10 +1523,18 @@
               </p>
 
               <div class="calendar-viewer-controls">
-                <button id="calendar-2027-prev" class="btn btn-secondary" type="button">
+                <button
+                  id="calendar-2027-prev"
+                  class="btn btn-secondary"
+                  type="button"
+                >
                   Previous Month
                 </button>
-                <button id="calendar-2027-next" class="btn btn-primary" type="button">
+                <button
+                  id="calendar-2027-next"
+                  class="btn btn-primary"
+                  type="button"
+                >
                   Next Month
                 </button>
               </div>
@@ -1481,17 +1559,21 @@
                 <li>All photographs taken by Dan Bourret</li>
                 <li>Every image photographed in Florida</li>
                 <li>Wildlife, birds, flowers, and Florida scenery</li>
-                <li>Shipping included in the $22.00 price</li>
+                <li>Shipping included in the $25.00 price</li>
               </ul>
 
-              <label for="calendar-2027-quantity"><strong>Quantity</strong></label>
+              <label for="calendar-2027-quantity"
+                ><strong>Quantity</strong></label
+              >
               <div class="calendar-quantity-row">
                 <button
                   id="calendar-2027-minus"
                   class="btn btn-secondary calendar-quantity-btn"
                   type="button"
                   aria-label="Decrease calendar quantity"
-                >−</button>
+                >
+                  −
+                </button>
                 <input
                   id="calendar-2027-quantity"
                   class="calendar-quantity-input"
@@ -1507,12 +1589,18 @@
                   class="btn btn-secondary calendar-quantity-btn"
                   type="button"
                   aria-label="Increase calendar quantity"
-                >+</button>
+                >
+                  +
+                </button>
               </div>
 
               <div class="calendar-order-total">
-                <span><strong style="font-size: 1rem; color: inherit">Order total</strong><br /><small class="muted">Shipping included</small></span>
-                <strong id="calendar-2027-total">$22.00</strong>
+                <span
+                  ><strong style="font-size: 1rem; color: inherit"
+                    >Order total</strong
+                  ><br /><small class="muted">Shipping included</small></span
+                >
+                <strong id="calendar-2027-total">$25.00</strong>
               </div>
 
               <button
@@ -1522,7 +1610,11 @@
               >
                 Add to Cart &amp; Checkout
               </button>
-              <div id="calendar-2027-order-status" class="calendar-order-status" aria-live="polite"></div>
+              <div
+                id="calendar-2027-order-status"
+                class="calendar-order-status"
+                aria-live="polite"
+              ></div>
             </aside>
           </div>
         </div>
@@ -1936,13 +2028,43 @@
       </button>
     </div>
 
-
-
-    <div id="calendar-2027-lightbox" class="calendar-lightbox" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Calendar month preview">
-      <button id="calendar-2027-lightbox-close" class="calendar-lightbox-close" type="button" aria-label="Close calendar preview">×</button>
-      <button id="calendar-2027-lightbox-prev" class="calendar-lightbox-nav calendar-lightbox-prev" type="button" aria-label="Previous calendar month">‹</button>
-      <img id="calendar-2027-lightbox-image" src="images/calendars/2027/01_jan.jpg" alt="January 2027 calendar preview" />
-      <button id="calendar-2027-lightbox-next" class="calendar-lightbox-nav calendar-lightbox-next" type="button" aria-label="Next calendar month">›</button>
+    <div
+      id="calendar-2027-lightbox"
+      class="calendar-lightbox"
+      aria-hidden="true"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Calendar month preview"
+    >
+      <button
+        id="calendar-2027-lightbox-close"
+        class="calendar-lightbox-close"
+        type="button"
+        aria-label="Close calendar preview"
+      >
+        ×
+      </button>
+      <button
+        id="calendar-2027-lightbox-prev"
+        class="calendar-lightbox-nav calendar-lightbox-prev"
+        type="button"
+        aria-label="Previous calendar month"
+      >
+        ‹
+      </button>
+      <img
+        id="calendar-2027-lightbox-image"
+        src="images/calendars/2027/01_jan.jpg"
+        alt="January 2027 calendar preview"
+      />
+      <button
+        id="calendar-2027-lightbox-next"
+        class="calendar-lightbox-nav calendar-lightbox-next"
+        type="button"
+        aria-label="Next calendar month"
+      >
+        ›
+      </button>
     </div>
 
     <div id="site-modal" class="site-modal" aria-hidden="true">
@@ -2050,28 +2172,76 @@
       })();
     </script>
 
-
-
     <script>
       (() => {
         const CALENDAR_PRICE = 22;
         const months = [
-          { name: "January", file: "01_jan.jpg", description: "a colorful parrot in flight" },
-          { name: "February", file: "02_feb.jpg", description: "a close-up Florida alligator" },
-          { name: "March", file: "03_mar.jpg", description: "pink orchids in bloom" },
-          { name: "April", file: "04_apr.jpg", description: "a brilliant Florida sunset over the water" },
-          { name: "May", file: "05_may.jpg", description: "a vivid blue-and-gold macaw" },
-          { name: "June", file: "06_jun.jpg", description: "a ring-tailed lemur in a wooded setting" },
-          { name: "July", file: "07_jul.jpg", description: "a lizard resting near a white orchid" },
-          { name: "August", file: "08_aug.jpg", description: "a monarch butterfly among Florida flowers" },
-          { name: "September", file: "09_sep.jpg", description: "a scarlet macaw with wings spread" },
-          { name: "October", file: "10_oct.jpg", description: "a zebra photographed in Florida" },
-          { name: "November", file: "11_nov.jpg", description: "a rustic Florida porch and winter landscape" },
-          { name: "December", file: "12_dec.jpg", description: "a great blue heron in flight" },
+          {
+            name: "January",
+            file: "01_jan.jpg",
+            description: "a colorful parrot in flight",
+          },
+          {
+            name: "February",
+            file: "02_feb.jpg",
+            description: "a close-up Florida alligator",
+          },
+          {
+            name: "March",
+            file: "03_mar.jpg",
+            description: "pink orchids in bloom",
+          },
+          {
+            name: "April",
+            file: "04_apr.jpg",
+            description: "a brilliant Florida sunset over the water",
+          },
+          {
+            name: "May",
+            file: "05_may.jpg",
+            description: "a vivid blue-and-gold macaw",
+          },
+          {
+            name: "June",
+            file: "06_jun.jpg",
+            description: "a ring-tailed lemur in a wooded setting",
+          },
+          {
+            name: "July",
+            file: "07_jul.jpg",
+            description: "a lizard resting near a white orchid",
+          },
+          {
+            name: "August",
+            file: "08_aug.jpg",
+            description: "a monarch butterfly among Florida flowers",
+          },
+          {
+            name: "September",
+            file: "09_sep.jpg",
+            description: "a scarlet macaw with wings spread",
+          },
+          {
+            name: "October",
+            file: "10_oct.jpg",
+            description: "a zebra photographed in Florida",
+          },
+          {
+            name: "November",
+            file: "11_nov.jpg",
+            description: "a rustic Florida porch and winter landscape",
+          },
+          {
+            name: "December",
+            file: "12_dec.jpg",
+            description: "a great blue heron in flight",
+          },
         ];
 
         const preview = document.getElementById("calendar-2027-preview");
-        const previewButton = document.getElementById("calendar-2027-open-preview");
+        const previewButton = document.getElementById(
+          "calendar-2027-open-preview",
+        );
         const monthTitle = document.getElementById("calendar-2027-month-title");
         const monthCount = document.getElementById("calendar-2027-month-count");
         const thumbnails = document.getElementById("calendar-2027-thumbnails");
@@ -2084,12 +2254,30 @@
         const addButton = document.getElementById("calendar-2027-add-to-cart");
         const status = document.getElementById("calendar-2027-order-status");
         const lightbox = document.getElementById("calendar-2027-lightbox");
-        const lightboxImage = document.getElementById("calendar-2027-lightbox-image");
-        const lightboxClose = document.getElementById("calendar-2027-lightbox-close");
-        const lightboxPrevious = document.getElementById("calendar-2027-lightbox-prev");
-        const lightboxNext = document.getElementById("calendar-2027-lightbox-next");
+        const lightboxImage = document.getElementById(
+          "calendar-2027-lightbox-image",
+        );
+        const lightboxClose = document.getElementById(
+          "calendar-2027-lightbox-close",
+        );
+        const lightboxPrevious = document.getElementById(
+          "calendar-2027-lightbox-prev",
+        );
+        const lightboxNext = document.getElementById(
+          "calendar-2027-lightbox-next",
+        );
 
-        if (!preview || !previewButton || !thumbnails || !quantityInput || !addButton || !lightbox || !lightboxImage || !lightboxClose) return;
+        if (
+          !preview ||
+          !previewButton ||
+          !thumbnails ||
+          !quantityInput ||
+          !addButton ||
+          !lightbox ||
+          !lightboxImage ||
+          !lightboxClose
+        )
+          return;
 
         let currentMonth = 0;
 
@@ -2116,22 +2304,29 @@
           const month = months[currentMonth];
           preview.src = imagePath(month);
           preview.alt = imageAlt(month);
-          previewButton.setAttribute("aria-label", `Open ${month.name} 2027 calendar preview full screen`);
+          previewButton.setAttribute(
+            "aria-label",
+            `Open ${month.name} 2027 calendar preview full screen`,
+          );
           monthTitle.textContent = `${month.name} 2027`;
           monthCount.textContent = `${currentMonth + 1} of ${months.length}`;
           lightboxImage.src = imagePath(month);
           lightboxImage.alt = imageAlt(month);
 
-          thumbnails.querySelectorAll(".calendar-thumbnail").forEach((button, buttonIndex) => {
-            const active = buttonIndex === currentMonth;
-            button.classList.toggle("active", active);
-            button.setAttribute("aria-current", active ? "true" : "false");
-          });
+          thumbnails
+            .querySelectorAll(".calendar-thumbnail")
+            .forEach((button, buttonIndex) => {
+              const active = buttonIndex === currentMonth;
+              button.classList.toggle("active", active);
+              button.setAttribute("aria-current", active ? "true" : "false");
+            });
         }
 
         function normalizedQuantity() {
           const parsed = Number.parseInt(quantityInput.value, 10);
-          const quantity = Number.isFinite(parsed) ? Math.min(20, Math.max(1, parsed)) : 1;
+          const quantity = Number.isFinite(parsed)
+            ? Math.min(20, Math.max(1, parsed))
+            : 1;
           quantityInput.value = String(quantity);
           return quantity;
         }
@@ -2160,7 +2355,9 @@
           previewButton.focus();
         }
 
-        previousButton.addEventListener("click", () => showMonth(currentMonth - 1));
+        previousButton.addEventListener("click", () =>
+          showMonth(currentMonth - 1),
+        );
         nextButton.addEventListener("click", () => showMonth(currentMonth + 1));
         minusButton.addEventListener("click", () => {
           quantityInput.value = String(normalizedQuantity() - 1);
@@ -2176,8 +2373,12 @@
         previewButton.addEventListener("click", openLightbox);
 
         lightboxClose.addEventListener("click", closeLightbox);
-        lightboxPrevious.addEventListener("click", () => showMonth(currentMonth - 1));
-        lightboxNext.addEventListener("click", () => showMonth(currentMonth + 1));
+        lightboxPrevious.addEventListener("click", () =>
+          showMonth(currentMonth - 1),
+        );
+        lightboxNext.addEventListener("click", () =>
+          showMonth(currentMonth + 1),
+        );
         lightbox.addEventListener("click", (event) => {
           if (event.target === lightbox) closeLightbox();
         });
@@ -2193,9 +2394,10 @@
           let cart = [];
 
           try {
-            cart = typeof getCart === "function"
-              ? getCart()
-              : JSON.parse(localStorage.getItem("cart") || "[]");
+            cart =
+              typeof getCart === "function"
+                ? getCart()
+                : JSON.parse(localStorage.getItem("cart") || "[]");
           } catch (error) {
             console.error("Could not read cart:", error);
             cart = [];
