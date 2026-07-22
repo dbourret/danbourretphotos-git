@@ -69,6 +69,49 @@ function normalizeMaterialForDb(material = "") {
 function normalizeFinishForDb(finish = "") {
   return String(finish).trim().toLowerCase();
 }
+
+// ----------------------------------
+// 2027 CALENDAR PRODUCT
+// Calendar orders use Square checkout but are fulfilled manually,
+// so they must not be submitted to WHCC or validated as S3 print files.
+// ----------------------------------
+const CALENDAR_PRODUCT_PRICE = 22;
+
+function isCalendarItem(item = {}) {
+  const material = String(item.material || "").trim().toLowerCase();
+  const size = String(item.size || "").trim().toLowerCase();
+  const productType = String(item.productType || "").trim().toLowerCase();
+
+  return (
+    productType === "calendar" ||
+    (material === "calendar" && size === "2027")
+  );
+}
+
+async function fulfillOrderWithWhccOrManual(payload = {}) {
+  const submittedItems = Array.isArray(payload.items) ? payload.items : [];
+  const whccItems = submittedItems.filter((item) => !isCalendarItem(item));
+
+  if (!whccItems.length) {
+    logWhcc("[WHCC SKIPPED] Calendar-only order requires manual fulfillment");
+    return {
+      manualFulfillment: true,
+      confirmationId: null,
+      importResponse: { Orders: [] },
+      message: "Calendar-only order; manual fulfillment required.",
+    };
+  }
+
+  if (whccItems.length !== submittedItems.length) {
+    logWhcc("[WHCC] Calendar item excluded from mixed-order fulfillment");
+  }
+
+  return fulfillOrderWithWhcc({
+    ...payload,
+    items: whccItems,
+  });
+}
+
 const express = require("express");
 const crypto = require("crypto");
 const nodemailer = require("nodemailer");
@@ -164,16 +207,24 @@ async function estimateWhccCostsFromItems(items) {
   let shippingCost = 0;
 
   for (const item of items || []) {
+    // Calendars are stocked and shipped manually, not produced by WHCC.
+    if (isCalendarItem(item)) {
+      continue;
+    }
+
     const material = normalizeMaterialForDb(item.material || "");
     const size = String(item.size || "").trim();
     const finish = normalizeFinishForDb(item.finish || "");
 
     const [rows] = await db.execute(
       `
-      SELECT product_cost, shipping_cost
-      FROM whcc_costs
-      WHERE material = ? AND size = ? AND finish = ? AND active = 1
-      LIMIT 1
+        SELECT product_cost, shipping_cost
+        FROM whcc_costs
+        WHERE material = ?
+          AND size = ?
+          AND finish = ?
+          AND active = 1
+        LIMIT 1
       `,
       [material, size, finish],
     );
@@ -566,6 +617,12 @@ async function calculateOrderTotal(items) {
   let total = 0;
 
   for (const item of items) {
+    // The server, rather than the browser, remains the authority for price.
+    if (isCalendarItem(item)) {
+      total += CALENDAR_PRODUCT_PRICE;
+      continue;
+    }
+
     const rawMaterial = item.material || "";
     const rawSize = item.size || "";
     const rawFinish = item.finish || "";
@@ -576,10 +633,13 @@ async function calculateOrderTotal(items) {
 
     const [rows] = await db.execute(
       `
-      SELECT price
-      FROM pricing
-      WHERE material = ? AND size = ? AND finish = ? AND active = 1
-      LIMIT 1
+        SELECT price
+        FROM pricing
+        WHERE material = ?
+          AND size = ?
+          AND finish = ?
+          AND active = 1
+        LIMIT 1
       `,
       [material, size, finish],
     );
@@ -588,8 +648,7 @@ async function calculateOrderTotal(items) {
       throw new Error(`Invalid price for ${material} ${size} ${finish}`);
     }
 
-    let price = Number(rows[0].price);
-
+    const price = Number(rows[0].price);
     total += price;
   }
 
@@ -1828,6 +1887,11 @@ app.post("/api/payments/square", async (req, res) => {
 
     // 🔒 PRE-FLIGHT S3 VALIDATION (PREVENT REFUNDS)
     for (const item of orderDetails.items) {
+      if (isCalendarItem(item)) {
+        logOrder("[S3 SKIPPED] Calendar item uses manual fulfillment");
+        continue;
+      }
+
       const exists = await verifyS3ObjectExists(
         process.env.S3_BUCKET_NAME,
         item.imageKey,
@@ -1994,7 +2058,7 @@ INSERT INTO orders (
       logWhcc("[WHCC] starting fulfillment");
       logWhcc("[WHCC IMPORT] calling fulfillOrderWithWhcc");
 
-      whccResult = await fulfillOrderWithWhcc({
+      whccResult = await fulfillOrderWithWhccOrManual({
         orderId: squarePaymentId,
         customer: {
           name: customerName,
@@ -2099,6 +2163,22 @@ WHERE square_payment_id = ?
           squarePaymentId,
         ],
       );
+
+      // Calendar inventory is fulfilled outside WHCC, so surface the order
+      // prominently in the admin dashboard for packing and shipment.
+      if (items.some(isCalendarItem)) {
+        await db.execute(
+          `
+            UPDATE orders
+            SET needs_manual_review = 1,
+                manual_review_reason = ?
+            WHERE square_payment_id = ?
+          `,
+          ["Calendar order requires manual fulfillment", squarePaymentId],
+        );
+        logOrder("[MANUAL FULFILLMENT] Calendar order flagged for review");
+      }
+
     } catch (whccError) {
       whccErrorMessage = whccError.message || "Unknown WHCC error";
       console.error("[ORDER FLOW FAILED]:", {

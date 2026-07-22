@@ -153,7 +153,7 @@
 
       .restoration-stage-btn.active {
         background: linear-gradient(180deg, #f4dfac, #d6b36a);
-        color: #171717;
+        color: #ffffff;
         border-color: transparent;
       }
 
@@ -192,6 +192,102 @@
         font-weight: 800;
       }
 
+      /* Center the burst on the viewer's left border so half sits outside
+         over the page background and half overlaps the viewer/photo. */
+      .home-restoration-burst {
+        position: absolute;
+        top: 50%;
+        left: 0;
+        z-index: 8;
+        width: 142px;
+        height: 142px;
+        display: grid;
+        place-items: center;
+        padding: 0;
+        color: #171717;
+        text-align: center;
+        text-decoration: none;
+        text-transform: uppercase;
+        font-size: 0.76rem;
+        font-weight: 900;
+        line-height: 1.08;
+        letter-spacing: 0.025em;
+        background: transparent;
+        border: 0;
+        text-shadow: 0 2px 2px rgba(0, 0, 0, 0.8);
+        filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.62));
+        transform: translate(-50%, -50%) rotate(7deg);
+        transition: transform 0.2s ease, filter 0.2s ease;
+      }
+
+      .home-restoration-burst::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: -2;
+        background: #171717;
+        clip-path: polygon(
+          50% 0%, 60% 13%, 75% 7%, 79% 23%, 96% 21%, 91% 38%,
+          100% 50%, 87% 60%, 93% 75%, 77% 79%, 79% 96%, 62% 91%,
+          50% 100%, 40% 87%, 25% 93%, 21% 77%, 4% 79%, 9% 62%,
+          0% 50%, 13% 40%, 7% 25%, 23% 21%, 21% 4%, 38% 9%
+        );
+      }
+
+      .home-restoration-burst::after {
+        content: "";
+        position: absolute;
+        inset: 5px;
+        z-index: -1;
+        background: linear-gradient(145deg, #ff5a36 0%, #ff1744 52%, #d5006d 100%);
+        clip-path: polygon(
+          50% 0%, 60% 13%, 75% 7%, 79% 23%, 96% 21%, 91% 38%,
+          100% 50%, 87% 60%, 93% 75%, 77% 79%, 79% 96%, 62% 91%,
+          50% 100%, 40% 87%, 25% 93%, 21% 77%, 4% 79%, 9% 62%,
+          0% 50%, 13% 40%, 7% 25%, 23% 21%, 21% 4%, 38% 9%
+        );
+      }
+
+      .home-restoration-burst:hover,
+      .home-restoration-burst:focus-visible {
+        color: #ffffff;
+        transform: translate(-50%, -50%) rotate(2deg) scale(1.08);
+        filter:
+          drop-shadow(0 14px 22px rgba(0, 0, 0, 0.68))
+          drop-shadow(0 0 12px rgba(255, 23, 68, 0.62));
+      }
+
+      .home-restoration-burst span {
+        position: relative;
+        z-index: 1;
+        display: block;
+        width: 104px;
+        transform: rotate(-7deg);
+        overflow: visible;
+      }
+
+      .home-restoration-viewer {
+        position: relative;
+        overflow: visible !important;
+        isolation: isolate;
+      }
+
+      .home-restoration-viewer__image {
+        position: relative;
+        z-index: 1;
+        border-radius: inherit;
+      }
+
+      .home-restoration-burst {
+        z-index: 20;
+      }
+
+      .home-restoration-feature,
+      .hero-media,
+      .hero-media-stack {
+        overflow: visible !important;
+      }
+
       @media (max-width: 700px) {
         .restoration-compare {
           aspect-ratio: 4 / 3;
@@ -209,7 +305,467 @@
         .restoration-label.after {
           right: 10px;
         }
+        .home-restoration-burst {
+          top: 50%;
+          left: 0;
+          width: 112px;
+          height: 112px;
+          font-size: 0.62rem;
+          transform: translate(-50%, -50%) rotate(7deg);
+        }
+
+        .home-restoration-burst span {
+          width: 84px;
+        }
+
+        .home-restoration-burst:hover,
+        .home-restoration-burst:focus-visible {
+          transform: translate(-50%, -50%) rotate(2deg) scale(1.05);
+        }
       }
+
+
+      /* Compact home-page actions: three smaller buttons on one row. */
+      .home-hero-actions {
+        display: flex;
+        flex-wrap: nowrap;
+        align-items: stretch;
+        justify-content: flex-start;
+        gap: 8px;
+        width: max-content;
+        max-width: 100%;
+      }
+
+      .home-hero-actions .btn {
+        width: auto;
+        min-width: 0;
+        min-height: 46px;
+        padding: 8px 12px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        white-space: nowrap;
+        font-size: 0.76rem;
+        line-height: 1.1;
+      }
+
+      .home-hero-actions .calendar-home-cta {
+        min-width: 138px;
+        padding-inline: 13px;
+      }
+
+      /* =============================
+         2027 CALENDAR PAGE
+      ============================= */
+      .calendar-home-cta {
+        display: inline-flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-width: 172px;
+        gap: 2px;
+        background: linear-gradient(180deg, #f4dfac, #d6b36a);
+        color: #171717;
+        border-color: transparent;
+      }
+
+      .calendar-home-cta:hover,
+      .calendar-home-cta:focus-visible {
+        color: #000;
+      }
+
+      .calendar-home-cta__title {
+        display: block;
+        font-size: 1.03rem;
+        font-weight: 900;
+        line-height: 1.05;
+      }
+
+      .calendar-home-cta__subtext {
+        display: block;
+        font-size: 0.7rem;
+        font-weight: 800;
+        line-height: 1;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+
+      .calendar-hero-card {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: center;
+        gap: 28px;
+        margin-bottom: 24px;
+        padding: clamp(24px, 4vw, 42px);
+        background:
+          radial-gradient(circle at 85% 20%, rgba(242, 211, 138, 0.2), transparent 30%),
+          linear-gradient(145deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.018));
+      }
+
+      .calendar-hero-card h2 {
+        margin: 10px 0 12px;
+      }
+
+      .calendar-price-badge {
+        min-width: 190px;
+        padding: 22px 24px;
+        border: 1px solid rgba(242, 211, 138, 0.5);
+        border-radius: 18px;
+        background: rgba(8, 8, 8, 0.72);
+        text-align: center;
+        box-shadow: 0 14px 38px rgba(0, 0, 0, 0.3);
+      }
+
+      .calendar-price-badge strong {
+        display: block;
+        color: #f2d38a;
+        font-size: clamp(2rem, 5vw, 3rem);
+        line-height: 1;
+      }
+
+      .calendar-price-badge span {
+        display: block;
+        margin-top: 7px;
+        color: #ddd;
+        font-size: 0.82rem;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .calendar-page-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1.55fr) minmax(280px, 0.75fr);
+        align-items: start;
+        gap: 24px;
+      }
+
+      .calendar-viewer-card,
+      .calendar-order-card {
+        min-width: 0;
+      }
+
+      .calendar-main-viewer {
+        position: relative;
+        display: grid;
+        place-items: center;
+        width: 100%;
+        min-height: 520px;
+        padding: 22px;
+        overflow: hidden;
+        appearance: none;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 18px;
+        background:
+          linear-gradient(45deg, rgba(255, 255, 255, 0.025) 25%, transparent 25%) 0 0 / 22px 22px,
+          linear-gradient(-45deg, rgba(255, 255, 255, 0.025) 25%, transparent 25%) 0 11px / 22px 22px,
+          #080808;
+        color: inherit;
+        font: inherit;
+        cursor: zoom-in;
+      }
+
+      .calendar-main-viewer:hover,
+      .calendar-main-viewer:focus-visible {
+        border-color: rgba(242, 211, 138, 0.75);
+        box-shadow: 0 0 0 3px rgba(242, 211, 138, 0.12);
+        outline: none;
+      }
+
+      .calendar-main-image {
+        display: block;
+        width: auto;
+        max-width: 100%;
+        max-height: 720px;
+        object-fit: contain;
+        border-radius: 8px;
+        background: #fff;
+        box-shadow: 0 18px 46px rgba(0, 0, 0, 0.48);
+        pointer-events: none;
+      }
+
+      .calendar-month-heading {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+        margin-bottom: 16px;
+      }
+
+      .calendar-month-heading h3 {
+        margin: 0;
+      }
+
+      .calendar-month-count {
+        color: #aaa;
+        font-size: 0.9rem;
+      }
+
+      .calendar-viewer-controls {
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        margin-top: 18px;
+      }
+
+      .calendar-viewer-note {
+        margin: 12px 0 0;
+        color: #aaa;
+        text-align: center;
+        font-size: 0.84rem;
+      }
+
+      .calendar-thumbnail-grid {
+        display: grid;
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+        gap: 10px;
+        margin-top: 20px;
+      }
+
+      .calendar-thumbnail {
+        position: relative;
+        padding: 0;
+        overflow: hidden;
+        border: 2px solid transparent;
+        border-radius: 10px;
+        background: #111;
+        cursor: pointer;
+        transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+      }
+
+      .calendar-thumbnail:hover,
+      .calendar-thumbnail:focus-visible {
+        transform: translateY(-2px);
+        border-color: rgba(242, 211, 138, 0.7);
+      }
+
+      .calendar-thumbnail.active {
+        border-color: #f2d38a;
+        box-shadow: 0 0 0 2px rgba(242, 211, 138, 0.18);
+      }
+
+      .calendar-thumbnail img {
+        display: block;
+        width: 100%;
+        aspect-ratio: 0.6;
+        object-fit: cover;
+      }
+
+      .calendar-thumbnail span {
+        position: absolute;
+        right: 4px;
+        bottom: 4px;
+        left: 4px;
+        padding: 4px 3px;
+        border-radius: 5px;
+        background: rgba(0, 0, 0, 0.8);
+        color: #fff;
+        font-size: 0.62rem;
+        font-weight: 800;
+        text-align: center;
+      }
+
+      .calendar-order-card {
+        position: sticky;
+        top: 22px;
+      }
+
+      .calendar-feature-list {
+        margin: 18px 0 22px;
+      }
+
+      .calendar-feature-list li::marker {
+        color: #f2d38a;
+      }
+
+      .calendar-quantity-row {
+        display: grid;
+        grid-template-columns: auto minmax(84px, 112px) auto;
+        justify-content: start;
+        align-items: center;
+        gap: 9px;
+        margin-top: 10px;
+      }
+
+      .calendar-quantity-btn {
+        width: 44px;
+        height: 44px;
+        padding: 0;
+        font-size: 1.35rem;
+      }
+
+      .calendar-quantity-input {
+        height: 44px;
+        padding: 7px 10px;
+        text-align: center;
+        font-size: 1rem;
+        font-weight: 800;
+      }
+
+      .calendar-order-total {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 16px;
+        margin: 22px 0;
+        padding-top: 18px;
+        border-top: 1px solid rgba(255, 255, 255, 0.12);
+      }
+
+      .calendar-order-total strong {
+        color: #f2d38a;
+        font-size: 1.65rem;
+      }
+
+      .calendar-add-cart-btn {
+        width: 100%;
+        font-size: 1rem;
+      }
+
+      .calendar-order-status {
+        min-height: 1.4em;
+        margin-top: 12px;
+        color: #f2d38a;
+        text-align: center;
+        font-size: 0.88rem;
+      }
+
+      .calendar-lightbox {
+        position: fixed;
+        inset: 0;
+        z-index: 10000;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 24px 72px;
+        background: rgba(0, 0, 0, 0.94);
+      }
+
+      .calendar-lightbox.open {
+        display: flex;
+      }
+
+      .calendar-lightbox img {
+        display: block;
+        width: auto;
+        max-width: min(92vw, 760px);
+        max-height: 92vh;
+        object-fit: contain;
+        background: #fff;
+        box-shadow: 0 20px 70px rgba(0, 0, 0, 0.7);
+      }
+
+      .calendar-lightbox-close,
+      .calendar-lightbox-nav {
+        position: absolute;
+        z-index: 2;
+        border: 1px solid rgba(255, 255, 255, 0.35);
+        border-radius: 999px;
+        background: rgba(10, 10, 10, 0.82);
+        color: #fff;
+        cursor: pointer;
+      }
+
+      .calendar-lightbox-close {
+        top: 18px;
+        right: 18px;
+        width: 46px;
+        height: 46px;
+        font-size: 1.7rem;
+      }
+
+      .calendar-lightbox-nav {
+        top: 50%;
+        width: 48px;
+        height: 48px;
+        transform: translateY(-50%);
+        font-size: 1.8rem;
+      }
+
+      .calendar-lightbox-prev {
+        left: 16px;
+      }
+
+      .calendar-lightbox-next {
+        right: 16px;
+      }
+
+      @media (max-width: 900px) {
+        .calendar-hero-card,
+        .calendar-page-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .calendar-price-badge {
+          width: 100%;
+        }
+
+        .calendar-order-card {
+          position: static;
+        }
+      }
+
+      @media (max-width: 700px) {
+        .home-hero-actions {
+          width: 100%;
+          gap: 6px;
+        }
+
+        .home-hero-actions .btn {
+          flex: 1 1 0;
+          min-height: 44px;
+          padding: 7px 8px;
+          white-space: normal;
+          font-size: 0.7rem;
+        }
+
+        .home-hero-actions .calendar-home-cta {
+          min-width: 0;
+        }
+
+        .calendar-home-cta__title {
+          font-size: 0.85rem;
+        }
+
+        .calendar-home-cta__subtext {
+          font-size: 0.58rem;
+        }
+
+        .calendar-main-viewer {
+          min-height: 390px;
+          padding: 12px;
+        }
+
+        .calendar-thumbnail-grid {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+
+        .calendar-lightbox {
+          padding: 64px 12px 20px;
+        }
+
+        .calendar-lightbox-nav {
+          top: auto;
+          bottom: 12px;
+          transform: none;
+        }
+      }
+
+
+      @media (max-width: 480px) {
+        .home-hero-actions {
+          flex-direction: column;
+          width: 100%;
+        }
+
+        .home-hero-actions .btn,
+        .home-hero-actions .calendar-home-cta {
+          width: 100%;
+          min-height: 46px;
+        }
+      }
+
     </style>
   </head>
   <body>
@@ -253,7 +809,7 @@
               photograph back to life through professional photo restoration.
             </p>
 
-            <div class="button-row">
+            <div class="button-row home-hero-actions">
               <button
                 class="btn btn-primary"
                 data-page-target="photo-restoration"
@@ -262,6 +818,15 @@
               </button>
               <button class="btn btn-primary" data-page-target="gallery">
                 Browse Wildlife Gallery
+              </button>
+              <button
+                class="btn btn-primary calendar-home-cta"
+                type="button"
+                data-page-target="calendars-2027"
+                aria-label="Order a 2027 calendar"
+              >
+                <span class="calendar-home-cta__title">2027 Calendars</span>
+                <span class="calendar-home-cta__subtext">Order now</span>
               </button>
             </div>
           </div>
@@ -328,6 +893,14 @@
                 role="tabpanel"
                 aria-live="polite"
               >
+                <a
+                  class="home-restoration-burst"
+                  href="?page=photo-restoration"
+                  data-page-target="photo-restoration"
+                  aria-label="Explore the new Photo Restoration service"
+                >
+                  <span>New!<br />Photo<br />Restoration</span>
+                </a>
                 <img
                   id="home-restoration-stage-image"
                   class="restoration-stage-image home-restoration-viewer__image"
@@ -828,6 +1401,133 @@
         </div>
       </section>
 
+
+      <section id="page-calendars-2027" class="page">
+        <div class="container">
+          <div class="card calendar-hero-card">
+            <div>
+              <span class="eyebrow">Available Now</span>
+              <h2>2027 Florida Wildlife &amp; Scenery Calendar</h2>
+              <p class="lead">
+                Bring a full year of Florida&rsquo;s natural beauty to your wall.
+                Every featured photograph was taken by Dan Bourret in Florida,
+                capturing the state&rsquo;s wildlife, tropical birds, flowers,
+                waterways, and memorable scenery.
+              </p>
+              <p class="muted">
+                Preview all twelve months below, choose the quantity you would
+                like, and complete your order through the same secure cart and
+                Square checkout used for photography prints.
+              </p>
+            </div>
+            <div class="calendar-price-badge" aria-label="Price is 22 dollars with shipping included">
+              <strong>$22.00</strong>
+              <span>Shipping included</span>
+            </div>
+          </div>
+
+          <div class="calendar-page-grid">
+            <article class="card calendar-viewer-card">
+              <div class="calendar-month-heading">
+                <h3 id="calendar-2027-month-title">January 2027</h3>
+                <span id="calendar-2027-month-count" class="calendar-month-count">1 of 12</span>
+              </div>
+
+              <button
+                id="calendar-2027-open-preview"
+                class="calendar-main-viewer"
+                type="button"
+                aria-label="Open January 2027 calendar preview full screen"
+              >
+                <img
+                  id="calendar-2027-preview"
+                  class="calendar-main-image"
+                  src="images/calendars/2027/01_jan.jpg"
+                  alt="January 2027 calendar preview featuring a Florida parrot photograph by Dan Bourret"
+                  loading="eager"
+                />
+              </button>
+
+              <p class="calendar-viewer-note">
+                Click the large preview to view the month full screen.
+              </p>
+
+              <div class="calendar-viewer-controls">
+                <button id="calendar-2027-prev" class="btn btn-secondary" type="button">
+                  Previous Month
+                </button>
+                <button id="calendar-2027-next" class="btn btn-primary" type="button">
+                  Next Month
+                </button>
+              </div>
+
+              <div
+                id="calendar-2027-thumbnails"
+                class="calendar-thumbnail-grid"
+                aria-label="Choose a calendar month to preview"
+              ></div>
+            </article>
+
+            <aside class="card calendar-order-card">
+              <span class="eyebrow">Order Your Calendar</span>
+              <h3 style="margin-top: 14px">2027 Florida Collection</h3>
+              <p class="muted">
+                A year of original Florida photography by Dan Bourret, featuring
+                wildlife and scenery photographed throughout the state.
+              </p>
+
+              <ul class="info-list calendar-feature-list">
+                <li>January through December 2027</li>
+                <li>All photographs taken by Dan Bourret</li>
+                <li>Every image photographed in Florida</li>
+                <li>Wildlife, birds, flowers, and Florida scenery</li>
+                <li>Shipping included in the $22.00 price</li>
+              </ul>
+
+              <label for="calendar-2027-quantity"><strong>Quantity</strong></label>
+              <div class="calendar-quantity-row">
+                <button
+                  id="calendar-2027-minus"
+                  class="btn btn-secondary calendar-quantity-btn"
+                  type="button"
+                  aria-label="Decrease calendar quantity"
+                >−</button>
+                <input
+                  id="calendar-2027-quantity"
+                  class="calendar-quantity-input"
+                  type="number"
+                  min="1"
+                  max="20"
+                  step="1"
+                  value="1"
+                  inputmode="numeric"
+                />
+                <button
+                  id="calendar-2027-plus"
+                  class="btn btn-secondary calendar-quantity-btn"
+                  type="button"
+                  aria-label="Increase calendar quantity"
+                >+</button>
+              </div>
+
+              <div class="calendar-order-total">
+                <span><strong style="font-size: 1rem; color: inherit">Order total</strong><br /><small class="muted">Shipping included</small></span>
+                <strong id="calendar-2027-total">$22.00</strong>
+              </div>
+
+              <button
+                id="calendar-2027-add-to-cart"
+                class="btn btn-primary calendar-add-cart-btn"
+                type="button"
+              >
+                Add to Cart &amp; Checkout
+              </button>
+              <div id="calendar-2027-order-status" class="calendar-order-status" aria-live="polite"></div>
+            </aside>
+          </div>
+        </div>
+      </section>
+
       <section id="page-gallery" class="page">
         <div class="container">
           <div class="section-heading">
@@ -1236,6 +1936,15 @@
       </button>
     </div>
 
+
+
+    <div id="calendar-2027-lightbox" class="calendar-lightbox" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Calendar month preview">
+      <button id="calendar-2027-lightbox-close" class="calendar-lightbox-close" type="button" aria-label="Close calendar preview">×</button>
+      <button id="calendar-2027-lightbox-prev" class="calendar-lightbox-nav calendar-lightbox-prev" type="button" aria-label="Previous calendar month">‹</button>
+      <img id="calendar-2027-lightbox-image" src="images/calendars/2027/01_jan.jpg" alt="January 2027 calendar preview" />
+      <button id="calendar-2027-lightbox-next" class="calendar-lightbox-nav calendar-lightbox-next" type="button" aria-label="Next calendar month">›</button>
+    </div>
+
     <div id="site-modal" class="site-modal" aria-hidden="true">
       <div class="site-modal-card">
         <button
@@ -1338,6 +2047,195 @@
             showStage(button.dataset.homeRestorationStage);
           });
         });
+      })();
+    </script>
+
+
+
+    <script>
+      (() => {
+        const CALENDAR_PRICE = 22;
+        const months = [
+          { name: "January", file: "01_jan.jpg", description: "a colorful parrot in flight" },
+          { name: "February", file: "02_feb.jpg", description: "a close-up Florida alligator" },
+          { name: "March", file: "03_mar.jpg", description: "pink orchids in bloom" },
+          { name: "April", file: "04_apr.jpg", description: "a brilliant Florida sunset over the water" },
+          { name: "May", file: "05_may.jpg", description: "a vivid blue-and-gold macaw" },
+          { name: "June", file: "06_jun.jpg", description: "a ring-tailed lemur in a wooded setting" },
+          { name: "July", file: "07_jul.jpg", description: "a lizard resting near a white orchid" },
+          { name: "August", file: "08_aug.jpg", description: "a monarch butterfly among Florida flowers" },
+          { name: "September", file: "09_sep.jpg", description: "a scarlet macaw with wings spread" },
+          { name: "October", file: "10_oct.jpg", description: "a zebra photographed in Florida" },
+          { name: "November", file: "11_nov.jpg", description: "a rustic Florida porch and winter landscape" },
+          { name: "December", file: "12_dec.jpg", description: "a great blue heron in flight" },
+        ];
+
+        const preview = document.getElementById("calendar-2027-preview");
+        const previewButton = document.getElementById("calendar-2027-open-preview");
+        const monthTitle = document.getElementById("calendar-2027-month-title");
+        const monthCount = document.getElementById("calendar-2027-month-count");
+        const thumbnails = document.getElementById("calendar-2027-thumbnails");
+        const previousButton = document.getElementById("calendar-2027-prev");
+        const nextButton = document.getElementById("calendar-2027-next");
+        const quantityInput = document.getElementById("calendar-2027-quantity");
+        const minusButton = document.getElementById("calendar-2027-minus");
+        const plusButton = document.getElementById("calendar-2027-plus");
+        const total = document.getElementById("calendar-2027-total");
+        const addButton = document.getElementById("calendar-2027-add-to-cart");
+        const status = document.getElementById("calendar-2027-order-status");
+        const lightbox = document.getElementById("calendar-2027-lightbox");
+        const lightboxImage = document.getElementById("calendar-2027-lightbox-image");
+        const lightboxClose = document.getElementById("calendar-2027-lightbox-close");
+        const lightboxPrevious = document.getElementById("calendar-2027-lightbox-prev");
+        const lightboxNext = document.getElementById("calendar-2027-lightbox-next");
+
+        if (!preview || !previewButton || !thumbnails || !quantityInput || !addButton || !lightbox || !lightboxImage || !lightboxClose) return;
+
+        let currentMonth = 0;
+
+        const imagePath = (month) => `images/calendars/2027/${month.file}`;
+        const imageAlt = (month) =>
+          `${month.name} 2027 calendar preview featuring ${month.description}, photographed in Florida by Dan Bourret`;
+
+        months.forEach((month, index) => {
+          const button = document.createElement("button");
+          button.type = "button";
+          button.className = "calendar-thumbnail";
+          button.dataset.monthIndex = String(index);
+          button.setAttribute("aria-label", `View ${month.name} 2027`);
+          button.innerHTML = `
+            <img src="${imagePath(month)}" alt="" loading="lazy" />
+            <span>${month.name}</span>
+          `;
+          button.addEventListener("click", () => showMonth(index));
+          thumbnails.appendChild(button);
+        });
+
+        function showMonth(index) {
+          currentMonth = (index + months.length) % months.length;
+          const month = months[currentMonth];
+          preview.src = imagePath(month);
+          preview.alt = imageAlt(month);
+          previewButton.setAttribute("aria-label", `Open ${month.name} 2027 calendar preview full screen`);
+          monthTitle.textContent = `${month.name} 2027`;
+          monthCount.textContent = `${currentMonth + 1} of ${months.length}`;
+          lightboxImage.src = imagePath(month);
+          lightboxImage.alt = imageAlt(month);
+
+          thumbnails.querySelectorAll(".calendar-thumbnail").forEach((button, buttonIndex) => {
+            const active = buttonIndex === currentMonth;
+            button.classList.toggle("active", active);
+            button.setAttribute("aria-current", active ? "true" : "false");
+          });
+        }
+
+        function normalizedQuantity() {
+          const parsed = Number.parseInt(quantityInput.value, 10);
+          const quantity = Number.isFinite(parsed) ? Math.min(20, Math.max(1, parsed)) : 1;
+          quantityInput.value = String(quantity);
+          return quantity;
+        }
+
+        function updateTotal() {
+          const quantity = normalizedQuantity();
+          total.textContent = `$${(quantity * CALENDAR_PRICE).toFixed(2)}`;
+        }
+
+        function openLightbox() {
+          const month = months[currentMonth];
+          lightboxImage.src = imagePath(month);
+          lightboxImage.alt = imageAlt(month);
+          lightbox.style.display = "flex";
+          lightbox.classList.add("open");
+          lightbox.setAttribute("aria-hidden", "false");
+          document.body.style.overflow = "hidden";
+          window.requestAnimationFrame(() => lightboxClose.focus());
+        }
+
+        function closeLightbox() {
+          lightbox.classList.remove("open");
+          lightbox.style.display = "none";
+          lightbox.setAttribute("aria-hidden", "true");
+          document.body.style.overflow = "";
+          previewButton.focus();
+        }
+
+        previousButton.addEventListener("click", () => showMonth(currentMonth - 1));
+        nextButton.addEventListener("click", () => showMonth(currentMonth + 1));
+        minusButton.addEventListener("click", () => {
+          quantityInput.value = String(normalizedQuantity() - 1);
+          updateTotal();
+        });
+        plusButton.addEventListener("click", () => {
+          quantityInput.value = String(normalizedQuantity() + 1);
+          updateTotal();
+        });
+        quantityInput.addEventListener("input", updateTotal);
+        quantityInput.addEventListener("change", updateTotal);
+
+        previewButton.addEventListener("click", openLightbox);
+
+        lightboxClose.addEventListener("click", closeLightbox);
+        lightboxPrevious.addEventListener("click", () => showMonth(currentMonth - 1));
+        lightboxNext.addEventListener("click", () => showMonth(currentMonth + 1));
+        lightbox.addEventListener("click", (event) => {
+          if (event.target === lightbox) closeLightbox();
+        });
+        document.addEventListener("keydown", (event) => {
+          if (!lightbox.classList.contains("open")) return;
+          if (event.key === "Escape") closeLightbox();
+          if (event.key === "ArrowLeft") showMonth(currentMonth - 1);
+          if (event.key === "ArrowRight") showMonth(currentMonth + 1);
+        });
+
+        addButton.addEventListener("click", () => {
+          const quantity = normalizedQuantity();
+          let cart = [];
+
+          try {
+            cart = typeof getCart === "function"
+              ? getCart()
+              : JSON.parse(localStorage.getItem("cart") || "[]");
+          } catch (error) {
+            console.error("Could not read cart:", error);
+            cart = [];
+          }
+
+          for (let index = 0; index < quantity; index += 1) {
+            cart.push({
+              title: "2027 Florida Wildlife & Scenery Calendar",
+              image: "images/calendars/2027/01_jan.jpg",
+              imageKey: "calendar-2027.jpg",
+              size: "2027",
+              material: "Calendar",
+              finish: "Shipping included",
+              price: CALENDAR_PRICE,
+              productType: "calendar",
+            });
+          }
+
+          if (typeof saveCart === "function") {
+            saveCart(cart);
+          } else {
+            localStorage.setItem("cart", JSON.stringify(cart));
+          }
+
+          if (typeof renderCart === "function") renderCart();
+
+          status.textContent = `${quantity} calendar${quantity === 1 ? "" : "s"} added to your cart.`;
+
+          window.setTimeout(() => {
+            if (typeof showPage === "function") {
+              showPage("order");
+            } else {
+              window.location.href = "?page=order";
+            }
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }, 180);
+        });
+
+        showMonth(0);
+        updateTotal();
       })();
     </script>
 
