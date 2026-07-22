@@ -75,16 +75,21 @@ function normalizeFinishForDb(finish = "") {
 // Calendar orders use Square checkout but are fulfilled manually,
 // so they must not be submitted to WHCC or validated as S3 print files.
 // ----------------------------------
-const CALENDAR_PRODUCT_PRICE = 22;
+const CALENDAR_PRODUCT_PRICE = 25;
 
 function isCalendarItem(item = {}) {
-  const material = String(item.material || "").trim().toLowerCase();
-  const size = String(item.size || "").trim().toLowerCase();
-  const productType = String(item.productType || "").trim().toLowerCase();
+  const material = String(item.material || "")
+    .trim()
+    .toLowerCase();
+  const size = String(item.size || "")
+    .trim()
+    .toLowerCase();
+  const productType = String(item.productType || "")
+    .trim()
+    .toLowerCase();
 
   return (
-    productType === "calendar" ||
-    (material === "calendar" && size === "2027")
+    productType === "calendar" || (material === "calendar" && size === "2027")
   );
 }
 
@@ -2178,7 +2183,6 @@ WHERE square_payment_id = ?
         );
         logOrder("[MANUAL FULFILLMENT] Calendar order flagged for review");
       }
-
     } catch (whccError) {
       whccErrorMessage = whccError.message || "Unknown WHCC error";
       console.error("[ORDER FLOW FAILED]:", {
