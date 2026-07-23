@@ -1736,22 +1736,32 @@ ${
           tbody.appendChild(detailsTr);
         });
 
-        const totalRevenue = data.reduce(
-          (sum, o) => sum + Number(o.order_total || 0),
+        // Financial dashboard metrics only include paid or completed orders.
+        const financialOrders = data.filter((order) => {
+          const status = String(order.status || "")
+            .trim()
+            .toLowerCase();
+
+          return status === "paid" || status === "completed";
+        });
+
+        const totalRevenue = financialOrders.reduce(
+          (sum, order) => sum + Number(order.order_total || 0),
           0,
         );
 
-        const totalEstimatedProfit = data.reduce(
-          (sum, o) => sum + Number(o.estimated_profit || 0),
+        const totalEstimatedProfit = financialOrders.reduce(
+          (sum, order) => sum + Number(order.estimated_profit || 0),
           0,
         );
 
         const avgEstimatedMargin =
-          data.length > 0
-            ? data.reduce(
-                (sum, o) => sum + Number(o.estimated_profit_margin || 0),
+          financialOrders.length > 0
+            ? financialOrders.reduce(
+                (sum, order) =>
+                  sum + Number(order.estimated_profit_margin || 0),
                 0,
-              ) / data.length
+              ) / financialOrders.length
             : 0;
 
         const shippedCount = data.filter(
