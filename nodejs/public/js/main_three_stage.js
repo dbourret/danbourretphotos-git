@@ -20,6 +20,10 @@ function showPage(pageName) {
       initSquare().catch((err) => {
         console.error("Square init error:", err);
       });
+
+      initPayPal().catch((err) => {
+        console.error("PayPal init error:", err);
+      });
     }, 200);
   }
 
@@ -517,6 +521,42 @@ function setPayButtonState(isDisabled, label = "Pay with Card") {
     "is-loading",
     isDisabled && label.includes("Processing"),
   );
+}
+
+function getCheckoutCustomer() {
+  return {
+    name: document.getElementById("cust-name")?.value?.trim() || "",
+    email: document.getElementById("cust-email")?.value?.trim() || "",
+    phone: document.getElementById("cust-phone")?.value?.trim() || "",
+    address: document.getElementById("cust-address")?.value?.trim() || "",
+    city: document.getElementById("cust-city")?.value?.trim() || "",
+    state: document.getElementById("cust-state")?.value?.trim() || "",
+    zip: document.getElementById("cust-zip")?.value?.trim() || "",
+  };
+}
+
+function getCheckoutTotal(cart = getCart()) {
+  return cart.reduce((sum, item) => {
+    return (
+      sum + Number(item.price ?? getPrice(item.size, item.material, item.finish))
+    );
+  }, 0);
+}
+
+function showPayPalStatus(message, isError = false) {
+  const statusEl = document.getElementById("paypal-status");
+  if (!statusEl) return;
+
+  if (!message) {
+    statusEl.textContent = "";
+    statusEl.className = "payment-status";
+    statusEl.style.display = "none";
+    return;
+  }
+
+  statusEl.textContent = message;
+  statusEl.className = `payment-status show ${isError ? "error" : "success"}`;
+  statusEl.style.display = "block";
 }
 
 function renderCart() {
@@ -2407,43 +2447,30 @@ function isCheckoutFormComplete() {
   const emailValue = document.getElementById("cust-email")?.value.trim() || "";
   const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const emailValid = emailPattern.test(emailValue);
+  const cartHasItems = getCart().length > 0;
 
-  const cart = getCart();
-  const cartHasItems = cart.length > 0;
-
-  return allFilled && emailValid && cartHasItems && !!squareCard;
+  return allFilled && emailValid && cartHasItems;
 }
 
 function updatePayButtonAvailability() {
   const checkoutHelper = document.getElementById("checkout-helper");
+  const squareButton = document.getElementById("square-pay-btn");
+  const paypalContainer = document.getElementById("paypal-button-container");
 
-  const requiredIds = [
-    "cust-name",
-    "cust-email",
-    "cust-phone",
-    "cust-address",
-    "cust-city",
-    "cust-state",
-    "cust-zip",
-  ];
-
-  const allFieldsValid = requiredIds.every((id) => {
-    const field = document.getElementById(id);
-    return field && field.value.trim() !== "";
-  });
-
-  const emailField = document.getElementById("cust-email");
-  const emailValue = emailField?.value.trim() || "";
-  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  const emailValid = emailPattern.test(emailValue);
-
-  const customerInfoValid = allFieldsValid && emailValid;
+  const ready = isCheckoutFormComplete();
 
   if (checkoutHelper) {
-    checkoutHelper.style.display = customerInfoValid ? "none" : "block";
+    checkoutHelper.style.display = ready ? "none" : "block";
   }
 
-  // keep your existing Square/card/button logic below this
+  if (squareButton && !squareButton.classList.contains("is-loading")) {
+    squareButton.disabled = !ready || !squareCard;
+  }
+
+  if (paypalContainer) {
+    paypalContainer.classList.toggle("is-disabled", !ready);
+    paypalContainer.setAttribute("aria-disabled", String(!ready));
+  }
 }
 
 async function handleSquarePayment() {
@@ -2473,23 +2500,11 @@ async function handleSquarePayment() {
       return;
     }
 
-    const total = cart.reduce((sum, item) => {
-      return (
-        sum + (item.price ?? getPrice(item.size, item.material, item.finish))
-      );
-    }, 0);
+    const total = getCheckoutTotal(cart);
 
     const result = await squareCard.tokenize();
 
-    const customer = {
-      name: document.getElementById("cust-name")?.value?.trim() || "",
-      email: document.getElementById("cust-email")?.value?.trim() || "",
-      phone: document.getElementById("cust-phone")?.value?.trim() || "",
-      address: document.getElementById("cust-address")?.value?.trim() || "",
-      city: document.getElementById("cust-city")?.value?.trim() || "",
-      state: document.getElementById("cust-state")?.value?.trim() || "",
-      zip: document.getElementById("cust-zip")?.value?.trim() || "",
-    };
+    const customer = getCheckoutCustomer();
 
     console.log("cart being sent to server =", cart);
     if (result.status !== "OK") {
@@ -2551,7 +2566,229 @@ async function handleSquarePayment() {
     console.error("Square payment error:", err);
   } finally {
     setPayButtonState(false, "Pay with Card");
+    updatePayButtonAvailability();
   }
+}
+
+
+/* =============================
+   PAYPAL PAYMENT
+============================= */
+
+let paypalInitPromise = null;
+let paypalButtonsRendered = false;
+
+async function loadPayPalSdk(config) {
+  if (window.paypal) return;
+
+  const sdkUrl = new URL(config.scriptUrl);
+  sdkUrl.searchParams.set("client-id", config.clientId);
+  sdkUrl.searchParams.set("currency", "USD");
+  sdkUrl.searchParams.set("intent", "capture");
+  sdkUrl.searchParams.set("components", "buttons");
+
+  await new Promise((resolve, reject) => {
+    const existing = document.querySelector('script[data-paypal-sdk="true"]');
+
+    if (existing) {
+      if (existing.dataset.loaded === "true" && window.paypal) {
+        resolve();
+        return;
+      }
+
+      existing.addEventListener("load", resolve, { once: true });
+      existing.addEventListener(
+        "error",
+        () => reject(new Error("Failed to load PayPal SDK")),
+        { once: true },
+      );
+      return;
+    }
+
+    const script = document.createElement("script");
+    script.src = sdkUrl.toString();
+    script.async = true;
+    script.dataset.paypalSdk = "true";
+    script.onload = () => {
+      script.dataset.loaded = "true";
+      resolve();
+    };
+    script.onerror = () =>
+      reject(new Error(`Failed to load PayPal SDK from ${config.scriptUrl}`));
+    document.head.appendChild(script);
+  });
+}
+
+async function parsePaymentResponse(response) {
+  const text = await response.text();
+  let data = {};
+
+  try {
+    data = text ? JSON.parse(text) : {};
+  } catch {
+    data = { error: text || "Unexpected server response" };
+  }
+
+  if (!response.ok) {
+    throw new Error(data.error || data.details || "Payment request failed");
+  }
+
+  return data;
+}
+
+async function initPayPal() {
+  const container = document.getElementById("paypal-button-container");
+  if (!container || paypalButtonsRendered) return;
+  if (paypalInitPromise) return paypalInitPromise;
+
+  paypalInitPromise = (async () => {
+    const response = await fetch("/api/config/paypal");
+    const config = await parsePaymentResponse(response);
+
+    if (!config.enabled) {
+      container.innerHTML =
+        '<p class="muted">PayPal is not configured yet.</p>';
+      return;
+    }
+
+    await loadPayPalSdk(config);
+
+    if (!window.paypal?.Buttons) {
+      throw new Error("PayPal Buttons SDK did not load");
+    }
+
+    const buttons = window.paypal.Buttons({
+      fundingSource: window.paypal.FUNDING.PAYPAL,
+      style: {
+        layout: "vertical",
+        color: "gold",
+        shape: "rect",
+        label: "paypal",
+        height: 45,
+      },
+
+      onClick(_data, actions) {
+        clearCheckoutValidation();
+        showPayPalStatus("");
+
+        if (!validateCheckoutFields()) {
+          return actions.reject();
+        }
+
+        if (!getCart().length) {
+          showPayPalStatus("Your cart is empty.", true);
+          return actions.reject();
+        }
+
+        return actions.resolve();
+      },
+
+      async createOrder() {
+        const cart = getCart();
+        const customer = getCheckoutCustomer();
+
+        showPayPalStatus("Opening secure PayPal checkout...");
+
+        const response = await fetch("/api/payments/paypal/create", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            checkoutAttemptId: crypto.randomUUID(),
+            orderDetails: {
+              items: cart,
+              customer,
+            },
+          }),
+        });
+
+        const data = await parsePaymentResponse(response);
+
+        if (!data.orderId) {
+          throw new Error("PayPal did not return an order ID");
+        }
+
+        return data.orderId;
+      },
+
+      async onApprove(data) {
+        const cart = getCart();
+        const customer = getCheckoutCustomer();
+        const total = getCheckoutTotal(cart);
+
+        showPayPalStatus("Completing your PayPal payment...");
+
+        const response = await fetch(
+          `/api/payments/paypal/${encodeURIComponent(data.orderID)}/capture`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              orderDetails: {
+                items: cart,
+                customer,
+              },
+            }),
+          },
+        );
+
+        const result = await parsePaymentResponse(response);
+
+        localStorage.setItem(
+          "lastOrder",
+          JSON.stringify({
+            paymentId: result.captureId || result.orderId,
+            paymentProvider: "paypal",
+            total: `$${total.toFixed(2)}`,
+            items: cart,
+          }),
+        );
+
+        localStorage.removeItem("cart");
+        renderCart();
+        showPayPalStatus("PayPal payment completed successfully.");
+        window.location.href = "/success.html";
+      },
+
+      onCancel() {
+        showPayPalStatus(
+          "PayPal checkout was canceled. Your order has not been placed.",
+          true,
+        );
+      },
+
+      onError(error) {
+        console.error("PayPal checkout error:", error);
+        showPayPalStatus(
+          error?.message ||
+            "PayPal could not complete the payment. Please try again.",
+          true,
+        );
+      },
+    });
+
+    if (!buttons.isEligible()) {
+      container.innerHTML =
+        '<p class="muted">PayPal is not available for this browser or account.</p>';
+      return;
+    }
+
+    await buttons.render("#paypal-button-container");
+    paypalButtonsRendered = true;
+    updatePayButtonAvailability();
+  })()
+    .catch((error) => {
+      console.error("PayPal initialization failed:", error);
+      showPayPalStatus(
+        "PayPal is temporarily unavailable. You can still pay by card.",
+        true,
+      );
+      throw error;
+    })
+    .finally(() => {
+      paypalInitPromise = null;
+    });
+
+  return paypalInitPromise;
 }
 
 function sortSizesAscending(sizeEntries) {
@@ -3658,6 +3895,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     clearCartBtn.addEventListener("click", () => {
       localStorage.removeItem("cart");
       renderCart();
+      updatePayButtonAvailability();
     });
   }
 

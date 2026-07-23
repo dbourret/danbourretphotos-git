@@ -1,0 +1,10 @@
+PayPal update contents
+
+1. Adds a PayPal button below the existing Square card checkout.
+2. Adds GET /api/config/paypal.
+3. Adds POST /api/payments/paypal/create.
+4. Adds POST /api/payments/paypal/:orderId/capture.
+5. Uses PayPal OAuth 2.0 and Orders v2 on the Node.js server.
+6. Reuses server-side pricing, S3 checks, WHCC fulfillment, calendar manual fulfillment, database storage, and order emails.
+7. Updates Content Security Policy rules for PayPal.
+8. Keeps the PayPal client secret on the server only.
