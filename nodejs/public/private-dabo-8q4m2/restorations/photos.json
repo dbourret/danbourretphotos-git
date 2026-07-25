@@ -1,0 +1,870 @@
+[
+  {
+    "position": 1,
+    "group": "1637804654618-febf6e63-4e9b-4e68-b61c-196c2a37368d_401",
+    "title": "Restoration 401",
+    "items": [
+      {
+        "kind": "original",
+        "label": "Original JPG",
+        "filename": "1637804654618-febf6e63-4e9b-4e68-b61c-196c2a37368d_401.jpg",
+        "image": "../images/restorations/1637804654618-febf6e63-4e9b-4e68-b61c-196c2a37368d_401.jpg",
+        "thumbnail": "../images/restorations-thumbs/01-original.jpg"
+      },
+      {
+        "kind": "restored",
+        "label": "Restored PNG",
+        "filename": "1637804654618-febf6e63-4e9b-4e68-b61c-196c2a37368d_401.png",
+        "image": "../images/restorations/1637804654618-febf6e63-4e9b-4e68-b61c-196c2a37368d_401.png",
+        "thumbnail": "../images/restorations-thumbs/01-restored.jpg"
+      },
+      {
+        "kind": "combined",
+        "label": "Combined",
+        "filename": "1637804654618-febf6e63-4e9b-4e68-b61c-196c2a37368d_401combined.png",
+        "image": "../images/restorations/1637804654618-febf6e63-4e9b-4e68-b61c-196c2a37368d_401combined.png",
+        "thumbnail": "../images/restorations-thumbs/01-combined.jpg"
+      }
+    ]
+  },
+  {
+    "position": 2,
+    "group": "1638113664443-a5f6329c-901a-4b55-a45c-29981f3a4176__402",
+    "title": "Restoration 402",
+    "items": [
+      {
+        "kind": "original",
+        "label": "Original JPG",
+        "filename": "1638113664443-a5f6329c-901a-4b55-a45c-29981f3a4176__402.jpg",
+        "image": "../images/restorations/1638113664443-a5f6329c-901a-4b55-a45c-29981f3a4176__402.jpg",
+        "thumbnail": "../images/restorations-thumbs/02-original.jpg"
+      },
+      {
+        "kind": "restored",
+        "label": "Restored PNG",
+        "filename": "1638113664443-a5f6329c-901a-4b55-a45c-29981f3a4176__402.png",
+        "image": "../images/restorations/1638113664443-a5f6329c-901a-4b55-a45c-29981f3a4176__402.png",
+        "thumbnail": "../images/restorations-thumbs/02-restored.jpg"
+      },
+      {
+        "kind": "combined",
+        "label": "Combined",
+        "filename": "1638113664443-a5f6329c-901a-4b55-a45c-29981f3a4176__402_combined.png",
+        "image": "../images/restorations/1638113664443-a5f6329c-901a-4b55-a45c-29981f3a4176__402_combined.png",
+        "thumbnail": "../images/restorations-thumbs/02-combined.jpg"
+      }
+    ]
+  },
+  {
+    "position": 3,
+    "group": "1638886013294-41ce79cd-879f-4cf9-a4bd-e402193f6e0e__403",
+    "title": "Restoration 403",
+    "items": [
+      {
+        "kind": "original",
+        "label": "Original JPG",
+        "filename": "1638886013294-41ce79cd-879f-4cf9-a4bd-e402193f6e0e__403.jpg",
+        "image": "../images/restorations/1638886013294-41ce79cd-879f-4cf9-a4bd-e402193f6e0e__403.jpg",
+        "thumbnail": "../images/restorations-thumbs/03-original.jpg"
+      },
+      {
+        "kind": "restored",
+        "label": "Restored PNG",
+        "filename": "1638886013294-41ce79cd-879f-4cf9-a4bd-e402193f6e0e__403.png",
+        "image": "../images/restorations/1638886013294-41ce79cd-879f-4cf9-a4bd-e402193f6e0e__403.png",
+        "thumbnail": "../images/restorations-thumbs/03-restored.jpg"
+      },
+      {
+        "kind": "combined",
+        "label": "Combined",
+        "filename": "1638886013294-41ce79cd-879f-4cf9-a4bd-e402193f6e0e__403_combined.png",
+        "image": "../images/restorations/1638886013294-41ce79cd-879f-4cf9-a4bd-e402193f6e0e__403_combined.png",
+        "thumbnail": "../images/restorations-thumbs/03-combined.jpg"
+      }
+    ]
+  },
+  {
+    "position": 4,
+    "group": "1638886051710-bd0d5b1a-b8eb-42d3-874f-5eff59f39de9__404",
+    "title": "Restoration 404",
+    "items": [
+      {
+        "kind": "original",
+        "label": "Original JPG",
+        "filename": "1638886051710-bd0d5b1a-b8eb-42d3-874f-5eff59f39de9__404.jpg",
+        "image": "../images/restorations/1638886051710-bd0d5b1a-b8eb-42d3-874f-5eff59f39de9__404.jpg",
+        "thumbnail": "../images/restorations-thumbs/04-original.jpg"
+      },
+      {
+        "kind": "restored",
+        "label": "Restored PNG",
+        "filename": "1638886051710-bd0d5b1a-b8eb-42d3-874f-5eff59f39de9__404.png",
+        "image": "../images/restorations/1638886051710-bd0d5b1a-b8eb-42d3-874f-5eff59f39de9__404.png",
+        "thumbnail": "../images/restorations-thumbs/04-restored.jpg"
+      },
+      {
+        "kind": "combined",
+        "label": "Combined",
+        "filename": "1638886051710-bd0d5b1a-b8eb-42d3-874f-5eff59f39de9__404_combined.png",
+        "image": "../images/restorations/1638886051710-bd0d5b1a-b8eb-42d3-874f-5eff59f39de9__404_combined.png",
+        "thumbnail": "../images/restorations-thumbs/04-combined.jpg"
+      }
+    ]
+  },
+  {
+    "position": 5,
+    "group": "1638886085317-c53b1bab-f135-40af-be3f-d911b43d5414__405",
+    "title": "Restoration 405",
+    "items": [
+      {
+        "kind": "original",
+        "label": "Original JPG",
+        "filename": "1638886085317-c53b1bab-f135-40af-be3f-d911b43d5414__405.jpg",
+        "image": "../images/restorations/1638886085317-c53b1bab-f135-40af-be3f-d911b43d5414__405.jpg",
+        "thumbnail": "../images/restorations-thumbs/05-original.jpg"
+      },
+      {
+        "kind": "restored",
+        "label": "Restored PNG",
+        "filename": "1638886085317-c53b1bab-f135-40af-be3f-d911b43d5414__405.png",
+        "image": "../images/restorations/1638886085317-c53b1bab-f135-40af-be3f-d911b43d5414__405.png",
+        "thumbnail": "../images/restorations-thumbs/05-restored.jpg"
+      },
+      {
+        "kind": "combined",
+        "label": "Combined",
+        "filename": "1638886085317-c53b1bab-f135-40af-be3f-d911b43d5414__405_combined.png",
+        "image": "../images/restorations/1638886085317-c53b1bab-f135-40af-be3f-d911b43d5414__405_combined.png",
+        "thumbnail": "../images/restorations-thumbs/05-combined.jpg"
+      }
+    ]
+  },
+  {
+    "position": 6,
+    "group": "1638886317566-04e9c7d6-1875-4024-86d8-4f90d07db06e_406",
+    "title": "Restoration 406",
+    "items": [
+      {
+        "kind": "original",
+        "label": "Original JPG",
+        "filename": "1638886317566-04e9c7d6-1875-4024-86d8-4f90d07db06e_406.jpg",
+        "image": "../images/restorations/1638886317566-04e9c7d6-1875-4024-86d8-4f90d07db06e_406.jpg",
+        "thumbnail": "../images/restorations-thumbs/06-original.jpg"
+      },
+      {
+        "kind": "restored",
+        "label": "Restored PNG",
+        "filename": "1638886317566-04e9c7d6-1875-4024-86d8-4f90d07db06e_406.png",
+        "image": "../images/restorations/1638886317566-04e9c7d6-1875-4024-86d8-4f90d07db06e_406.png",
+        "thumbnail": "../images/restorations-thumbs/06-restored.jpg"
+      },
+      {
+        "kind": "combined",
+        "label": "Combined",
+        "filename": "1638886317566-04e9c7d6-1875-4024-86d8-4f90d07db06e_406_combined.png",
+        "image": "../images/restorations/1638886317566-04e9c7d6-1875-4024-86d8-4f90d07db06e_406_combined.png",
+        "thumbnail": "../images/restorations-thumbs/06-combined.jpg"
+      }
+    ]
+  },
+  {
+    "position": 7,
+    "group": "1638886383668-2d46ad92-1daa-4f6c-913f-152d6ac6e13f_407",
+    "title": "Restoration 407",
+    "items": [
+      {
+        "kind": "original",
+        "label": "Original JPG",
+        "filename": "1638886383668-2d46ad92-1daa-4f6c-913f-152d6ac6e13f_407.jpg",
+        "image": "../images/restorations/1638886383668-2d46ad92-1daa-4f6c-913f-152d6ac6e13f_407.jpg",
+        "thumbnail": "../images/restorations-thumbs/07-original.jpg"
+      },
+      {
+        "kind": "restored",
+        "label": "Restored PNG",
+        "filename": "1638886383668-2d46ad92-1daa-4f6c-913f-152d6ac6e13f_407.png",
+        "image": "../images/restorations/1638886383668-2d46ad92-1daa-4f6c-913f-152d6ac6e13f_407.png",
+        "thumbnail": "../images/restorations-thumbs/07-restored.jpg"
+      },
+      {
+        "kind": "combined",
+        "label": "Combined",
+        "filename": "1638886383668-2d46ad92-1daa-4f6c-913f-152d6ac6e13f_407_combined.png",
+        "image": "../images/restorations/1638886383668-2d46ad92-1daa-4f6c-913f-152d6ac6e13f_407_combined.png",
+        "thumbnail": "../images/restorations-thumbs/07-combined.jpg"
+      }
+    ]
+  },
+  {
+    "position": 8,
+    "group": "1638886483962-c2de7b6e-25fd-4768-984e-806b02002865__408",
+    "title": "Restoration 408",
+    "items": [
+      {
+        "kind": "original",
+        "label": "Original JPG",
+        "filename": "1638886483962-c2de7b6e-25fd-4768-984e-806b02002865__408.jpg",
+        "image": "../images/restorations/1638886483962-c2de7b6e-25fd-4768-984e-806b02002865__408.jpg",
+        "thumbnail": "../images/restorations-thumbs/08-original.jpg"
+      },
+      {
+        "kind": "restored",
+        "label": "Restored PNG",
+        "filename": "1638886483962-c2de7b6e-25fd-4768-984e-806b02002865__408.png",
+        "image": "../images/restorations/1638886483962-c2de7b6e-25fd-4768-984e-806b02002865__408.png",
+        "thumbnail": "../images/restorations-thumbs/08-restored.jpg"
+      },
+      {
+        "kind": "combined",
+        "label": "Combined",
+        "filename": "1638886483962-c2de7b6e-25fd-4768-984e-806b02002865__408_combined.png",
+        "image": "../images/restorations/1638886483962-c2de7b6e-25fd-4768-984e-806b02002865__408_combined.png",
+        "thumbnail": "../images/restorations-thumbs/08-combined.jpg"
+      }
+    ]
+  },
+  {
+    "position": 9,
+    "group": "1638886591360-31560de3-d8e7-4203-b9ce-75c6f327e866_409",
+    "title": "Restoration 409",
+    "items": [
+      {
+        "kind": "original",
+        "label": "Original JPG",
+        "filename": "1638886591360-31560de3-d8e7-4203-b9ce-75c6f327e866_409.jpg",
+        "image": "../images/restorations/1638886591360-31560de3-d8e7-4203-b9ce-75c6f327e866_409.jpg",
+        "thumbnail": "../images/restorations-thumbs/09-original.jpg"
+      },
+      {
+        "kind": "restored",
+        "label": "Restored PNG",
+        "filename": "1638886591360-31560de3-d8e7-4203-b9ce-75c6f327e866_409.png",
+        "image": "../images/restorations/1638886591360-31560de3-d8e7-4203-b9ce-75c6f327e866_409.png",
+        "thumbnail": "../images/restorations-thumbs/09-restored.jpg"
+      },
+      {
+        "kind": "combined",
+        "label": "Combined",
+        "filename": "1638886591360-31560de3-d8e7-4203-b9ce-75c6f327e866_409_combined.png",
+        "image": "../images/restorations/1638886591360-31560de3-d8e7-4203-b9ce-75c6f327e866_409_combined.png",
+        "thumbnail": "../images/restorations-thumbs/09-combined.jpg"
+      }
+    ]
+  },
+  {
+    "position": 10,
+    "group": "1638886655015-5bc3bbf7-2a18-4505-ac1e-f188d1b126c0_410",
+    "title": "Restoration 410",
+    "items": [
+      {
+        "kind": "original",
+        "label": "Original JPG",
+        "filename": "1638886655015-5bc3bbf7-2a18-4505-ac1e-f188d1b126c0_410.jpg",
+        "image": "../images/restorations/1638886655015-5bc3bbf7-2a18-4505-ac1e-f188d1b126c0_410.jpg",
+        "thumbnail": "../images/restorations-thumbs/10-original.jpg"
+      },
+      {
+        "kind": "restored",
+        "label": "Restored PNG",
+        "filename": "1638886655015-5bc3bbf7-2a18-4505-ac1e-f188d1b126c0_410.png",
+        "image": "../images/restorations/1638886655015-5bc3bbf7-2a18-4505-ac1e-f188d1b126c0_410.png",
+        "thumbnail": "../images/restorations-thumbs/10-restored.jpg"
+      },
+      {
+        "kind": "combined",
+        "label": "Combined",
+        "filename": "1638886655015-5bc3bbf7-2a18-4505-ac1e-f188d1b126c0_410_combined.png",
+        "image": "../images/restorations/1638886655015-5bc3bbf7-2a18-4505-ac1e-f188d1b126c0_410_combined.png",
+        "thumbnail": "../images/restorations-thumbs/10-combined.jpg"
+      }
+    ]
+  },
+  {
+    "position": 11,
+    "group": "1638886724536-eb2fe44a-e4ed-4c13-9afd-f8b5fae57795_411",
+    "title": "Restoration 411",
+    "items": [
+      {
+        "kind": "original",
+        "label": "Original JPG",
+        "filename": "1638886724536-eb2fe44a-e4ed-4c13-9afd-f8b5fae57795_411.jpg",
+        "image": "../images/restorations/1638886724536-eb2fe44a-e4ed-4c13-9afd-f8b5fae57795_411.jpg",
+        "thumbnail": "../images/restorations-thumbs/11-original.jpg"
+      },
+      {
+        "kind": "restored",
+        "label": "Restored PNG",
+        "filename": "1638886724536-eb2fe44a-e4ed-4c13-9afd-f8b5fae57795_411.png",
+        "image": "../images/restorations/1638886724536-eb2fe44a-e4ed-4c13-9afd-f8b5fae57795_411.png",
+        "thumbnail": "../images/restorations-thumbs/11-restored.jpg"
+      },
+      {
+        "kind": "combined",
+        "label": "Combined",
+        "filename": "1638886724536-eb2fe44a-e4ed-4c13-9afd-f8b5fae57795_411_combined.png",
+        "image": "../images/restorations/1638886724536-eb2fe44a-e4ed-4c13-9afd-f8b5fae57795_411_combined.png",
+        "thumbnail": "../images/restorations-thumbs/11-combined.jpg"
+      }
+    ]
+  },
+  {
+    "position": 12,
+    "group": "1638886785388-8cb9b52e-27e8-40df-a182-32f3c88509db_412",
+    "title": "Restoration 412",
+    "items": [
+      {
+        "kind": "original",
+        "label": "Original JPG",
+        "filename": "1638886785388-8cb9b52e-27e8-40df-a182-32f3c88509db_412.jpg",
+        "image": "../images/restorations/1638886785388-8cb9b52e-27e8-40df-a182-32f3c88509db_412.jpg",
+        "thumbnail": "../images/restorations-thumbs/12-original.jpg"
+      },
+      {
+        "kind": "restored",
+        "label": "Restored PNG",
+        "filename": "1638886785388-8cb9b52e-27e8-40df-a182-32f3c88509db_412.png",
+        "image": "../images/restorations/1638886785388-8cb9b52e-27e8-40df-a182-32f3c88509db_412.png",
+        "thumbnail": "../images/restorations-thumbs/12-restored.jpg"
+      },
+      {
+        "kind": "combined",
+        "label": "Combined",
+        "filename": "1638886785388-8cb9b52e-27e8-40df-a182-32f3c88509db_412_combined.png",
+        "image": "../images/restorations/1638886785388-8cb9b52e-27e8-40df-a182-32f3c88509db_412_combined.png",
+        "thumbnail": "../images/restorations-thumbs/12-combined.jpg"
+      }
+    ]
+  },
+  {
+    "position": 13,
+    "group": "1638886857361-024a361a-21cd-42f4-8495-428d38113c21_413",
+    "title": "Restoration 413",
+    "items": [
+      {
+        "kind": "original",
+        "label": "Original JPG",
+        "filename": "1638886857361-024a361a-21cd-42f4-8495-428d38113c21_413.jpg",
+        "image": "../images/restorations/1638886857361-024a361a-21cd-42f4-8495-428d38113c21_413.jpg",
+        "thumbnail": "../images/restorations-thumbs/13-original.jpg"
+      },
+      {
+        "kind": "restored",
+        "label": "Restored PNG",
+        "filename": "1638886857361-024a361a-21cd-42f4-8495-428d38113c21_413.png",
+        "image": "../images/restorations/1638886857361-024a361a-21cd-42f4-8495-428d38113c21_413.png",
+        "thumbnail": "../images/restorations-thumbs/13-restored.jpg"
+      },
+      {
+        "kind": "combined",
+        "label": "Combined",
+        "filename": "1638886857361-024a361a-21cd-42f4-8495-428d38113c21_413_combined.png",
+        "image": "../images/restorations/1638886857361-024a361a-21cd-42f4-8495-428d38113c21_413_combined.png",
+        "thumbnail": "../images/restorations-thumbs/13-combined.jpg"
+      }
+    ]
+  },
+  {
+    "position": 14,
+    "group": "1638886912226-447d473d-0d6a-4ebe-8658-29daea38fb50__414",
+    "title": "Restoration 414",
+    "items": [
+      {
+        "kind": "original",
+        "label": "Original JPG",
+        "filename": "1638886912226-447d473d-0d6a-4ebe-8658-29daea38fb50__414.jpg",
+        "image": "../images/restorations/1638886912226-447d473d-0d6a-4ebe-8658-29daea38fb50__414.jpg",
+        "thumbnail": "../images/restorations-thumbs/14-original.jpg"
+      },
+      {
+        "kind": "restored",
+        "label": "Restored PNG",
+        "filename": "1638886912226-447d473d-0d6a-4ebe-8658-29daea38fb50__414.png",
+        "image": "../images/restorations/1638886912226-447d473d-0d6a-4ebe-8658-29daea38fb50__414.png",
+        "thumbnail": "../images/restorations-thumbs/14-restored.jpg"
+      },
+      {
+        "kind": "combined",
+        "label": "Combined",
+        "filename": "1638886912226-447d473d-0d6a-4ebe-8658-29daea38fb50__414_combined.png",
+        "image": "../images/restorations/1638886912226-447d473d-0d6a-4ebe-8658-29daea38fb50__414_combined.png",
+        "thumbnail": "../images/restorations-thumbs/14-combined.jpg"
+      }
+    ]
+  },
+  {
+    "position": 15,
+    "group": "1638886982680-2594b80b-f882-4fac-aea7-54b34a441c26_415",
+    "title": "Restoration 415",
+    "items": [
+      {
+        "kind": "original",
+        "label": "Original JPG",
+        "filename": "1638886982680-2594b80b-f882-4fac-aea7-54b34a441c26_415.jpg",
+        "image": "../images/restorations/1638886982680-2594b80b-f882-4fac-aea7-54b34a441c26_415.jpg",
+        "thumbnail": "../images/restorations-thumbs/15-original.jpg"
+      },
+      {
+        "kind": "restored",
+        "label": "Restored PNG",
+        "filename": "1638886982680-2594b80b-f882-4fac-aea7-54b34a441c26_415.png",
+        "image": "../images/restorations/1638886982680-2594b80b-f882-4fac-aea7-54b34a441c26_415.png",
+        "thumbnail": "../images/restorations-thumbs/15-restored.jpg"
+      },
+      {
+        "kind": "combined",
+        "label": "Combined",
+        "filename": "1638886982680-2594b80b-f882-4fac-aea7-54b34a441c26_415_combined.png",
+        "image": "../images/restorations/1638886982680-2594b80b-f882-4fac-aea7-54b34a441c26_415_combined.png",
+        "thumbnail": "../images/restorations-thumbs/15-combined.jpg"
+      }
+    ]
+  },
+  {
+    "position": 16,
+    "group": "1638887061509-00ad716f-bd62-4be9-bdb0-ee649da12f05_416",
+    "title": "Restoration 416",
+    "items": [
+      {
+        "kind": "original",
+        "label": "Original JPG",
+        "filename": "1638887061509-00ad716f-bd62-4be9-bdb0-ee649da12f05_416.jpg",
+        "image": "../images/restorations/1638887061509-00ad716f-bd62-4be9-bdb0-ee649da12f05_416.jpg",
+        "thumbnail": "../images/restorations-thumbs/16-original.jpg"
+      },
+      {
+        "kind": "restored",
+        "label": "Restored PNG",
+        "filename": "1638887061509-00ad716f-bd62-4be9-bdb0-ee649da12f05_416.png",
+        "image": "../images/restorations/1638887061509-00ad716f-bd62-4be9-bdb0-ee649da12f05_416.png",
+        "thumbnail": "../images/restorations-thumbs/16-restored.jpg"
+      },
+      {
+        "kind": "combined",
+        "label": "Combined",
+        "filename": "1638887061509-00ad716f-bd62-4be9-bdb0-ee649da12f05_416_combined.png",
+        "image": "../images/restorations/1638887061509-00ad716f-bd62-4be9-bdb0-ee649da12f05_416_combined.png",
+        "thumbnail": "../images/restorations-thumbs/16-combined.jpg"
+      }
+    ]
+  },
+  {
+    "position": 17,
+    "group": "1638887140432-06d0642a-0753-463e-802b-9992202e5fcf_417",
+    "title": "Restoration 417",
+    "items": [
+      {
+        "kind": "original",
+        "label": "Original JPG",
+        "filename": "1638887140432-06d0642a-0753-463e-802b-9992202e5fcf_417.jpg",
+        "image": "../images/restorations/1638887140432-06d0642a-0753-463e-802b-9992202e5fcf_417.jpg",
+        "thumbnail": "../images/restorations-thumbs/17-original.jpg"
+      },
+      {
+        "kind": "restored",
+        "label": "Restored PNG",
+        "filename": "1638887140432-06d0642a-0753-463e-802b-9992202e5fcf_417.png",
+        "image": "../images/restorations/1638887140432-06d0642a-0753-463e-802b-9992202e5fcf_417.png",
+        "thumbnail": "../images/restorations-thumbs/17-restored.jpg"
+      },
+      {
+        "kind": "combined",
+        "label": "Combined",
+        "filename": "1638887140432-06d0642a-0753-463e-802b-9992202e5fcf_417_combined.png",
+        "image": "../images/restorations/1638887140432-06d0642a-0753-463e-802b-9992202e5fcf_417_combined.png",
+        "thumbnail": "../images/restorations-thumbs/17-combined.jpg"
+      }
+    ]
+  },
+  {
+    "position": 18,
+    "group": "1638887209683-f6db8d65-e36f-4582-a04d-822e60029a84_418",
+    "title": "Restoration 418",
+    "items": [
+      {
+        "kind": "original",
+        "label": "Original JPG",
+        "filename": "1638887209683-f6db8d65-e36f-4582-a04d-822e60029a84_418.jpg",
+        "image": "../images/restorations/1638887209683-f6db8d65-e36f-4582-a04d-822e60029a84_418.jpg",
+        "thumbnail": "../images/restorations-thumbs/18-original.jpg"
+      },
+      {
+        "kind": "restored",
+        "label": "Restored PNG",
+        "filename": "1638887209683-f6db8d65-e36f-4582-a04d-822e60029a84_418.png",
+        "image": "../images/restorations/1638887209683-f6db8d65-e36f-4582-a04d-822e60029a84_418.png",
+        "thumbnail": "../images/restorations-thumbs/18-restored.jpg"
+      },
+      {
+        "kind": "combined",
+        "label": "Combined",
+        "filename": "1638887209683-f6db8d65-e36f-4582-a04d-822e60029a84_418_combined.png",
+        "image": "../images/restorations/1638887209683-f6db8d65-e36f-4582-a04d-822e60029a84_418_combined.png",
+        "thumbnail": "../images/restorations-thumbs/18-combined.jpg"
+      }
+    ]
+  },
+  {
+    "position": 19,
+    "group": "1638887268531-941f339f-4cb4-4935-84fb-c703200f3476_419",
+    "title": "Restoration 419",
+    "items": [
+      {
+        "kind": "original",
+        "label": "Original JPG",
+        "filename": "1638887268531-941f339f-4cb4-4935-84fb-c703200f3476_419.jpg",
+        "image": "../images/restorations/1638887268531-941f339f-4cb4-4935-84fb-c703200f3476_419.jpg",
+        "thumbnail": "../images/restorations-thumbs/19-original.jpg"
+      },
+      {
+        "kind": "restored",
+        "label": "Restored PNG",
+        "filename": "1638887268531-941f339f-4cb4-4935-84fb-c703200f3476_419.png",
+        "image": "../images/restorations/1638887268531-941f339f-4cb4-4935-84fb-c703200f3476_419.png",
+        "thumbnail": "../images/restorations-thumbs/19-restored.jpg"
+      },
+      {
+        "kind": "combined",
+        "label": "Combined",
+        "filename": "1638887268531-941f339f-4cb4-4935-84fb-c703200f3476_419_combined.png",
+        "image": "../images/restorations/1638887268531-941f339f-4cb4-4935-84fb-c703200f3476_419_combined.png",
+        "thumbnail": "../images/restorations-thumbs/19-combined.jpg"
+      }
+    ]
+  },
+  {
+    "position": 20,
+    "group": "1638887368163-469208c4-8561-4877-81a6-477a4a805e0d_420",
+    "title": "Restoration 420",
+    "items": [
+      {
+        "kind": "original",
+        "label": "Original JPG",
+        "filename": "1638887368163-469208c4-8561-4877-81a6-477a4a805e0d_420.jpg",
+        "image": "../images/restorations/1638887368163-469208c4-8561-4877-81a6-477a4a805e0d_420.jpg",
+        "thumbnail": "../images/restorations-thumbs/20-original.jpg"
+      },
+      {
+        "kind": "restored",
+        "label": "Restored PNG",
+        "filename": "1638887368163-469208c4-8561-4877-81a6-477a4a805e0d_420.png",
+        "image": "../images/restorations/1638887368163-469208c4-8561-4877-81a6-477a4a805e0d_420.png",
+        "thumbnail": "../images/restorations-thumbs/20-restored.jpg"
+      },
+      {
+        "kind": "combined",
+        "label": "Combined",
+        "filename": "1638887368163-469208c4-8561-4877-81a6-477a4a805e0d_420_combined.png",
+        "image": "../images/restorations/1638887368163-469208c4-8561-4877-81a6-477a4a805e0d_420_combined.png",
+        "thumbnail": "../images/restorations-thumbs/20-combined.jpg"
+      }
+    ]
+  },
+  {
+    "position": 21,
+    "group": "1638887453666-b9e6340b-591d-4dd8-a46d-0252f622809a_421",
+    "title": "Restoration 421",
+    "items": [
+      {
+        "kind": "original",
+        "label": "Original JPG",
+        "filename": "1638887453666-b9e6340b-591d-4dd8-a46d-0252f622809a_421.jpg",
+        "image": "../images/restorations/1638887453666-b9e6340b-591d-4dd8-a46d-0252f622809a_421.jpg",
+        "thumbnail": "../images/restorations-thumbs/21-original.jpg"
+      },
+      {
+        "kind": "restored",
+        "label": "Restored PNG",
+        "filename": "1638887453666-b9e6340b-591d-4dd8-a46d-0252f622809a_421.png",
+        "image": "../images/restorations/1638887453666-b9e6340b-591d-4dd8-a46d-0252f622809a_421.png",
+        "thumbnail": "../images/restorations-thumbs/21-restored.jpg"
+      },
+      {
+        "kind": "combined",
+        "label": "Combined",
+        "filename": "1638887453666-b9e6340b-591d-4dd8-a46d-0252f622809a_421_combined.png",
+        "image": "../images/restorations/1638887453666-b9e6340b-591d-4dd8-a46d-0252f622809a_421_combined.png",
+        "thumbnail": "../images/restorations-thumbs/21-combined.jpg"
+      }
+    ]
+  },
+  {
+    "position": 22,
+    "group": "1638887529338-a3a66e61-7159-4c90-b77e-e648fa7aff0d_422",
+    "title": "Restoration 422",
+    "items": [
+      {
+        "kind": "original",
+        "label": "Original JPG",
+        "filename": "1638887529338-a3a66e61-7159-4c90-b77e-e648fa7aff0d_422.jpg",
+        "image": "../images/restorations/1638887529338-a3a66e61-7159-4c90-b77e-e648fa7aff0d_422.jpg",
+        "thumbnail": "../images/restorations-thumbs/22-original.jpg"
+      },
+      {
+        "kind": "restored",
+        "label": "Restored PNG",
+        "filename": "1638887529338-a3a66e61-7159-4c90-b77e-e648fa7aff0d_422.png",
+        "image": "../images/restorations/1638887529338-a3a66e61-7159-4c90-b77e-e648fa7aff0d_422.png",
+        "thumbnail": "../images/restorations-thumbs/22-restored.jpg"
+      },
+      {
+        "kind": "combined",
+        "label": "Combined",
+        "filename": "1638887529338-a3a66e61-7159-4c90-b77e-e648fa7aff0d_422_combined.png",
+        "image": "../images/restorations/1638887529338-a3a66e61-7159-4c90-b77e-e648fa7aff0d_422_combined.png",
+        "thumbnail": "../images/restorations-thumbs/22-combined.jpg"
+      }
+    ]
+  },
+  {
+    "position": 23,
+    "group": "1638887808359-20955b0e-4956-4319-8635-5ab5a33c041f_423",
+    "title": "Restoration 423",
+    "items": [
+      {
+        "kind": "original",
+        "label": "Original JPG",
+        "filename": "1638887808359-20955b0e-4956-4319-8635-5ab5a33c041f_423.jpg",
+        "image": "../images/restorations/1638887808359-20955b0e-4956-4319-8635-5ab5a33c041f_423.jpg",
+        "thumbnail": "../images/restorations-thumbs/23-original.jpg"
+      },
+      {
+        "kind": "restored",
+        "label": "Restored PNG",
+        "filename": "1638887808359-20955b0e-4956-4319-8635-5ab5a33c041f_423.png",
+        "image": "../images/restorations/1638887808359-20955b0e-4956-4319-8635-5ab5a33c041f_423.png",
+        "thumbnail": "../images/restorations-thumbs/23-restored.jpg"
+      },
+      {
+        "kind": "combined",
+        "label": "Combined",
+        "filename": "1638887808359-20955b0e-4956-4319-8635-5ab5a33c041f_423_combined.png",
+        "image": "../images/restorations/1638887808359-20955b0e-4956-4319-8635-5ab5a33c041f_423_combined.png",
+        "thumbnail": "../images/restorations-thumbs/23-combined.jpg"
+      }
+    ]
+  },
+  {
+    "position": 24,
+    "group": "1638887986924-79930a33-9a6f-400e-bb7e-c86c173c7509_424",
+    "title": "Restoration 424",
+    "items": [
+      {
+        "kind": "original",
+        "label": "Original JPG",
+        "filename": "1638887986924-79930a33-9a6f-400e-bb7e-c86c173c7509_424.jpg",
+        "image": "../images/restorations/1638887986924-79930a33-9a6f-400e-bb7e-c86c173c7509_424.jpg",
+        "thumbnail": "../images/restorations-thumbs/24-original.jpg"
+      },
+      {
+        "kind": "restored",
+        "label": "Restored PNG",
+        "filename": "1638887986924-79930a33-9a6f-400e-bb7e-c86c173c7509_424.png",
+        "image": "../images/restorations/1638887986924-79930a33-9a6f-400e-bb7e-c86c173c7509_424.png",
+        "thumbnail": "../images/restorations-thumbs/24-restored.jpg"
+      },
+      {
+        "kind": "combined",
+        "label": "Combined",
+        "filename": "1638887986924-79930a33-9a6f-400e-bb7e-c86c173c7509_424_combined.png",
+        "image": "../images/restorations/1638887986924-79930a33-9a6f-400e-bb7e-c86c173c7509_424_combined.png",
+        "thumbnail": "../images/restorations-thumbs/24-combined.jpg"
+      }
+    ]
+  },
+  {
+    "position": 25,
+    "group": "1742398755515-07df5d39-1c23-4018-bebd-6475ca09fe9a_498",
+    "title": "Restoration 498",
+    "items": [
+      {
+        "kind": "original",
+        "label": "Original JPG",
+        "filename": "1742398755515-07df5d39-1c23-4018-bebd-6475ca09fe9a_498.jpg",
+        "image": "../images/restorations/1742398755515-07df5d39-1c23-4018-bebd-6475ca09fe9a_498.jpg",
+        "thumbnail": "../images/restorations-thumbs/25-original.jpg"
+      },
+      {
+        "kind": "restored",
+        "label": "Restored PNG",
+        "filename": "1742398755515-07df5d39-1c23-4018-bebd-6475ca09fe9a_498.png",
+        "image": "../images/restorations/1742398755515-07df5d39-1c23-4018-bebd-6475ca09fe9a_498.png",
+        "thumbnail": "../images/restorations-thumbs/25-restored.jpg"
+      },
+      {
+        "kind": "combined",
+        "label": "Combined",
+        "filename": "1742398755515-07df5d39-1c23-4018-bebd-6475ca09fe9a_498_combined.png",
+        "image": "../images/restorations/1742398755515-07df5d39-1c23-4018-bebd-6475ca09fe9a_498_combined.png",
+        "thumbnail": "../images/restorations-thumbs/25-combined.jpg"
+      }
+    ]
+  },
+  {
+    "position": 26,
+    "group": "1742400038685-31b12dc7-91b7-4be3-a631-42b97d04861c_528",
+    "title": "Restoration 528",
+    "items": [
+      {
+        "kind": "original",
+        "label": "Original JPG",
+        "filename": "1742400038685-31b12dc7-91b7-4be3-a631-42b97d04861c_528.jpg",
+        "image": "../images/restorations/1742400038685-31b12dc7-91b7-4be3-a631-42b97d04861c_528.jpg",
+        "thumbnail": "../images/restorations-thumbs/26-original.jpg"
+      },
+      {
+        "kind": "restored",
+        "label": "Restored PNG",
+        "filename": "1742400038685-31b12dc7-91b7-4be3-a631-42b97d04861c_528.png",
+        "image": "../images/restorations/1742400038685-31b12dc7-91b7-4be3-a631-42b97d04861c_528.png",
+        "thumbnail": "../images/restorations-thumbs/26-restored.jpg"
+      },
+      {
+        "kind": "combined",
+        "label": "Combined",
+        "filename": "1742400038685-31b12dc7-91b7-4be3-a631-42b97d04861c_528_combined.png",
+        "image": "../images/restorations/1742400038685-31b12dc7-91b7-4be3-a631-42b97d04861c_528_combined.png",
+        "thumbnail": "../images/restorations-thumbs/26-combined.jpg"
+      }
+    ]
+  },
+  {
+    "position": 27,
+    "group": "1742400060282-c3086b78-040c-43c3-909b-c4add62df3d2_529",
+    "title": "Restoration 529",
+    "items": [
+      {
+        "kind": "original",
+        "label": "Original JPG",
+        "filename": "1742400060282-c3086b78-040c-43c3-909b-c4add62df3d2_529.jpg",
+        "image": "../images/restorations/1742400060282-c3086b78-040c-43c3-909b-c4add62df3d2_529.jpg",
+        "thumbnail": "../images/restorations-thumbs/27-original.jpg"
+      },
+      {
+        "kind": "restored",
+        "label": "Restored PNG",
+        "filename": "1742400060282-c3086b78-040c-43c3-909b-c4add62df3d2_529.png",
+        "image": "../images/restorations/1742400060282-c3086b78-040c-43c3-909b-c4add62df3d2_529.png",
+        "thumbnail": "../images/restorations-thumbs/27-restored.jpg"
+      },
+      {
+        "kind": "combined",
+        "label": "Combined",
+        "filename": "1742400060282-c3086b78-040c-43c3-909b-c4add62df3d2_529_combined.png",
+        "image": "../images/restorations/1742400060282-c3086b78-040c-43c3-909b-c4add62df3d2_529_combined.png",
+        "thumbnail": "../images/restorations-thumbs/27-combined.jpg"
+      }
+    ]
+  },
+  {
+    "position": 28,
+    "group": "1742400080611-f9cff305-d129-4849-8395-8307d6be8caa_531",
+    "title": "Restoration 531",
+    "items": [
+      {
+        "kind": "original",
+        "label": "Original JPG",
+        "filename": "1742400080611-f9cff305-d129-4849-8395-8307d6be8caa_531.jpg",
+        "image": "../images/restorations/1742400080611-f9cff305-d129-4849-8395-8307d6be8caa_531.jpg",
+        "thumbnail": "../images/restorations-thumbs/28-original.jpg"
+      },
+      {
+        "kind": "restored",
+        "label": "Restored PNG",
+        "filename": "1742400080611-f9cff305-d129-4849-8395-8307d6be8caa_531.png",
+        "image": "../images/restorations/1742400080611-f9cff305-d129-4849-8395-8307d6be8caa_531.png",
+        "thumbnail": "../images/restorations-thumbs/28-restored.jpg"
+      },
+      {
+        "kind": "combined",
+        "label": "Combined",
+        "filename": "1742400080611-f9cff305-d129-4849-8395-8307d6be8caa_531_combined.png",
+        "image": "../images/restorations/1742400080611-f9cff305-d129-4849-8395-8307d6be8caa_531_combined.png",
+        "thumbnail": "../images/restorations-thumbs/28-combined.jpg"
+      }
+    ]
+  },
+  {
+    "position": 29,
+    "group": "1742400107175-f169c392-2868-4d3b-9d44-b73271bc6251_530",
+    "title": "Restoration 530",
+    "items": [
+      {
+        "kind": "original",
+        "label": "Original JPG",
+        "filename": "1742400107175-f169c392-2868-4d3b-9d44-b73271bc6251_530.jpg",
+        "image": "../images/restorations/1742400107175-f169c392-2868-4d3b-9d44-b73271bc6251_530.jpg",
+        "thumbnail": "../images/restorations-thumbs/29-original.jpg"
+      },
+      {
+        "kind": "restored",
+        "label": "Restored PNG",
+        "filename": "1742400107175-f169c392-2868-4d3b-9d44-b73271bc6251_530.png",
+        "image": "../images/restorations/1742400107175-f169c392-2868-4d3b-9d44-b73271bc6251_530.png",
+        "thumbnail": "../images/restorations-thumbs/29-restored.jpg"
+      },
+      {
+        "kind": "combined",
+        "label": "Combined",
+        "filename": "1742400107175-f169c392-2868-4d3b-9d44-b73271bc6251_530_combined.png",
+        "image": "../images/restorations/1742400107175-f169c392-2868-4d3b-9d44-b73271bc6251_530_combined.png",
+        "thumbnail": "../images/restorations-thumbs/29-combined.jpg"
+      }
+    ]
+  },
+  {
+    "position": 30,
+    "group": "1742400125623-03b34482-150f-4a00-b998-541edb70659b_532",
+    "title": "Restoration 532",
+    "items": [
+      {
+        "kind": "original",
+        "label": "Original JPG",
+        "filename": "1742400125623-03b34482-150f-4a00-b998-541edb70659b_532.jpg",
+        "image": "../images/restorations/1742400125623-03b34482-150f-4a00-b998-541edb70659b_532.jpg",
+        "thumbnail": "../images/restorations-thumbs/30-original.jpg"
+      },
+      {
+        "kind": "restored",
+        "label": "Restored PNG",
+        "filename": "1742400125623-03b34482-150f-4a00-b998-541edb70659b_532.png",
+        "image": "../images/restorations/1742400125623-03b34482-150f-4a00-b998-541edb70659b_532.png",
+        "thumbnail": "../images/restorations-thumbs/30-restored.jpg"
+      },
+      {
+        "kind": "combined",
+        "label": "Combined",
+        "filename": "1742400125623-03b34482-150f-4a00-b998-541edb70659b_532_combined.png",
+        "image": "../images/restorations/1742400125623-03b34482-150f-4a00-b998-541edb70659b_532_combined.png",
+        "thumbnail": "../images/restorations-thumbs/30-combined.jpg"
+      }
+    ]
+  },
+  {
+    "position": 31,
+    "group": "IMG_9152",
+    "title": "Restoration 9152",
+    "items": [
+      {
+        "kind": "original",
+        "label": "Original JPG",
+        "filename": "IMG_9152.jpg.jpg",
+        "image": "../images/restorations/IMG_9152.jpg.jpg",
+        "thumbnail": "../images/restorations-thumbs/31-original.jpg"
+      },
+      {
+        "kind": "restored",
+        "label": "Restored PNG",
+        "filename": "IMG_9152.png",
+        "image": "../images/restorations/IMG_9152.png",
+        "thumbnail": "../images/restorations-thumbs/31-restored.jpg"
+      },
+      {
+        "kind": "combined",
+        "label": "Combined",
+        "filename": "IMG_9152_combined.png",
+        "image": "../images/restorations/IMG_9152_combined.png",
+        "thumbnail": "../images/restorations-thumbs/31-combined.jpg"
+      }
+    ]
+  }
+]

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow, noarchive, nosnippet" />
+  <meta name="googlebot" content="noindex, nofollow, noarchive, nosnippet" />
+  <meta name="referrer" content="no-referrer" />
+
+  <title>Restorations | Private DABOPhotos Gallery</title>
+  <link rel="stylesheet" href="../assets/private.css" />
+  <link rel="stylesheet" href="../assets/restorations.css" />
+  <link rel="stylesheet" href="../assets/private-menu.css?v=1" />
+  <link rel="stylesheet" href="../assets/private-page.css?v=1" />
+  <script src="../assets/restorations.js" defer></script>
+  <script src="../assets/private-menu.js?v=1" defer></script>
+</head>
+<body class="private-gallery-page restorations-page">
+  <header class="site-header">
+    <div class="header-inner gallery-header">
+      <div>
+        <h1>DABOPhotos</h1>
+        <p>Private Restoration Gallery</p>
+      </div>
+
+      <nav class="private-nav" aria-label="Private gallery navigation">
+        <a href="../">Private Home</a>
+
+        <div class="private-menu" data-private-gallery-menu>
+          <button
+            class="private-menu-toggle"
+            type="button"
+            aria-label="Open private gallery menu"
+            aria-expanded="false"
+          >
+            <span class="private-menu-icon" aria-hidden="true">
+              <span></span><span></span><span></span>
+            </span>
+          </button>
+
+          <div class="private-menu-dropdown" hidden>
+            <p class="private-menu-status">Loading galleries…</p>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main class="page-shell restoration-shell">
+    <section class="gallery-intro restoration-intro">
+      <p class="eyebrow">Private collection</p>
+      <h2>Restored Photographs</h2>
+      <p>
+        Each restoration is shown in this order: <strong>Original JPG</strong>,
+        <strong>Restored PNG</strong>, then <strong>Combined</strong>.
+        Click any image to open the full-screen viewer.
+      </p>
+      <p class="gallery-count" id="galleryCount" aria-live="polite">Loading restoration gallery…</p>
+    </section>
+
+    <noscript>
+      <p class="gallery-error">JavaScript must be enabled to display this gallery.</p>
+    </noscript>
+
+    <section id="restorationGallery" class="restoration-gallery" aria-label="Restoration photo groups"></section>
+  </main>
+
+  <div class="lightbox" id="lightbox" hidden aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="lightboxTitle">
+    <div class="lightbox-backdrop" data-close-lightbox></div>
+    <div class="lightbox-panel">
+      <button class="lightbox-close" type="button" aria-label="Close full-screen viewer" data-close-lightbox>×</button>
+      <button class="lightbox-arrow lightbox-prev" type="button" aria-label="Previous image">❮</button>
+
+      <figure class="lightbox-figure">
+        <img id="lightboxImage" alt="" />
+        <figcaption>
+          <span id="lightboxTitle" class="lightbox-title"></span>
+          <span id="lightboxFilename" class="lightbox-filename"></span>
+          <span id="lightboxCounter" class="lightbox-counter"></span>
+        </figcaption>
+      </figure>
+
+      <button class="lightbox-arrow lightbox-next" type="button" aria-label="Next image">❯</button>
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2026 DABOPhotos. All rights reserved.</p>
+  </footer>
+</body>
+</html>

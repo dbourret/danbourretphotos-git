@@ -1,0 +1,194 @@
+/* =========================================================
+   SHARED PRIVATE-GALLERY PAGE LAYOUT
+   Load this after private.css and any gallery-specific CSS.
+   Every current and future subpage should use:
+   <body class="private-gallery-page">
+   ========================================================= */
+
+body.private-gallery-page {
+  margin: 0 !important;
+  background: #f7f4ef !important;
+  color: #101827 !important;
+}
+
+/* ---------- Header shared by every private subpage ---------- */
+body.private-gallery-page .site-header {
+  margin: 0 !important;
+  padding: 0 !important;
+  background: #111111 !important;
+  color: #ffffff !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+body.private-gallery-page .site-header .header-inner {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 24px !important;
+  width: min(100% - 48px, 1280px) !important;
+  min-height: 138px !important;
+  margin: 0 auto !important;
+  padding: 22px 0 !important;
+  box-sizing: border-box !important;
+}
+
+body.private-gallery-page .site-header h1 {
+  margin: 0 !important;
+  color: #ffffff !important;
+  font-family: Arial, Helvetica, sans-serif !important;
+  font-size: clamp(2rem, 4vw, 3rem) !important;
+  font-weight: 800 !important;
+  line-height: 1 !important;
+  letter-spacing: 0.01em !important;
+}
+
+body.private-gallery-page .site-header p {
+  margin: 12px 0 0 !important;
+  color: #ffffff !important;
+  font-family: Arial, Helvetica, sans-serif !important;
+  font-size: 1.05rem !important;
+  font-weight: 400 !important;
+  line-height: 1.25 !important;
+}
+
+/* ---------- Shared top navigation ---------- */
+body.private-gallery-page .private-nav {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  gap: 8px !important;
+  margin: 0 !important;
+}
+
+/* ---------- Main page structure ---------- */
+body.private-gallery-page .page-shell {
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 0 0 48px !important;
+  box-sizing: border-box !important;
+  background: #f7f4ef !important;
+}
+
+/* ---------- Intro shared by every private subpage ---------- */
+body.private-gallery-page .gallery-intro {
+  width: min(100% - 40px, 980px) !important;
+  margin: 0 auto !important;
+  padding: 42px 0 30px !important;
+  text-align: center !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+body.private-gallery-page .gallery-intro .eyebrow {
+  display: block !important;
+  margin: 0 0 12px !important;
+  padding: 0 !important;
+  color: #7e4e00 !important;
+  font-family: Arial, Helvetica, sans-serif !important;
+  font-size: 0.76rem !important;
+  font-weight: 800 !important;
+  line-height: 1.2 !important;
+  letter-spacing: 0.2em !important;
+  text-transform: uppercase !important;
+}
+
+body.private-gallery-page .gallery-intro h2 {
+  margin: 0 !important;
+  color: #101827 !important;
+  font-family: Arial, Helvetica, sans-serif !important;
+  font-size: clamp(2.15rem, 5vw, 3rem) !important;
+  font-weight: 800 !important;
+  line-height: 1.05 !important;
+  letter-spacing: -0.025em !important;
+}
+
+body.private-gallery-page .gallery-intro > p:not(.eyebrow):not(.gallery-count) {
+  width: min(100%, 820px) !important;
+  margin: 14px auto 0 !important;
+  color: #56637a !important;
+  font-family: Arial, Helvetica, sans-serif !important;
+  font-size: 1rem !important;
+  font-weight: 400 !important;
+  line-height: 1.65 !important;
+}
+
+body.private-gallery-page .gallery-intro strong {
+  color: #56637a !important;
+  font-weight: 800 !important;
+}
+
+/* Restoration count remains useful, but follows the same visual system. */
+body.private-gallery-page .gallery-count {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: auto !important;
+  margin: 10px auto 0 !important;
+  padding: 8px 13px !important;
+  border-radius: 999px !important;
+  background: #ece6dc !important;
+  color: #4e5563 !important;
+  font-family: Arial, Helvetica, sans-serif !important;
+  font-size: 0.8rem !important;
+  font-weight: 800 !important;
+  line-height: 1 !important;
+}
+
+/* Keep gallery-specific content centered without changing its internal cards. */
+body.private-gallery-page .gallery,
+body.private-gallery-page .restoration-gallery,
+body.private-gallery-page .gallery-error,
+body.private-gallery-page noscript > p {
+  width: min(100% - 48px, 1280px);
+  margin-left: auto;
+  margin-right: auto;
+  box-sizing: border-box;
+}
+
+/* ---------- Footer ---------- */
+body.private-gallery-page footer {
+  text-align: center !important;
+}
+
+/* ---------- Responsive shared layout ---------- */
+@media (max-width: 700px) {
+  body.private-gallery-page .site-header .header-inner {
+    align-items: flex-start !important;
+    width: min(100% - 28px, 1280px) !important;
+    min-height: 118px !important;
+    padding: 20px 0 !important;
+  }
+
+  body.private-gallery-page .site-header h1 {
+    font-size: clamp(1.8rem, 9vw, 2.4rem) !important;
+  }
+
+  body.private-gallery-page .site-header p {
+    margin-top: 8px !important;
+    font-size: 0.93rem !important;
+  }
+
+  body.private-gallery-page .gallery-intro {
+    width: min(100% - 28px, 980px) !important;
+    padding: 34px 0 24px !important;
+  }
+
+  body.private-gallery-page .gallery-intro h2 {
+    font-size: clamp(2rem, 11vw, 2.65rem) !important;
+  }
+
+  body.private-gallery-page .gallery-intro > p:not(.eyebrow):not(.gallery-count) {
+    font-size: 0.94rem !important;
+    line-height: 1.55 !important;
+  }
+
+  body.private-gallery-page .gallery,
+  body.private-gallery-page .restoration-gallery,
+  body.private-gallery-page .gallery-error,
+  body.private-gallery-page noscript > p {
+    width: min(100% - 28px, 1280px);
+  }
+}

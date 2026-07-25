@@ -11,8 +11,11 @@
 
   <title>Cars | Private DABOPhotos Gallery</title>
   <link rel="stylesheet" href="../assets/private.css?v=truefullscreen1" />
+  <link rel="stylesheet" href="../assets/private-menu.css?v=1" />
+  <link rel="stylesheet" href="../assets/private-page.css?v=1" />
+  <script src="../assets/private-menu.js?v=1" defer></script>
 </head>
-<body data-gallery-json="photos.json">
+<body class="private-gallery-page" data-gallery-json="photos.json">
   <header class="site-header">
     <div class="header-inner gallery-header">
       <div>
@@ -22,8 +25,23 @@
 
       <nav class="private-nav" aria-label="Private gallery navigation">
         <a href="../">Private Home</a>
-        <a href="../sports/">Sports</a>
-        <a href="../cars/">Cars</a>
+
+        <div class="private-menu" data-private-gallery-menu>
+          <button
+            class="private-menu-toggle"
+            type="button"
+            aria-label="Open private gallery menu"
+            aria-expanded="false"
+          >
+            <span class="private-menu-icon" aria-hidden="true">
+              <span></span><span></span><span></span>
+            </span>
+          </button>
+
+          <div class="private-menu-dropdown" hidden>
+            <p class="private-menu-status">Loading galleries…</p>
+          </div>
+        </div>
       </nav>
     </div>
   </header>

@@ -10,8 +10,80 @@
   <meta name="referrer" content="no-referrer" />
 
   <title>Private Galleries | DABOPhotos</title>
+
+  <!-- Root private page: no ../ prefix -->
   <link rel="stylesheet" href="assets/private.css" />
+
+  <style>
+    /* Compact, uniform private-gallery buttons */
+    .page-shell .category-grid {
+      display: grid !important;
+      grid-template-columns: 156px !important;
+      grid-auto-rows: 36px !important;
+      justify-content: center !important;
+      align-items: start !important;
+      gap: 8px !important;
+      width: 156px !important;
+      max-width: 156px !important;
+      margin-inline: auto !important;
+    }
+
+    .page-shell .category-grid .category-card {
+      display: grid !important;
+      grid-template-columns: 24px 1fr !important;
+      align-items: center !important;
+      justify-items: start !important;
+      gap: 7px !important;
+
+      width: 156px !important;
+      min-width: 156px !important;
+      max-width: 156px !important;
+
+      height: 36px !important;
+      min-height: 36px !important;
+      max-height: 36px !important;
+      aspect-ratio: auto !important;
+
+      margin: 0 !important;
+      padding: 5px 9px !important;
+      box-sizing: border-box !important;
+      border-radius: 12px !important;
+
+      text-align: left !important;
+      overflow: hidden !important;
+    }
+
+    .page-shell .category-grid .category-icon {
+      display: grid !important;
+      place-items: center !important;
+      width: 24px !important;
+      min-width: 24px !important;
+      max-width: 24px !important;
+      height: 24px !important;
+      min-height: 24px !important;
+      max-height: 24px !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      border-radius: 8px !important;
+      font-size: 0.9rem !important;
+      line-height: 1 !important;
+      box-sizing: border-box !important;
+    }
+
+    .page-shell .category-grid .category-name {
+      display: block !important;
+      width: auto !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      font-size: 0.88rem !important;
+      font-weight: 800 !important;
+      line-height: 1 !important;
+      white-space: nowrap !important;
+      overflow: visible !important;
+    }
+  </style>
 </head>
+
 <body>
   <header class="site-header">
     <div class="header-inner">
@@ -29,19 +101,24 @@
       <p>This page is not linked from the public website.</p>
     </section>
 
+    <!--
+      The subpage dropdown menus read these category-card links automatically.
+      Add future private galleries here using the same structure.
+    -->
     <section class="category-grid" aria-label="Private photo galleries">
       <a class="category-card" href="sports/">
         <span class="category-icon" aria-hidden="true">🏟️</span>
         <span class="category-name">Sports</span>
-        <span class="category-description">View the private sports collection.</span>
-        <span class="category-action">Open gallery →</span>
       </a>
 
       <a class="category-card" href="cars/">
         <span class="category-icon" aria-hidden="true">🏎️</span>
         <span class="category-name">Cars</span>
-        <span class="category-description">View the private automotive collection.</span>
-        <span class="category-action">Open gallery →</span>
+      </a>
+
+      <a class="category-card" href="restorations/">
+        <span class="category-icon" aria-hidden="true">🖼️</span>
+        <span class="category-name">Restorations</span>
       </a>
     </section>
   </main>
