@@ -1,0 +1,259 @@
+/*
+  Restoration private-page viewer corrections
+  ---------------------------------------------
+  - Removes captions/descriptions under gallery photographs
+  - Removes magnifying-glass and "click to view" overlays
+  - Makes the restoration viewer fill the complete screen
+  - Leaves the existing restoration grouping and image-order logic intact
+*/
+
+/* Remove text displayed beneath individual restoration photographs. */
+#restorationGallery figure > figcaption,
+#restorationGallery .restoration-caption,
+#restorationGallery .restoration-photo-caption,
+#restorationGallery .restoration-image-caption,
+#restorationGallery .photo-caption,
+#restorationGallery .image-caption,
+#restorationGallery .photo-description,
+#restorationGallery .image-description,
+#restorationGallery .photo-filename,
+#restorationGallery .image-filename,
+#restorationGallery .restoration-filename,
+#restorationGallery .restoration-label,
+#restorationGallery .photo-label,
+#restorationGallery .image-label {
+  display: none !important;
+}
+
+/* Remove the magnifier and any visible click/zoom prompt. */
+#restorationGallery .magnifier,
+#restorationGallery .magnifying-glass,
+#restorationGallery .zoom-icon,
+#restorationGallery .zoom-overlay,
+#restorationGallery .zoom-hint,
+#restorationGallery .view-icon,
+#restorationGallery .view-overlay,
+#restorationGallery .click-hint,
+#restorationGallery [class*="magnif" i],
+#restorationGallery [class*="zoom-icon" i],
+#restorationGallery [class*="zoom-hint" i],
+#restorationGallery [class*="click-hint" i] {
+  display: none !important;
+}
+
+/* Prevent legacy overlays from adding a magnifier with pseudo-elements. */
+#restorationGallery figure::before,
+#restorationGallery figure::after,
+#restorationGallery button::before,
+#restorationGallery button::after,
+#restorationGallery [data-lightbox-index]::before,
+#restorationGallery [data-lightbox-index]::after {
+  content: none !important;
+}
+
+/* Keep cards clean after their captions are removed. */
+#restorationGallery figure,
+#restorationGallery button,
+#restorationGallery .restoration-photo,
+#restorationGallery .restoration-item,
+#restorationGallery .restoration-image {
+  overflow: hidden;
+}
+
+#restorationGallery img {
+  display: block;
+  margin: 0;
+}
+
+/* The lightbox itself fills the browser viewport. */
+#lightbox[hidden] {
+  display: none !important;
+}
+
+#lightbox:not([hidden]),
+#lightbox.is-open,
+#lightbox.open,
+#lightbox[aria-hidden="false"] {
+  position: fixed !important;
+  z-index: 2147483647 !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  height: 100dvh !important;
+  min-width: 100vw !important;
+  min-height: 100vh !important;
+  min-height: 100dvh !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  overflow: hidden !important;
+  background: #000 !important;
+}
+
+#lightbox .lightbox-backdrop {
+  position: absolute !important;
+  z-index: 0 !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  background: #000 !important;
+  opacity: 1 !important;
+}
+
+#lightbox .lightbox-panel {
+  position: relative !important;
+  z-index: 1 !important;
+  inset: auto !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  height: 100dvh !important;
+  max-width: none !important;
+  max-height: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  overflow: hidden !important;
+  background: #000 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+#lightbox .lightbox-figure {
+  width: 100vw !important;
+  height: 100vh !important;
+  height: 100dvh !important;
+  max-width: none !important;
+  max-height: none !important;
+  margin: 0 !important;
+  padding: 12px 78px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  overflow: hidden !important;
+}
+
+#lightboxImage {
+  width: auto !important;
+  height: auto !important;
+  max-width: calc(100vw - 156px) !important;
+  max-height: calc(100vh - 24px) !important;
+  max-height: calc(100dvh - 24px) !important;
+  margin: auto !important;
+  padding: 0 !important;
+  display: block !important;
+  object-fit: contain !important;
+  object-position: center !important;
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  cursor: default !important;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* No title, filename, counter, or description in the full-screen viewer. */
+#lightbox .lightbox-figure figcaption,
+#lightbox .lightbox-title,
+#lightbox .lightbox-filename,
+#lightbox .lightbox-counter {
+  display: none !important;
+}
+
+/* Match the simple Sports/Cars close and navigation controls. */
+#lightbox .lightbox-close {
+  position: fixed !important;
+  z-index: 4 !important;
+  top: max(10px, env(safe-area-inset-top)) !important;
+  right: max(16px, env(safe-area-inset-right)) !important;
+  width: 54px !important;
+  height: 54px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  display: grid !important;
+  place-items: center !important;
+  border: 0 !important;
+  border-radius: 6px !important;
+  background: rgba(0, 0, 0, 0.58) !important;
+  color: #fff !important;
+  font-size: 3rem !important;
+  font-weight: 300 !important;
+  line-height: 1 !important;
+  cursor: pointer !important;
+}
+
+#lightbox .lightbox-arrow {
+  position: fixed !important;
+  z-index: 4 !important;
+  top: 50% !important;
+  width: 58px !important;
+  height: 74px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  display: grid !important;
+  place-items: center !important;
+  transform: translateY(-50%) !important;
+  border: 0 !important;
+  border-radius: 6px !important;
+  background: rgba(0, 0, 0, 0.58) !important;
+  color: #fff !important;
+  font-size: 2.7rem !important;
+  line-height: 1 !important;
+  cursor: pointer !important;
+  user-select: none !important;
+}
+
+#lightbox .lightbox-prev {
+  left: max(12px, env(safe-area-inset-left)) !important;
+}
+
+#lightbox .lightbox-next {
+  right: max(12px, env(safe-area-inset-right)) !important;
+}
+
+#lightbox .lightbox-close:hover,
+#lightbox .lightbox-arrow:hover {
+  background: rgba(255, 255, 255, 0.23) !important;
+}
+
+/* Fullscreen API mode uses the same solid black canvas. */
+#lightbox:fullscreen,
+#lightbox:-webkit-full-screen {
+  width: 100vw !important;
+  height: 100vh !important;
+  background: #000 !important;
+}
+
+@media (max-width: 760px) {
+  #lightbox .lightbox-figure {
+    padding: 64px 8px 92px !important;
+  }
+
+  #lightboxImage {
+    max-width: calc(100vw - 16px) !important;
+    max-height: calc(100vh - 156px) !important;
+    max-height: calc(100dvh - 156px) !important;
+  }
+
+  #lightbox .lightbox-arrow {
+    top: auto !important;
+    bottom: max(18px, env(safe-area-inset-bottom)) !important;
+    width: 52px !important;
+    height: 52px !important;
+    transform: none !important;
+    font-size: 2.2rem !important;
+  }
+
+  #lightbox .lightbox-prev {
+    left: max(18px, env(safe-area-inset-left)) !important;
+  }
+
+  #lightbox .lightbox-next {
+    right: max(18px, env(safe-area-inset-right)) !important;
+  }
+}

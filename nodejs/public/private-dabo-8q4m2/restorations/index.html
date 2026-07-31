@@ -3,18 +3,24 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <meta name="robots" content="noindex, nofollow, noarchive, nosnippet" />
   <meta name="googlebot" content="noindex, nofollow, noarchive, nosnippet" />
   <meta name="referrer" content="no-referrer" />
 
   <title>Restorations | Private DABOPhotos Gallery</title>
-  <link rel="stylesheet" href="../assets/private.css" />
-  <link rel="stylesheet" href="../assets/restorations.css" />
+
+  <link rel="stylesheet" href="../assets/private.css?v=fullscreen2" />
   <link rel="stylesheet" href="../assets/private-menu.css?v=1" />
   <link rel="stylesheet" href="../assets/private-page.css?v=1" />
-  <script src="../assets/restorations.js" defer></script>
+  <link rel="stylesheet" href="../assets/restorations.css?v=fullscreen2" />
+  <link rel="stylesheet" href="../assets/restoration-fullscreen-fix.css?v=fullscreen2" />
+
   <script src="../assets/private-menu.js?v=1" defer></script>
+  <script src="../assets/restorations.js?v=fullscreen2" defer></script>
+  <script src="../assets/restoration-fullscreen-fix.js?v=fullscreen2" defer></script>
 </head>
+
 <body class="private-gallery-page restorations-page">
   <header class="site-header">
     <div class="header-inner gallery-header">
@@ -51,36 +57,77 @@
       <p class="eyebrow">Private collection</p>
       <h2>Restored Photographs</h2>
       <p>
-        Each restoration is shown in this order: <strong>Original JPG</strong>,
-        <strong>Restored PNG</strong>, then <strong>Combined</strong>.
-        Click any image to open the full-screen viewer.
+        Each restoration is shown in this order:
+        <strong>Original JPG</strong>,
+        <strong>Restored PNG</strong>, then
+        <strong>Combined</strong>.
       </p>
-      <p class="gallery-count" id="galleryCount" aria-live="polite">Loading restoration gallery…</p>
+      <p class="gallery-count" id="galleryCount" aria-live="polite">
+        Loading restoration gallery…
+      </p>
     </section>
 
     <noscript>
-      <p class="gallery-error">JavaScript must be enabled to display this gallery.</p>
+      <p class="gallery-error">
+        JavaScript must be enabled to display this gallery.
+      </p>
     </noscript>
 
-    <section id="restorationGallery" class="restoration-gallery" aria-label="Restoration photo groups"></section>
+    <section
+      id="restorationGallery"
+      class="restoration-gallery"
+      aria-label="Restoration photo groups"
+    ></section>
   </main>
 
-  <div class="lightbox" id="lightbox" hidden aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="lightboxTitle">
+  <div
+    class="lightbox"
+    id="lightbox"
+    hidden
+    aria-hidden="true"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Restoration photo viewer"
+  >
     <div class="lightbox-backdrop" data-close-lightbox></div>
+
     <div class="lightbox-panel">
-      <button class="lightbox-close" type="button" aria-label="Close full-screen viewer" data-close-lightbox>×</button>
-      <button class="lightbox-arrow lightbox-prev" type="button" aria-label="Previous image">❮</button>
+      <button
+        class="lightbox-close"
+        type="button"
+        aria-label="Close full-screen viewer"
+        data-close-lightbox
+      >
+        &times;
+      </button>
+
+      <button
+        class="lightbox-arrow lightbox-prev"
+        type="button"
+        aria-label="Previous image"
+      >
+        &#10094;
+      </button>
 
       <figure class="lightbox-figure">
         <img id="lightboxImage" alt="" />
-        <figcaption>
+
+        <!-- Kept for compatibility with the existing restorations.js.
+             The fix stylesheet hides this text from the viewer. -->
+        <figcaption aria-hidden="true">
           <span id="lightboxTitle" class="lightbox-title"></span>
           <span id="lightboxFilename" class="lightbox-filename"></span>
           <span id="lightboxCounter" class="lightbox-counter"></span>
         </figcaption>
       </figure>
 
-      <button class="lightbox-arrow lightbox-next" type="button" aria-label="Next image">❯</button>
+      <button
+        class="lightbox-arrow lightbox-next"
+        type="button"
+        aria-label="Next image"
+      >
+        &#10095;
+      </button>
     </div>
   </div>
 
