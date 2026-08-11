@@ -1,302 +1,359 @@
 [
   {
+    "src": "images/misc/lightening_strike.png",
+    "title": "Lightening bolt in  Fort Myers, FL",
+    "category": "misc",
+    "description": "Lightening bolt - captured in Fort Myers, FL on 08-05-26 @ 4:21pm",
+    "added": "2026-08-10"
+  },
+  {
     "src": "images/animals/monarch_butterfly_1.jpg",
     "title": "Monarch Butterfly 1",
     "category": "animals",
-    "description": "Delicate wings glowing in golden light"
+    "description": "Delicate wings glowing in golden light",
+    "added": "2026-04-01"
   },
   {
     "src": "images/animals/monarch_butterfly_2.jpg",
     "title": "Monarch Butterfly 2",
     "category": "animals",
-    "description": "Nature’s stained glass drifting on the breeze"
+    "description": "Nature’s stained glass drifting on the breeze",
+    "added": "2026-04-01"
   },
   {
     "src": "images/animals/monarch_butterfly_3.jpg",
     "title": "Monarch Butterfly 3",
     "category": "animals",
-    "description": "A monarch paused in perfect elegance"
+    "description": "A monarch paused in perfect elegance",
+    "added": "2026-04-01"
   },
   {
     "src": "images/flowers/baldans_kaleidoscope_orchid.jpg",
     "title": "Baldans Kaleidoscope",
     "category": "flowers",
-    "description": "An explosion of color in delicate bloom"
+    "description": "An explosion of color in delicate bloom",
+    "added": "2026-04-01"
   },
   {
     "src": "images/flowers/magenta_speckled_orchid.jpg",
     "title": "Magenta Speckled Orchid",
     "category": "flowers",
-    "description": "Rich magenta tones dusted with intricate detail"
+    "description": "Rich magenta tones dusted with intricate detail",
+    "added": "2026-04-01"
   },
   {
     "src": "images/flowers/blooming_orchids.jpg",
     "title": "Moth and Purple Happiness Orchids",
     "category": "flowers",
-    "description": "Layers of vibrant petals bursting with life"
+    "description": "Layers of vibrant petals bursting with life",
+    "added": "2026-04-01"
   },
   {
     "src": "images/flowers/purple_orchid.jpg",
     "title": "Purple Orchid",
     "category": "flowers",
-    "description": "Velvet petals glowing in deep purple light"
+    "description": "Velvet petals glowing in deep purple light",
+    "added": "2026-04-01"
   },
   {
     "src": "images/flowers/white_cattleya_orchid.jpg",
     "title": "White Cattleya Orchid",
     "category": "flowers",
-    "description": "Timeless elegance in pristine white bloom"
+    "description": "Timeless elegance in pristine white bloom",
+    "added": "2026-04-01"
   },
   {
     "src": "images/flowers/white_phalaenopsis_orchid.jpg",
     "title": "White Phalaenopsis Orchid",
     "category": "flowers",
-    "description": "Soft petals flowing with graceful simplicity"
+    "description": "Soft petals flowing with graceful simplicity",
+    "added": "2026-04-01"
   },
   {
     "src": "images/birds/3parakeets.jpg",
     "title": "3 Parakeets",
     "category": "birds",
-    "description": "A lively trio bursting with color and chatter"
+    "description": "A lively trio bursting with color and chatter",
+    "added": "2026-04-01"
   },
   {
     "src": "images/birds/7parakeets.jpg",
     "title": "7 Parakeets",
     "category": "birds",
-    "description": "A vibrant gathering of feathered personalities"
+    "description": "A vibrant gathering of feathered personalities",
+    "added": "2026-04-01"
   },
   {
     "src": "images/birds/american_white_ibis.jpg",
     "title": "American White Ibis",
     "category": "birds",
-    "description": "Coastal grace reflected in every step"
+    "description": "Coastal grace reflected in every step",
+    "added": "2026-04-01"
   },
   {
     "src": "images/birds/cardinal.jpg",
     "title": "Cardinal",
     "category": "birds",
-    "description": "A brilliant flash of crimson against nature’s canvas"
+    "description": "A brilliant flash of crimson against nature’s canvas",
+    "added": "2026-04-01"
   },
   {
     "src": "images/birds/caribbean_flamingo.jpg",
     "title": "Caribbean Flamingo",
     "category": "birds",
-    "description": "Tropical elegance painted in shades of pink"
+    "description": "Tropical elegance painted in shades of pink",
+    "added": "2026-04-01"
   },
   {
     "src": "images/birds/catalina_macaw.jpg",
     "title": "Catalina Macaw 1",
     "category": "birds",
-    "description": "Brilliant feathers shining with exotic beauty"
+    "description": "Brilliant feathers shining with exotic beauty",
+    "added": "2026-04-01"
   },
   {
     "src": "images/birds/catalina_macaw2.jpg",
     "title": "Catalina Macaw 2",
     "category": "birds",
-    "description": "A striking burst of tropical color and confidence"
+    "description": "A striking burst of tropical color and confidence",
+    "added": "2026-04-01"
   },
   {
     "src": "images/birds/catalina_macaw3.jpg",
     "title": "Catalina Macaw 3",
     "category": "birds",
-    "description": "Radiant plumage captured in vivid detail"
+    "description": "Radiant plumage captured in vivid detail",
+    "added": "2026-04-01"
   },
   {
     "src": "images/birds/flamingo1.jpg",
     "title": "Flamingo 1",
     "category": "birds",
-    "description": "Long legs and soft pink reflections at sunset"
+    "description": "Long legs and soft pink reflections at sunset",
+    "added": "2026-04-01"
   },
   {
     "src": "images/birds/flamingo2.jpg",
     "title": "Flamingo 2",
     "category": "birds",
-    "description": "Graceful curves and vibrant tropical hues"
+    "description": "Graceful curves and vibrant tropical hues",
+    "added": "2026-04-01"
   },
   {
     "src": "images/birds/flamingo3.jpg",
     "title": "Flamingo 3",
     "category": "birds",
-    "description": "A peaceful moment in paradise pink"
+    "description": "A peaceful moment in paradise pink",
+    "added": "2026-04-01"
   },
   {
     "src": "images/birds/grackle.jpg",
     "title": "Grackle",
     "category": "birds",
-    "description": "Glossy feathers shimmering beneath the light"
+    "description": "Glossy feathers shimmering beneath the light",
+    "added": "2026-04-01"
   },
   {
     "src": "images/birds/great_blue_heron.jpg",
     "title": "Great Blue Heron",
     "category": "birds",
-    "description": "A patient hunter standing tall at the water’s edge"
+    "description": "A patient hunter standing tall at the water’s edge",
+    "added": "2026-04-01"
   },
   {
     "src": "images/birds/mandarin_duck.jpg",
     "title": "Mandarin Duck",
     "category": "birds",
-    "description": "Nature’s masterpiece painted in brilliant color"
+    "description": "Nature’s masterpiece painted in brilliant color",
+    "added": "2026-04-01"
   },
   {
     "src": "images/birds/moluccan_cockatoo.jpg",
     "title": "Moluccan Cockatoo",
     "category": "birds",
-    "description": "Soft feathers and a bold personality combined"
+    "description": "Soft feathers and a bold personality combined",
+    "added": "2026-04-01"
   },
   {
     "src": "images/birds/nanday_parakeet.png",
     "title": "Nanday Parakeet",
     "category": "birds",
-    "description": "A spirited splash of green and gold"
+    "description": "A spirited splash of green and gold",
+    "added": "2026-04-01"
   },
   {
     "src": "images/birds/nanday_parakeet_in_flight.png",
     "title": "Nanday Parakeet In Flight",
     "category": "birds",
-    "description": "Wings spread wide in a moment of freedom"
+    "description": "Wings spread wide in a moment of freedom",
+    "added": "2026-04-01"
   },
   {
     "src": "images/birds/parrot1.jpg",
     "title": "Parrot 1",
     "category": "birds",
-    "description": "Tropical brilliance captured up close"
+    "description": "Tropical brilliance captured up close",
+    "added": "2026-04-01"
   },
   {
     "src": "images/birds/parrot2.png",
     "title": "Parrot 2",
     "category": "birds",
-    "description": "Colorful feathers glowing with personality"
+    "description": "Colorful feathers glowing with personality",
+    "added": "2026-04-01"
   },
   {
     "src": "images/birds/peacock.png",
     "title": "Peacock",
     "category": "birds",
-    "description": "Regal beauty unfolding in dazzling detail"
+    "description": "Regal beauty unfolding in dazzling detail",
+    "added": "2026-04-01"
   },
   {
     "src": "images/birds/scarlet_macaw.jpg",
     "title": "Scarlet Macaw",
     "category": "birds",
-    "description": "Fiery colors soaring with tropical energy"
+    "description": "Fiery colors soaring with tropical energy",
+    "added": "2026-04-01"
   },
   {
     "src": "images/birds/scarlet_macaw2.jpg",
     "title": "Scarlet Macaw 2",
     "category": "birds",
-    "description": "A bold and brilliant symbol of the rainforest"
+    "description": "A bold and brilliant symbol of the rainforest",
+    "added": "2026-04-01"
   },
   {
     "src": "images/birds/two_nanday_parakeets.png",
     "title": "Two Nanday Parakeets",
     "category": "birds",
-    "description": "A colorful pair sharing a quiet moment"
+    "description": "A colorful pair sharing a quiet moment",
+    "added": "2026-04-01"
   },
   {
     "src": "images/birds/white_cockatoo.jpg",
     "title": "White Cockatoo",
     "category": "birds",
-    "description": "Elegant white feathers with striking charm"
+    "description": "Elegant white feathers with striking charm",
+    "added": "2026-04-01"
   },
   {
     "src": "images/birds/yellow_naped_amazon_parrot.jpg",
     "title": "Yellow Naped Amazon Parrot",
     "category": "birds",
-    "description": "Vibrant personality wrapped in emerald feathers"
+    "description": "Vibrant personality wrapped in emerald feathers",
+    "added": "2026-04-01"
   },
   {
     "src": "images/animals/african_spurred_tortoise.jpg",
     "title": "African Spurred Tortoise",
     "category": "animals",
-    "description": "Ancient eyes and quiet determination beneath the sun"
+    "description": "Ancient eyes and quiet determination beneath the sun",
+    "added": "2026-04-01"
   },
   {
     "src": "images/animals/alligator.jpg",
     "title": "Alligator",
     "category": "animals",
-    "description": "A silent predator gliding through still waters"
+    "description": "A silent predator gliding through still waters",
+    "added": "2026-04-01"
   },
   {
     "src": "images/animals/bengal_tiger.png",
     "title": "Bengal Tiger",
     "category": "animals",
-    "description": "Fierce stripes blazing with untamed power"
+    "description": "Fierce stripes blazing with untamed power",
+    "added": "2026-04-01"
   },
   {
     "src": "images/animals/donkey.jpg",
     "title": "Donkey",
     "category": "animals",
-    "description": "A gentle soul with curious eyes and rustic charm"
+    "description": "A gentle soul with curious eyes and rustic charm",
+    "added": "2026-04-01"
   },
   {
     "src": "images/animals/ring-tailed_lemur.png",
     "title": "Ring-Tailed Lemur",
     "category": "animals",
-    "description": "Bright eyes and playful energy in every glance"
+    "description": "Bright eyes and playful energy in every glance",
+    "added": "2026-04-01"
   },
   {
     "src": "images/animals/zebra.jpg",
     "title": "Zebra",
     "category": "animals",
-    "description": "Bold stripes standing out across the wild plains"
+    "description": "Bold stripes standing out across the wild plains",
+    "added": "2026-04-01"
   },
   {
     "src": "images/misc/moonlit_monuments_tidal_basin.png",
     "title": "Moonlit Monuments Tidal Basin",
     "category": "misc",
-    "description": "Monuments glowing beneath a tranquil night sky"
+    "description": "Monuments glowing beneath a tranquil night sky",
+    "added": "2026-04-01"
   },
   {
     "src": "images/misc/porch.jpg",
     "title": "Porch",
     "category": "misc",
-    "description": "A quiet porch inviting peaceful reflection"
+    "description": "A quiet porch inviting peaceful reflection",
+    "added": "2026-04-01"
   },
   {
     "src": "images/misc/rocking_chair.jpg",
     "title": "Rocking Chair",
     "category": "misc",
-    "description": "Gentle moments suspended in timeless comfort"
+    "description": "Gentle moments suspended in timeless comfort",
+    "added": "2026-04-01"
   },
   {
     "src": "images/misc/statue_of_liberty.png",
     "title": "Statue Of Liberty",
     "category": "misc",
-    "description": "Freedom standing tall against the skyline"
+    "description": "Freedom standing tall against the skyline",
+    "added": "2026-04-01"
   },
   {
     "src": "images/misc/sunset_boat.png",
     "title": "Sunset with Boat",
     "category": "misc",
-    "description": "A lone boat drifting through golden waters"
+    "description": "A lone boat drifting through golden waters",
+    "added": "2026-04-01"
   },
   {
     "src": "images/misc/sunset1.png",
     "title": "Sunset 1",
     "category": "misc",
-    "description": "A lone boat drifting through golden waters"
+    "description": "A lone boat drifting through golden waters",
+    "added": "2026-04-01"
   },
   {
     "src": "images/misc/sunset2.png",
     "title": "Sunset 2",
     "category": "misc",
-    "description": "Warm skies melting into evening calm"
+    "description": "Warm skies melting into evening calm",
+    "added": "2026-04-01"
   },
   {
     "src": "images/misc/sunset3.png",
     "title": "Sunset 3",
     "category": "misc",
-    "description": "Nature’s final glow before nightfall"
+    "description": "Nature’s final glow before nightfall",
+    "added": "2026-04-01"
   },
   {
     "src": "images/misc/us_capitol.png",
     "title": "US Capitol",
     "category": "misc",
-    "description": "Historic grandeur beneath an endless sky"
+    "description": "Historic grandeur beneath an endless sky",
+    "added": "2026-04-01"
   },
   {
     "src": "images/misc/washington_monument_reflecting_pool.png",
     "title": "Washington Monument Reflecting Pool",
     "category": "misc",
-    "description": "Reflections of history stretching across still waters"
+    "description": "Reflections of history stretching across still waters",
+    "added": "2026-04-01"
   }
 ]

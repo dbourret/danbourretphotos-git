@@ -12,6 +12,8 @@ async function loadGallery() {
     }
 
     const photos = await response.json();
+    // Display newest photos first
+    photos.sort((a, b) => new Date(b.added) - new Date(a.added));
     allPhotos = photos;
     window.galleryPhotos = photos;
 
