@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Keep this page out of search engine results -->
+  <meta name="robots" content="noindex, nofollow, noarchive, nosnippet" />
+  <meta name="googlebot" content="noindex, nofollow, noarchive, nosnippet" />
+  <meta name="referrer" content="no-referrer" />
+
+  <title>AMB | Private DABOPhotos Gallery</title>
+  <link rel="stylesheet" href="../assets/private.css?v=truefullscreen1" />
+  <link rel="stylesheet" href="../assets/private-menu.css?v=1" />
+  <link rel="stylesheet" href="../assets/private-page.css?v=1" />
+  <script src="../assets/private-menu.js?v=1" defer></script>
+
+  <style>
+    /* AMB gallery: photos only, no captions/descriptions under thumbnails. */
+    #gallery.amb-gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+      align-items: stretch;
+    }
+
+    .amb-photo {
+      display: block;
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      margin: 0;
+      padding: 0;
+      border: 0;
+      border-radius: 12px;
+      overflow: hidden;
+      background: #111;
+      cursor: pointer;
+      box-shadow: 0 5px 18px rgba(0, 0, 0, 0.16);
+    }
+
+    .amb-photo img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .amb-photo:focus-visible {
+      outline: 3px solid currentColor;
+      outline-offset: 3px;
+    }
+
+    /* Viewport-filling photo viewer, matching the behavior of the other private galleries. */
+    #lightbox.amb-lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 10000;
+      display: none;
+      width: 100vw;
+      height: 100vh;
+      margin: 0;
+      padding: 0;
+      background: rgba(0, 0, 0, 0.96);
+      overflow: hidden;
+    }
+
+    #lightbox.amb-lightbox.is-open {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #lightbox .lightbox-content {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100vw;
+      height: 100vh;
+      max-width: none;
+      max-height: none;
+      margin: 0;
+      padding: 18px 72px;
+      box-sizing: border-box;
+    }
+
+    #lightboxImage {
+      display: block;
+      width: auto;
+      height: auto;
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      margin: auto;
+    }
+
+    #lightboxTitle {
+      display: none;
+    }
+
+    #lightbox .close-lightbox,
+    #lightbox .nav-btn {
+      position: fixed;
+      z-index: 10002;
+    }
+
+    #lightbox .close-lightbox {
+      top: 12px;
+      right: 18px;
+    }
+
+    #lightbox .prev-btn {
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    #lightbox .next-btn {
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    body.amb-lightbox-open {
+      overflow: hidden;
+    }
+
+    @media (max-width: 700px) {
+      #gallery.amb-gallery {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+      }
+
+      #lightbox .lightbox-content {
+        padding: 52px 10px 18px;
+      }
+
+      #lightbox .prev-btn {
+        left: 6px;
+      }
+
+      #lightbox .next-btn {
+        right: 6px;
+      }
+    }
+  </style>
+</head>
+<body class="private-gallery-page">
+  <header class="site-header">
+    <div class="header-inner gallery-header">
+      <div>
+        <h1>DABOPhotos</h1>
+        <p>Private AMB Gallery</p>
+      </div>
+
+      <nav class="private-nav" aria-label="Private gallery navigation">
+        <a href="../">Private Home</a>
+
+        <div class="private-menu" data-private-gallery-menu>
+          <button
+            class="private-menu-toggle"
+            type="button"
+            aria-label="Open private gallery menu"
+            aria-expanded="false"
+          >
+            <span class="private-menu-icon" aria-hidden="true">
+              <span></span><span></span><span></span>
+            </span>
+          </button>
+
+          <div class="private-menu-dropdown" hidden>
+            <p class="private-menu-status">Loading galleries…</p>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main class="page-shell">
+    <section class="gallery-intro">
+      <p class="eyebrow">Private collection</p>
+      <h2>AMB</h2>
+      <p>Click any photograph to view it full size.</p>
+    </section>
+
+    <section id="gallery" class="gallery amb-gallery" aria-label="AMB photographs"></section>
+  </main>
+
+  <div id="lightbox" class="lightbox amb-lightbox" role="dialog" aria-modal="true" aria-label="AMB photo viewer" aria-hidden="true">
+    <button id="closeLightbox" class="close-lightbox" type="button" aria-label="Close photo viewer">&times;</button>
+    <button id="prevBtn" class="nav-btn prev-btn" type="button" aria-label="Previous photograph">&#10094;</button>
+
+    <figure class="lightbox-content">
+      <img id="lightboxImage" src="" alt="" />
+      <figcaption id="lightboxTitle"></figcaption>
+    </figure>
+
+    <button id="nextBtn" class="nav-btn next-btn" type="button" aria-label="Next photograph">&#10095;</button>
+  </div>
+
+  <footer>
+    <p>&copy; 2026 DABOPhotos. All rights reserved.</p>
+  </footer>
+
+  <script>
+    (() => {
+      const photos = [
+        "01.png", "02.png", "03.png", "04.png", "05.png", "06.png", "07.png",
+        "08.png", "09.png", "10.png", "11.png", "12.png", "13.png", "14.png",
+        "15.png", "16.png", "17.png", "18.png", "19.png", "20.png", "21.png"
+      ];
+
+      const gallery = document.getElementById("gallery");
+      const lightbox = document.getElementById("lightbox");
+      const lightboxImage = document.getElementById("lightboxImage");
+      const closeButton = document.getElementById("closeLightbox");
+      const prevButton = document.getElementById("prevBtn");
+      const nextButton = document.getElementById("nextBtn");
+
+      let currentIndex = 0;
+      let lastFocused = null;
+
+      photos.forEach((filename, index) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "amb-photo";
+        button.setAttribute("aria-label", `View AMB photograph ${index + 1} full size`);
+
+        const image = document.createElement("img");
+        image.src = filename;
+        image.alt = `AMB photograph ${String(index + 1).padStart(2, "0")}`;
+        image.loading = index < 6 ? "eager" : "lazy";
+        image.decoding = "async";
+
+        button.appendChild(image);
+        button.addEventListener("click", () => openLightbox(index, button));
+        gallery.appendChild(button);
+      });
+
+      function showPhoto(index) {
+        currentIndex = (index + photos.length) % photos.length;
+        lightboxImage.src = photos[currentIndex];
+        lightboxImage.alt = `AMB photograph ${String(currentIndex + 1).padStart(2, "0")}`;
+      }
+
+      function openLightbox(index, trigger) {
+        lastFocused = trigger || document.activeElement;
+        showPhoto(index);
+        lightbox.classList.add("is-open");
+        lightbox.setAttribute("aria-hidden", "false");
+        document.body.classList.add("amb-lightbox-open");
+        closeButton.focus();
+      }
+
+      function closeLightbox() {
+        lightbox.classList.remove("is-open");
+        lightbox.setAttribute("aria-hidden", "true");
+        document.body.classList.remove("amb-lightbox-open");
+        lightboxImage.src = "";
+        if (lastFocused && typeof lastFocused.focus === "function") lastFocused.focus();
+      }
+
+      closeButton.addEventListener("click", closeLightbox);
+      prevButton.addEventListener("click", () => showPhoto(currentIndex - 1));
+      nextButton.addEventListener("click", () => showPhoto(currentIndex + 1));
+
+      lightbox.addEventListener("click", (event) => {
+        if (event.target === lightbox) closeLightbox();
+      });
+
+      document.addEventListener("keydown", (event) => {
+        if (!lightbox.classList.contains("is-open")) return;
+
+        if (event.key === "Escape") closeLightbox();
+        if (event.key === "ArrowLeft") showPhoto(currentIndex - 1);
+        if (event.key === "ArrowRight") showPhoto(currentIndex + 1);
+      });
+    })();
+  </script>
+</body>
+</html>

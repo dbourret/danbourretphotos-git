@@ -1,72 +1,18 @@
-DABOPHOTOS PRIVATE GALLERIES
-=============================
+AMB PRIVATE GALLERY
 
-PRIVATE URL
------------
-After uploading the folder named "private-dabo-8q4m2" to the root of
-danbourretphotos.com, the private landing page will be:
+Upload these files/folders into the existing private gallery root:
 
-https://danbourretphotos.com/private-dabo-8q4m2/
+1. Replace the existing private root index.html with the included index.html.
+   - The only intended change is the new AMB button/link.
 
-Subpages:
+2. Upload the entire amb folder beside sports, cars, and restorations.
+   - amb/index.html
+   - amb/01.png through amb/21.png
 
-https://danbourretphotos.com/private-dabo-8q4m2/sports/
-https://danbourretphotos.com/private-dabo-8q4m2/cars/
+The AMB page uses the private site's existing assets folder:
+- assets/private.css
+- assets/private-menu.css
+- assets/private-page.css
+- assets/private-menu.js
 
-
-UPLOAD LOCATION
----------------
-Upload the entire "private-dabo-8q4m2" folder beside your website's main
-index.html file. Do not add links to it from your public navigation.
-
-
-ADDING SPORTS PHOTOS
---------------------
-1. Put the sports image files in:
-   private-dabo-8q4m2/images/sports/
-
-2. Edit:
-   private-dabo-8q4m2/sports/photos.json
-
-Example:
-
-[
-  {
-    "title": "Baseball Game",
-    "image": "../images/sports/baseball-game.jpg"
-  },
-  {
-    "title": "Football Game",
-    "image": "../images/sports/football-game.jpg"
-  }
-]
-
-
-ADDING CAR PHOTOS
------------------
-1. Put the car image files in:
-   private-dabo-8q4m2/images/cars/
-
-2. Edit:
-   private-dabo-8q4m2/cars/photos.json
-
-Example:
-
-[
-  {
-    "title": "Classic Mustang",
-    "image": "../images/cars/classic-mustang.jpg"
-  },
-  {
-    "title": "Car Show",
-    "image": "../images/cars/car-show.jpg"
-  }
-]
-
-
-IMPORTANT SECURITY NOTE
------------------------
-This setup hides the pages from your normal navigation and requests that
-search engines not index them. Anyone who knows or discovers the URL can
-still open them. For truly restricted access, add server-side password
-protection through your hosting control panel.
+The private dropdown menu should automatically include AMB because it reads the gallery links from the private home page.
