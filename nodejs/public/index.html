@@ -830,7 +830,7 @@
 
       .calendar-thumbnail-grid {
         display: grid;
-        grid-template-columns: repeat(6, minmax(0, 1fr));
+        grid-template-columns: repeat(4, minmax(0, 1fr));
         gap: 10px;
         margin-top: 20px;
       }
@@ -863,8 +863,8 @@
       .calendar-thumbnail img {
         display: block;
         width: 100%;
-        aspect-ratio: 0.6;
-        object-fit: cover;
+        aspect-ratio: 1;
+        object-fit: contain;
       }
 
       .calendar-thumbnail span {
@@ -1149,12 +1149,12 @@
           >
             <div class="home-calendar-preview-stack" aria-hidden="true">
               <img
-                src="images/calendars/2027/04_apr.jpg"
+                src="images/calendars/2027/jan_apr.png"
                 alt=""
                 loading="eager"
               />
               <img
-                src="images/calendars/2027/01_jan.jpg"
+                src="images/calendars/2027/calendar_cover.png"
                 alt=""
                 loading="eager"
               />
@@ -1173,14 +1173,14 @@
               <div class="home-calendar-feature__details">
                 <span>12 original photographs</span>
                 <span>Florida scenes all year</span>
-                <span>Shipping included</span>
+                <span>$25.00 + $3.00 shipping</span>
               </div>
             </div>
 
             <div class="home-calendar-feature__action">
-              <strong class="home-calendar-feature__price">$25</strong>
+              <strong class="home-calendar-feature__price">$28</strong>
               <span class="home-calendar-feature__shipping"
-                >Shipping included</span
+                >$25.00 + $3.00 shipping</span
               >
               <button
                 class="btn btn-primary home-calendar-feature__button"
@@ -1810,28 +1810,28 @@
                 flowers, waterways, and memorable scenery.
               </p>
               <p class="muted">
-                Preview all twelve months below, choose the quantity you would
+                Preview the cover and all twelve months in three grouped images below, choose the quantity you would
                 like, and complete your order through the same secure cart and
                 Square checkout used for photography prints.
               </p>
             </div>
             <div
               class="calendar-price-badge"
-              aria-label="Price is 25 dollars with shipping included"
+              aria-label="Calendar is 25 dollars plus 3 dollars shipping, total 28 dollars"
             >
-              <strong>$25.00</strong>
-              <span>Shipping included</span>
+              <strong>$28.00</strong>
+              <span>$25.00 + $3.00 shipping</span>
             </div>
           </div>
 
           <div class="calendar-page-grid">
             <article class="card calendar-viewer-card">
               <div class="calendar-month-heading">
-                <h3 id="calendar-2027-month-title">January 2027</h3>
+                <h3 id="calendar-2027-month-title">Calendar Cover 2027</h3>
                 <span
                   id="calendar-2027-month-count"
                   class="calendar-month-count"
-                  >1 of 12</span
+                  >1 of 4</span
                 >
               </div>
 
@@ -1839,19 +1839,19 @@
                 id="calendar-2027-open-preview"
                 class="calendar-main-viewer"
                 type="button"
-                aria-label="Open January 2027 calendar preview full screen"
+                aria-label="Open Calendar Cover 2027 calendar preview full screen"
               >
                 <img
                   id="calendar-2027-preview"
                   class="calendar-main-image"
-                  src="images/calendars/2027/01_jan.jpg"
-                  alt="January 2027 calendar preview featuring a Florida parrot photograph by Dan Bourret"
+                  src="images/calendars/2027/calendar_cover.png"
+                  alt="2027 Florida Wildlife & Scenery Calendar cover by Dan Bourret"
                   loading="eager"
                 />
               </button>
 
               <p class="calendar-viewer-note">
-                Click the large preview to view the month full screen.
+                Click the large preview to view the image full screen.
               </p>
 
               <div class="calendar-viewer-controls">
@@ -1860,21 +1860,21 @@
                   class="btn btn-secondary"
                   type="button"
                 >
-                  Previous Month
+                  Previous Image
                 </button>
                 <button
                   id="calendar-2027-next"
                   class="btn btn-primary"
                   type="button"
                 >
-                  Next Month
+                  Next Image
                 </button>
               </div>
 
               <div
                 id="calendar-2027-thumbnails"
                 class="calendar-thumbnail-grid"
-                aria-label="Choose a calendar month to preview"
+                aria-label="Choose a calendar image to preview"
               ></div>
             </article>
 
@@ -1891,7 +1891,7 @@
                 <li>All photographs taken by Dan Bourret</li>
                 <li>Every image photographed in Florida</li>
                 <li>Wildlife, birds, flowers, and Florida scenery</li>
-                <li>Shipping included in the $25.00 price</li>
+                <li>$25.00 + $3.00 shipping = $28.00 per calendar</li>
               </ul>
 
               <label for="calendar-2027-quantity"
@@ -1930,9 +1930,9 @@
                 <span
                   ><strong style="font-size: 1rem; color: inherit"
                     >Order total</strong
-                  ><br /><small class="muted">Shipping included</small></span
+                  ><br /><small class="muted">$25.00 + $3.00 shipping</small></span
                 >
-                <strong id="calendar-2027-total">$25.00</strong>
+                <strong id="calendar-2027-total">$28.00</strong>
               </div>
 
               <button
@@ -2384,7 +2384,7 @@
       aria-hidden="true"
       role="dialog"
       aria-modal="true"
-      aria-label="Calendar month preview"
+      aria-label="Calendar image preview"
     >
       <button
         id="calendar-2027-lightbox-close"
@@ -2398,20 +2398,20 @@
         id="calendar-2027-lightbox-prev"
         class="calendar-lightbox-nav calendar-lightbox-prev"
         type="button"
-        aria-label="Previous calendar month"
+        aria-label="Previous calendar image"
       >
         ‹
       </button>
       <img
         id="calendar-2027-lightbox-image"
-        src="images/calendars/2027/01_jan.jpg"
-        alt="January 2027 calendar preview"
+        src="images/calendars/2027/calendar_cover.png"
+        alt="Calendar Cover 2027 calendar preview"
       />
       <button
         id="calendar-2027-lightbox-next"
         class="calendar-lightbox-nav calendar-lightbox-next"
         type="button"
-        aria-label="Next calendar month"
+        aria-label="Next calendar image"
       >
         ›
       </button>
@@ -2524,68 +2524,14 @@
 
     <script>
       (() => {
-        const CALENDAR_PRICE = 25;
+        const CALENDAR_BASE_PRICE = 25;
+        const CALENDAR_SHIPPING = 3;
+        const CALENDAR_PRICE = CALENDAR_BASE_PRICE + CALENDAR_SHIPPING;
         const months = [
-          {
-            name: "January",
-            file: "01_jan.jpg",
-            description: "a colorful parrot in flight",
-          },
-          {
-            name: "February",
-            file: "02_feb.jpg",
-            description: "a close-up Florida alligator",
-          },
-          {
-            name: "March",
-            file: "03_mar.jpg",
-            description: "pink orchids in bloom",
-          },
-          {
-            name: "April",
-            file: "04_apr.jpg",
-            description: "a brilliant Florida sunset over the water",
-          },
-          {
-            name: "May",
-            file: "05_may.jpg",
-            description: "a vivid blue-and-gold macaw",
-          },
-          {
-            name: "June",
-            file: "06_jun.jpg",
-            description: "a ring-tailed lemur in a wooded setting",
-          },
-          {
-            name: "July",
-            file: "07_jul.jpg",
-            description: "a lizard resting near a white orchid",
-          },
-          {
-            name: "August",
-            file: "08_aug.jpg",
-            description: "a monarch butterfly among Florida flowers",
-          },
-          {
-            name: "September",
-            file: "09_sep.jpg",
-            description: "a scarlet macaw with wings spread",
-          },
-          {
-            name: "October",
-            file: "10_oct.jpg",
-            description: "a zebra photographed in Florida",
-          },
-          {
-            name: "November",
-            file: "11_nov.jpg",
-            description: "a rustic Florida porch and winter landscape",
-          },
-          {
-            name: "December",
-            file: "12_dec.jpg",
-            description: "a great blue heron in flight",
-          },
+          { name: "Calendar Cover", file: "calendar_cover.png" },
+          { name: "January–April", file: "jan_apr.png" },
+          { name: "May–August", file: "may_aug.png" },
+          { name: "September–December", file: "sept_dec.png" },
         ];
 
         const preview = document.getElementById("calendar-2027-preview");
@@ -2633,7 +2579,7 @@
 
         const imagePath = (month) => `images/calendars/2027/${month.file}`;
         const imageAlt = (month) =>
-          `${month.name} 2027 calendar preview featuring ${month.description}, photographed in Florida by Dan Bourret`;
+          `${month.name} — 2027 Florida Wildlife & Scenery Calendar by Dan Bourret`;
 
         months.forEach((month, index) => {
           const button = document.createElement("button");
@@ -2756,11 +2702,11 @@
           for (let index = 0; index < quantity; index += 1) {
             cart.push({
               title: "2027 Florida Wildlife & Scenery Calendar",
-              image: "images/calendars/2027/01_jan.jpg",
+              image: "images/calendars/2027/calendar_cover.png",
               imageKey: "calendar-2027.jpg",
               size: "2027",
               material: "Calendar",
-              finish: "Shipping included",
+              finish: "$25.00 + $3.00 shipping",
               price: CALENDAR_PRICE,
               productType: "calendar",
             });
