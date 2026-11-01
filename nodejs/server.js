@@ -498,6 +498,58 @@ app.use((req, res, next) => {
 });
 
 /* =============================
+   PRIVATE SHADOW CIPHER
+   Must remain BEFORE public static files and SPA fallback.
+============================= */
+const shadowCipherDir = path.join(__dirname, "private", "secret-cipher");
+
+function shadowCipherAuth(req, res, next) {
+  res.setHeader("Cache-Control", "private, no-store");
+  const expectedUsername = process.env.CIPHER_USERNAME;
+  const expectedPassword = process.env.CIPHER_PASSWORD;
+
+  if (!expectedUsername || !expectedPassword) {
+    return res.status(503).send("Shadow Cipher access has not been configured.");
+  }
+
+  let username = "";
+  let password = "";
+  const authHeader = req.get("authorization") || "";
+  if (/^Basic /i.test(authHeader)) {
+    try {
+      const decoded = Buffer.from(authHeader.slice(6), "base64").toString("utf8");
+      const colon = decoded.indexOf(":");
+      if (colon !== -1) {
+        username = decoded.slice(0, colon);
+        password = decoded.slice(colon + 1);
+      }
+    } catch (_) {
+      // Invalid credentials should be treated as an unsuccessful login.
+    }
+  }
+
+  const secureMatch = (received, expected) => {
+    const receivedHash = crypto.createHash("sha256").update(received).digest();
+    const expectedHash = crypto.createHash("sha256").update(expected).digest();
+    return crypto.timingSafeEqual(receivedHash, expectedHash);
+  };
+
+  // Evaluate both credential comparisons on every request.
+  const validUser = secureMatch(username, expectedUsername);
+  const validPassword = secureMatch(password, expectedPassword);
+  if (validUser && validPassword) return next();
+
+  res.setHeader("WWW-Authenticate", 'Basic realm="Shadow Cipher", charset="UTF-8"');
+  return res.status(401).send("Username and password required.");
+}
+
+app.use(
+  "/secret-cipher",
+  shadowCipherAuth,
+  express.static(shadowCipherDir, { index: "index.html", fallthrough: false }),
+);
+
+/* =============================
    STATIC FILES
 ============================= */
 
