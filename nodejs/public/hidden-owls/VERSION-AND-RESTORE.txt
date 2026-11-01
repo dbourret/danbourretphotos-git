@@ -1,0 +1,33 @@
+QUICHE CT. WEBSITE: VERSIONS AND RESTORING BACKUPS
+
+CURRENT PACKAGE: v3.1.0
+
+RECOMMENDED SIMPLE WORKFLOW
+1. Keep downloaded release ZIP files in a folder on your PC:
+   Quiche-Ct-Backups/v3.0.0/ and Quiche-Ct-Backups/v3.1.0/
+   Better yet, keep each original ZIP intact with the version in its name.
+2. Before uploading a new release, download/copy your CURRENT LIVE SITE folder
+   from Hostinger to your computer. Name it with the date and version.
+   This matters if you've edited the live files since downloading our ZIP.
+3. Upload the new release files to the SAME hidden site location, replacing the
+   prior files only after you've made the backup.
+4. Test the homepage, an interior page, navigation and a photo enlargement.
+5. To roll back, re-upload EVERY FILE from the desired backup release ZIP to the
+   same hosting directory, replacing the current files. If you changed image files
+   since that backup, those changes will also be rolled back.
+6. If your site's files are served through a Node.js/Express route, keep its
+   EXISTING ROUTE and directory mapping intact; only replace the site files.
+   Do not overwrite your photography site's server.js or other site content.
+
+VERSIONING RULES
+- v3.1.0: Major.Minor.Patch.
+- Major: substantial navigation/layout change.
+- Minor: new feature, for example the version history.
+- Patch: text/image fix or typo only.
+- Change `assets/site-version.js` for the displayed version in all pages.
+- Record changes in CHANGELOG.md and version-history.html.
+- Save a new ZIP named with the release number before deploying.
+
+NOTE: A visible version number is NOT a backup. Keep the actual ZIP archives
+locally (and optionally in cloud storage). An unlisted site URL is not a secure
+password-protected website.
